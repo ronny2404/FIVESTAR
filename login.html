@@ -5,24 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
         
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; transition: 0.3s; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; transition: 0.3s; }
+        
+        /* Tombol Toggle di Pojok */
+        .theme-header { position: absolute; top: 20px; right: 20px; }
+        .theme-toggle { cursor: pointer; padding: 10px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; background: var(--input); color: var(--text); }
+
         .form-card { width: 85%; max-width: 350px; }
         h2 { font-size: 38px; margin-bottom: 40px; font-weight: 700; }
         .field { margin-bottom: 25px; }
         label { display: block; opacity: 0.6; font-size: 14px; margin-bottom: 8px; }
-        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text); box-sizing: border-box; font-size: 16px; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; }
+        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text); box-sizing: border-box; font-size: 16px; }
         button { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
         [data-theme="dark"] button { color: black; }
         p { text-align: center; opacity: 0.6; margin-top: 30px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+    <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
+    </div>
+
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="loginForm">
@@ -32,18 +41,29 @@
         </form>
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
     </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         const firebaseConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+
+        // Theme Toggle Logic
+        const btn = document.getElementById('themeBtn');
+        btn.onclick = () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            btn.innerHTML = `<i data-lucide="${isDark ? 'moon' : 'sun'}"></i>`;
+            lucide.createIcons();
+        };
+
+        document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
                 .then(() => window.location.href = "dashboard.html").catch(err => alert(err.message));
-        });
+        };
+        lucide.createIcons();
     </script>
 </body>
 </html>
