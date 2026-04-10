@@ -339,21 +339,25 @@ function toggleEditAbsenMode() {
 function selectCalDate(dStr, element) { 
     if(!isEditAbsenMode) return; 
     
-    element.classList.remove('bg-white', 'text-slate-700', 'text-red-500', 'border-2', 'border-red-300');
-    element.classList.add('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
+    // 1. Efek ketukan BIRU (Kita gunakan blue-100 agar teks hitam/merah tetap terbaca jelas)
+    // Jika ingin Biru pekat, gunakan bg-blue-500
+    element.classList.remove('bg-white');
+    element.classList.add('bg-blue-500', 'transform', 'scale-105', 'shadow-md');
     
+    // Opsional: Jika menggunakan Biru Pekat (bg-blue-500), 
+    // biasanya teks hitam/merah jadi sulit dibaca. 
+    // Jika mau biru muda saja, ganti jadi 'bg-blue-100'
+
+    // 2. Tunggu 150 milidetik (efek ketukan), lalu kembalikan ke putih
     setTimeout(() => {
-        element.classList.remove('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
+        element.classList.remove('bg-blue-500', 'transform', 'scale-105', 'shadow-md');
         element.classList.add('bg-white');
         
-        const selectedDate = new Date(dStr);
-        if(selectedDate.getDay() === 0) element.classList.add('text-red-500');
-        else element.classList.add('text-slate-700');
-        
+        // Munculkan popup modal edit
         manualAbsenDateStr = dStr; 
         document.getElementById('manualAbsenTargetDate').innerText = dStr; 
         document.getElementById('manualAbsenModal').classList.remove('hidden'); 
-    }, 150); 
+    }, 150);
 }
 
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
