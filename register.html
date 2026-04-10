@@ -8,58 +8,17 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 40px 0; /* Memberi ruang untuk scroll di layar kecil */
-            transition: 0.3s; 
-        }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 0; transition: 0.3s; }
         .form-card { width: 90%; max-width: 400px; }
-        h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; }
-        
-        .field { margin-bottom: 20px; }
-        label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 6px; font-weight: 600; }
-        
-        input, select { 
-            width: 100%; 
-            background: var(--input); 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            padding: 14px; 
-            color: var(--text); 
-            box-sizing: border-box; 
-            font-size: 15px; 
-            transition: 0.3s; 
-        }
-
-        input:focus, select:focus { border-color: var(--accent); outline: none; }
-        
-        button { 
-            width: 100%; 
-            padding: 16px; 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            border-radius: 35px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            font-size: 16px;
-        }
+        h2 { font-size: 32px; margin-bottom: 25px; font-weight: 700; }
+        .field { margin-bottom: 15px; }
+        label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 5px; font-weight: 600; }
+        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; }
+        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
         [data-theme="dark"] button { color: black; }
-
-        .row { display: flex; gap: 15px; }
+        .row { display: flex; gap: 10px; }
         .row .field { flex: 1; }
-
-        p { text-align: center; opacity: 0.6; margin-top: 30px; font-size: 14px; }
+        p { text-align: center; opacity: 0.6; margin-top: 20px; font-size: 14px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
@@ -67,49 +26,21 @@
     <div class="form-card">
         <h2>Buat Akun</h2>
         <form id="regForm">
-            <div class="field">
-                <label>Nama Lengkap</label>
-                <input type="text" id="fullName" placeholder="Contoh: Ronny Wijaya" required>
-            </div>
-
-            <div class="field">
-                <label>Username</label>
-                <input type="text" id="username" placeholder="username123" required>
-            </div>
-
+            <div class="field"><label>Nama Lengkap</label><input type="text" id="fullName" placeholder="Nama Lengkap" required></div>
+            <div class="field"><label>Username</label><input type="text" id="username" placeholder="Username" required></div>
             <div class="row">
-                <div class="field">
-                    <label>Tanggal Lahir</label>
-                    <input type="date" id="birthDate" required>
-                </div>
-                <div class="field">
-                    <label>Jenis Kelamin</label>
+                <div class="field"><label>Tgl Lahir</label><input type="date" id="birthDate" required></div>
+                <div class="field"><label>Gender</label>
                     <select id="gender" required>
-                        <option value="">Pilih</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
+                        <option value="L">Pria</option>
+                        <option value="P">Wanita</option>
                     </select>
                 </div>
             </div>
-
-            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="remail" placeholder="email@fivestar.com" required>
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="rpass" placeholder="Min. 6 karakter" required>
-            </div>
-
-            <div class="field">
-                <label>Konfirmasi Password</label>
-                <input type="password" id="confirmPass" placeholder="Ulangi password" required>
-            </div>
-
-            <button type="submit">Daftar Sekarang</button>
+            <div class="field"><label>Email</label><input type="email" id="remail" required></div>
+            <div class="field"><label>Password</label><input type="password" id="rpass" required></div>
+            <div class="field"><label>Konfirmasi Password</label><input type="password" id="confirmPass" required></div>
+            <button type="submit" id="btnReg">Daftar Sekarang</button>
         </form>
         <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
     </div>
@@ -117,6 +48,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = { 
             apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", 
@@ -129,33 +61,39 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // Deteksi tema sistem
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
 
-        document.getElementById('regForm').addEventListener('submit', (e) => {
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('remail').value;
+            const btn = document.getElementById('btnReg');
             const pass = document.getElementById('rpass').value;
-            const confirmPass = document.getElementById('confirmPass').value;
+            if(pass !== document.getElementById('confirmPass').value) return alert("Password tidak cocok!");
 
-            // Validasi Password
-            if (pass !== confirmPass) {
-                alert("Konfirmasi password tidak cocok!");
-                return;
+            btn.innerText = "Memproses...";
+            btn.disabled = true;
+
+            try {
+                // 1. Auth Register
+                const res = await createUserWithEmailAndPassword(auth, document.getElementById('remail').value, pass);
+                
+                // 2. Simpan ke Firestore
+                await setDoc(doc(db, "users", res.user.uid), {
+                    nama: document.getElementById('fullName').value,
+                    username: document.getElementById('username').value,
+                    tgl_lahir: document.getElementById('birthDate').value,
+                    gender: document.getElementById('gender').value,
+                    email: res.user.email,
+                    createdAt: new Date()
+                });
+
+                window.location.href = "dashboard.html";
+            } catch (err) {
+                alert(err.message);
+                btn.innerText = "Daftar Sekarang";
+                btn.disabled = false;
             }
-
-            // Di sini kamu bisa mengambil data lain seperti:
-            // const name = document.getElementById('fullName').value;
-            // const user = document.getElementById('username').value;
-
-            createUserWithEmailAndPassword(auth, email, pass)
-                .then(() => {
-                    alert("Pendaftaran Berhasil!");
-                    window.location.href = "dashboard.html";
-                })
-                .catch(err => alert("Gagal Daftar: " + err.message));
         });
     </script>
 </body>
