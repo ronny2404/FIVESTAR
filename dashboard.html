@@ -3,24 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - FIVE STAR 2</title>
+    <title>Dashboard - Five Star 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; }
-        nav { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-        .content { padding: 2rem; text-align: center; }
-        button { background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+        :root { --bg-color: #121212; --accent-color: #39FF14; --card-bg: #1E1E1E; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: white; margin: 0; padding-bottom: 80px; }
+        
+        header { padding: 20px; font-size: 24px; font-weight: 700; border-bottom: 1px solid #333; }
+        
+        .content-section { padding: 20px; display: none; }
+        .content-section.active { display: block; }
+        
+        .card { background: var(--card-bg); padding: 25px; border-radius: 20px; margin-top: 20px; }
+        .user-email { color: var(--accent-color); font-weight: 700; margin-bottom: 15px; display: block; }
+        
+        /* Tombol Keluar hanya di Profil */
+        .btn-logout { 
+            background: var(--accent-color); color: black; border: none; 
+            padding: 15px; width: 100%; border-radius: 30px; font-weight: 700; margin-top: 20px;
+        }
+
+        /* Bottom Navbar */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #181818;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #333; z-index: 100;
+        }
+        .nav-item {
+            text-align: center; color: #888; text-decoration: none; font-size: 12px;
+            display: flex; flex-direction: column; align-items: center; cursor: pointer;
+        }
+        .nav-item.active { color: var(--accent-color); }
+        .nav-item i { margin-bottom: 4px; }
     </style>
 </head>
 <body>
-    <nav>
-        <span>FIVE STAR 2 - Dashboard</span>
-        <button id="logoutBtn">Logout</button>
-    </nav>
 
-    <div class="content">
-        <h1>Selamat Datang, <span id="userEmail">...</span></h1>
-        <p>Ini adalah area rahasia khusus pengguna terdaftar.</p>
+    <header id="headerTitle">Dashboard</header>
+
+    <div id="absensi" class="content-section"><h2>Absensi</h2><p>Halaman Absensi Anda.</p></div>
+    <div id="catatan" class="content-section"><h2>Catatan</h2><p>Catatan pekerjaan harian.</p></div>
+    <div id="gaji" class="content-section"><h2>Gaji</h2><p>Rincian Gaji bulanan.</p></div>
+    
+    <div id="profil" class="content-section active">
+        <div class="card">
+            <h1>Profil Saya</h1>
+            <span id="userEmail" class="user-email">Memuat...</span>
+            <p>Ini adalah area profil personal Anda. Di sini Anda dapat melihat status Absensi, Catatan, dan Gaji Anda.</p>
+            <button id="logoutBtn" class="btn-logout">Keluar</button>
+        </div>
     </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="showPage('absensi', this)">
+            <i data-lucide="calendar-check"></i><span>Absensi</span>
+        </div>
+        <div class="nav-item" onclick="showPage('catatan', this)">
+            <i data-lucide="file-text"></i><span>Catatan</span>
+        </div>
+        <div class="nav-item" onclick="showPage('gaji', this)">
+            <i data-lucide="wallet"></i><span>Gaji</span>
+        </div>
+        <div class="nav-item active" onclick="showPage('profil', this)">
+            <i data-lucide="user"></i><span>Profil</span>
+        </div>
+    </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -35,26 +83,30 @@
             appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
             measurementId: "G-Y71EN3MHVW"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Cek status login
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('userEmail').innerText = user.email;
-            } else {
-                // Jika tidak ada user, tendang ke login
-                window.location.href = "login.html";
-            }
+            if (user) document.getElementById('userEmail').innerText = user.email;
+            else window.location.href = "login.html";
         });
 
-        // Fungsi Logout
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
+            signOut(auth).then(() => window.location.href = "index.html");
         });
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Navigation Logic
+        window.showPage = function(pageId, element) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            element.classList.add('active');
+            document.getElementById('headerTitle').innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+        }
     </script>
 </body>
 </html>
