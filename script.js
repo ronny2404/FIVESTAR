@@ -280,7 +280,7 @@ function renderCalendar() {
     
     const dataLokal = getHydratedData();
 
-    for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
+    for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
 
     for (let i = 1; i <= daysInMonth; i++) {
         const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
@@ -321,7 +321,24 @@ function toggleEditAbsenMode() {
     }
     renderCalendar(); 
 }
-function selectCalDate(dStr) { if(!isEditAbsenMode) return; manualAbsenDateStr = dStr; document.getElementById('manualAbsenTargetDate').innerText = dStr; document.getElementById('manualAbsenModal').classList.remove('hidden'); }
+function selectCalDate(dStr, element) { 
+    if(!isEditAbsenMode) return; 
+    
+    // 1. Tambahkan efek animasi sentuhan (warna merah & membesar)
+    element.classList.remove('bg-white', 'text-slate-700', 'border-2', 'border-red-300');
+    element.classList.add('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
+    
+    // 2. Tunggu 150 milidetik, lalu kembalikan ke warna asli dan buka popup
+    setTimeout(() => {
+        element.classList.remove('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
+        element.classList.add('bg-white', 'text-slate-700');
+        
+        // Buka modal manual absen
+        manualAbsenDateStr = dStr; 
+        document.getElementById('manualAbsenTargetDate').innerText = dStr; 
+        document.getElementById('manualAbsenModal').classList.remove('hidden'); 
+    }, 150);
+}
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 
 // ==========================================
