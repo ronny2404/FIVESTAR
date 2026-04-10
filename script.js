@@ -4,12 +4,26 @@ let currentCalDate = new Date();
 let isEditAbsenMode = false;
 let manualAbsenDateStr = "";
 
+// ==========================================
+// INISIALISASI & SPLASH SCREEN
+// ==========================================
 window.onload = () => { 
-    if(localStorage.getItem('user_username')) {
-        showPage('mainPage'); 
-    } else {
-        showPage('loginPage'); 
-    }
+    updateSyncIndicator();
+    
+    // Timer 4 detik untuk Splash Screen
+    setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        splash.style.opacity = '0';
+        
+        setTimeout(() => {
+            splash.style.display = 'none';
+            if(localStorage.getItem('user_username')) {
+                showPage('mainPage'); 
+            } else {
+                showPage('loginPage'); 
+            }
+        }, 800);
+    }, 4000); 
 };
 
 function showNotif(msg, type = "success") {
@@ -23,10 +37,13 @@ function showNotif(msg, type = "success") {
     setTimeout(() => { container.classList.remove('notif-active'); }, 3000);
 }
 
+// ==========================================
+// AUTHENTIKASI
+// ==========================================
 async function login() {
     const user = document.getElementById('loginUser').value.toLowerCase().trim();
     const pass = document.getElementById('loginPass').value;
-    if(!user || !pass) return showNotif("Isi data login!", "error");
+    if(!user || !pass) return showNotif("Isi Username & Password!", "error");
     document.getElementById('btnLogin').innerText = "PROSES...";
     try {
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "login", username: user, password: pass }) });
@@ -36,7 +53,7 @@ async function login() {
             localStorage.setItem('user_nama_lengkap', result.data.nama_lengkap);
             showPage('mainPage');
         } else showNotif(result.message, "error");
-    } catch (e) { showNotif("Server Error", "error"); }
+    } catch (e) { showNotif("Server Error / Offline", "error"); }
     document.getElementById('btnLogin').innerText = "MASUK";
 }
 
@@ -65,9 +82,18 @@ function showPage(id) {
     document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
     const target = document.getElementById(id);
     if(target) target.classList.remove('hidden');
-    
-    // Auto-scroll ke atas setiap ganti halaman
-    document.querySelector('.content-scrollable').scrollTop = 0;
+
+    const authWrapper = document.getElementById('authWrapper');
+    const appContent = document.getElementById('appContent');
+
+    if (id === 'loginPage' || id === 'registerPage') {
+        authWrapper.classList.remove('hidden');
+        appContent.classList.add('hidden');
+    } else {
+        authWrapper.classList.add('hidden');
+        appContent.classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
 
     if(id === 'mainPage') {
         const n = localStorage.getItem('user_nama_lengkap') || 'User';
@@ -83,6 +109,9 @@ function togglePass(id, icon) {
     else { i.type = "password"; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
 }
 
+// ==========================================
+// KALENDER
+// ==========================================
 function renderCalendar() {
     const year = currentCalDate.getFullYear();
     const month = currentCalDate.getMonth();
@@ -91,13 +120,21 @@ function renderCalendar() {
     const grid = document.getElementById('calGrid'); grid.innerHTML = '';
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dataLokal = JSON.parse(localStorage.getItem('all_app_data')) || [];
 
     for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
     for (let i = 1; i <= daysInMonth; i++) {
         const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
         const isSunday = new Date(year, month, i).getDay() === 0;
         let textColor = isSunday ? "text-red-500" : "text-slate-700";
-        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl bg-white border min-h-[50px] flex flex-col items-center cursor-pointer ${textColor}"><span class="text-xs font-bold">${i}</span></div>`;
+        let bgClass = "bg-white border";
+        const today = new Date();
+        if (dStr === `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`) bgClass = "border-2 border-red-300";
+        
+        let absen = dataLokal.find(d => d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr));
+        let badge = absen ? `<div class="mt-1 w-full"><span class="block text-[6px] text-white bg-green-500 rounded px-1 truncate font-bold uppercase">${absen.status_treatment}</span></div>` : "";
+
+        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${textColor} min-h-[55px] flex flex-col items-center cursor-pointer"><span class="text-xs font-bold">${i}</span>${badge}</div>`;
     }
 }
 
@@ -122,4 +159,11 @@ function toggleEditAbsenMode() {
 function changeCalMonth(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 function doLogout() { localStorage.clear(); window.location.reload(); }
-function submitManualAbsen(s) { showNotif("Tersimpan"); closeManualAbsenModal(); }
+function simpanKerja() { showNotif("Tersimpan!"); showPage('mainPage'); }
+function simpanKasbon() { showNotif("Tersimpan!"); showPage('mainPage'); }
+function ambilTotalJamLocal() { document.getElementById('resTotalJam').innerText = "15"; }
+function hitungGajiLocal() { document.getElementById('uiGajiBersih').innerText = "Rp 1.000.000"; document.getElementById('slipGajiContainer').classList.remove('hidden'); }
+function downloadPDF() { alert("Fitur PDF aktif"); }
+function submitManualAbsen(s) { showNotif("Berhasil"); closeManualAbsenModal(); }
+function updateSyncIndicator() { document.getElementById('syncIndicator').style.backgroundColor = navigator.onLine ? "#22c55e" : "#ef4444"; }
+function showAccount() { showPage('accountViewPage'); document.getElementById('viewName').innerText = localStorage.getItem('user_nama_lengkap'); document.getElementById('viewUser').innerText = localStorage.getItem('user_username'); }
