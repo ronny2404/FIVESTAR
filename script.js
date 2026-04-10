@@ -280,8 +280,17 @@ function renderCalendar() {
                 }
             }
             
-            let bgClass = "bg-white text-slate-700 border border-slate-100";
-            if (dStr === getLocalDate()) bgClass = "border-2 border-red-300";
+                        // Cek apakah hari ini hari Minggu
+            const dayOfWeek = new Date(year, month, i).getDay();
+            const isSunday = dayOfWeek === 0;
+            
+            // Warna teks: Merah jika Minggu, Hitam (slate-700) jika hari biasa
+            let textColor = isSunday ? "text-red-500" : "text-slate-700";
+            let bgClass = "bg-white border border-slate-100";
+            
+            // Frame khusus hari ini (Today)
+            if (dStr === getLocalDate()) bgClass = "bg-white border-2 border-red-300";
+            
             let pointer = isEditAbsenMode ? "cursor-pointer hover:bg-slate-50" : "";
 
             let badge = "";
@@ -295,7 +304,12 @@ function renderCalendar() {
                 badge = `<div class="mt-1 flex flex-col items-center gap-[2px] w-full px-[1px]"><span class="block w-full text-[6px] font-bold text-white ${col} rounded-[3px] truncate px-[2px]">${absenHariIni.status_treatment}</span></div>`;
             }
 
-            grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
+            // Gunakan variable textColor agar warna angka tetap konsisten
+            grid.innerHTML += `
+                <div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${textColor} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150">
+                    <span class="text-xs font-bold leading-none mt-1">${i}</span>
+                    ${badge}
+                </div>`;
         }
     } catch (error) {
         console.error("Kalender Error:", error);
