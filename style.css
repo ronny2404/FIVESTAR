@@ -10,7 +10,7 @@ body {
 .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
 .modal-blur { backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.6); }
 
-/* ANIMASI KETUKAN BIRU (ANGKA TETAP MERAH/HITAM) */
+/* ANIMASI KETUKAN BIRU (ANGKA TETAP KELIHATAN) */
 .tap-flash { animation: flashBlue 0.3s ease-in-out; }
 @keyframes flashBlue {
     0% { background-color: #ffffff; }
@@ -35,3 +35,10 @@ body {
 .notif-error i { color: #ef4444; }
 
 .page-section { transition: opacity 0.3s ease-in-out; }
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* CSS CETAK PDF */
+#pdfPrintArea { font-family: 'Courier New', Courier, monospace !important; color: black !important; background: white !important; line-height: 1.5; }
+.pdf-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.pdf-dashed { border-bottom: 1px dashed black; margin: 8px 0; }
+.pdf-bold { font-weight: bold; }
