@@ -13,9 +13,13 @@
 
     <div id="splashScreen">
         <img src="logo_fivestar.png" alt="Logo" class="splash-logo">
-        <div class="mt-8 text-center px-6">
-            <h2 class="text-xl font-black text-slate-700 leading-tight">Selamat datang di aplikasi<br>catatan kerja <span class="text-red-600">FIVE STAR</span></h2>
+        
+        <div class="splash-welcome">
+            <h2 class="text-2xl font-black text-slate-700 leading-tight">Selamat datang di aplikasi<br>catatan kerja <span class="text-red-600">FIVE STAR</span></h2>
         </div>
+
+        <button onclick="tutupSplashScreen()" class="btn-mulai active:scale-95 transition-all">Mulai Aplikasi</button>
+
         <p class="splash-footer">Aplikasi Projek By Ronny</p>
     </div>
 
@@ -110,7 +114,7 @@
 
         <div id="absenPage" class="hidden bg-white p-6 rounded-[2.5rem] shadow-xl w-full page-section text-center">
             <h2 class="text-2xl font-black text-red-600 mb-4 uppercase">Kalender</h2>
-            <div class="bg-slate-50 p-4 rounded-3xl border mb-4">
+            <div class="bg-slate-50 p-4 rounded-3xl border mb-4 shadow-inner">
                 <div class="flex justify-between items-center mb-4">
                     <button onclick="changeCalMonth(-1)" class="w-8 h-8 flex items-center justify-center bg-white border rounded-full active:scale-90"><i class="fa fa-chevron-left text-red-500"></i></button>
                     <h3 id="calMonthYear" class="font-black text-slate-700 uppercase text-sm"></h3>
@@ -122,7 +126,7 @@
                 <div id="calGrid" class="grid grid-cols-7 gap-1 text-center"></div>
             </div>
             <button id="btnToggleEditAbsen" onclick="toggleEditAbsenMode()" class="w-full bg-yellow-500 text-white p-4 rounded-2xl shadow-lg uppercase font-black text-sm mb-4 active:scale-95"><i class="fa fa-pencil mr-2"></i> Edit Absen</button>
-            <button onclick="showPage('mainPage')" class="w-full text-slate-400 font-bold uppercase text-[10px]">Kembali</button>
+            <button onclick="showPage('mainPage')" class="w-full text-slate-400 font-bold uppercase text-[10px] tracking-widest">Kembali</button>
         </div>
 
         <div id="totalJamPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100 text-center">
@@ -138,7 +142,7 @@
             <button onclick="hitungGajiLocal()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-xs mb-6 uppercase shadow-lg active:scale-95 transition">Cek Gaji</button>
             <div id="slipGajiContainer" class="hidden">
                 <div class="bg-slate-100 p-5 rounded-3xl mb-6 flex justify-between items-center shadow-inner"><span class="text-xs font-black text-slate-600 uppercase">Diterima</span><span class="font-black text-orange-600 text-2xl" id="uiGajiBersih">Rp 0</span></div>
-                <button onclick="downloadPDF()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest shadow-lg"><i class="fa fa-print mr-2"></i> Unduh PDF</button>
+                <button onclick="downloadPDF()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest active:scale-95 shadow-lg"><i class="fa fa-print mr-2"></i> Unduh PDF</button>
             </div>
             <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] text-center mt-6">Kembali</button>
         </div>
