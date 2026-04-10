@@ -36,7 +36,7 @@
                 </select>
             </div>
 
-                        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="grid grid-cols-2 gap-3 mb-4">
                 <button onclick="submitQueueAbsen('Masuk')" class="bg-green-500 text-white p-4 rounded-xl font-black text-xs uppercase shadow-md active:scale-95 transition">Masuk</button>
                 <button onclick="submitQueueAbsen('Off')" class="bg-slate-400 text-white p-4 rounded-xl font-black text-xs uppercase shadow-md active:scale-95 transition">Off</button>
                 <button onclick="submitQueueAbsen('Izin')" class="bg-yellow-500 text-white p-4 rounded-xl font-black text-xs uppercase shadow-md active:scale-95 transition">Izin</button>
@@ -63,7 +63,7 @@
                 </select>
             </div>
 
-                        <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-3">
                 <button onclick="submitManualAbsen('Masuk')" class="bg-green-500 text-white p-4 rounded-xl font-black text-xs uppercase active:scale-95 transition">Masuk</button>
                 <button onclick="submitManualAbsen('Off')" class="bg-slate-400 text-white p-4 rounded-xl font-black text-xs uppercase active:scale-95 transition">Off</button>
                 <button onclick="submitManualAbsen('Izin')" class="bg-yellow-500 text-white p-4 rounded-xl font-black text-xs uppercase active:scale-95 transition">Izin</button>
@@ -92,19 +92,17 @@
             </div>
         </div>
 
-                <div id="registerPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
+        <div id="registerPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
             <h2 class="text-2xl font-bold text-slate-800 mb-6 uppercase tracking-tight text-center">Registrasi Baru</h2>
             <div class="space-y-3">
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Username</label>
                     <input type="text" id="regUser" class="w-full bg-transparent outline-none lowercase font-semibold text-sm text-slate-700">
                 </div>
-                
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Nama Lengkap</label>
                     <input type="text" id="regName" class="w-full bg-transparent outline-none uppercase font-bold text-blue-600 text-sm">
                 </div>
-                
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                         <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Jenis Kelamin</label>
@@ -119,12 +117,10 @@
                         <input type="date" id="regDate" class="w-full bg-transparent font-bold outline-none text-blue-600 text-sm">
                     </div>
                 </div>
-                
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Alamat Lengkap</label>
                     <textarea id="regAddress" class="w-full bg-transparent outline-none resize-none h-16 text-sm font-semibold text-slate-700"></textarea>
                 </div>
-
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Password</label>
                     <div class="flex items-center justify-between">
@@ -132,7 +128,6 @@
                         <i onclick="togglePass('regPass', this)" class="fa fa-eye text-slate-300 cursor-pointer p-1"></i>
                     </div>
                 </div>
-                
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Konfirmasi Password</label>
                     <div class="flex items-center justify-between">
