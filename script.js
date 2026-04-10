@@ -99,7 +99,15 @@ async function syncAllData(showManualMsg = false) {
     } catch(e) {}
 }
 
-function getHydratedData() { return JSON.parse(localStorage.getItem('all_app_data')) || []; }
+function getHydratedData() { 
+    try {
+        const val = localStorage.getItem('all_app_data');
+        if (!val || val === "undefined") return [];
+        return JSON.parse(val) || [];
+    } catch (e) {
+        return [];
+    }
+}
 
 // ==========================================
 // AUTENTIKASI (LOGIN / REGIS / LOGOUT)
@@ -253,33 +261,45 @@ function renderCalendar() {
     grid.innerHTML = '';
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
-    const dataLokal = getHydratedData();
 
-    for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
+    try {
+        const dataLokal = getHydratedData();
 
-    for (let i = 1; i <= daysInMonth; i++) {
-        const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-        const absenHariIni = dataLokal.reverse().find(d => d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr)); 
-        dataLokal.reverse(); 
-        
-        let bgClass = "bg-white text-slate-700 border border-slate-100";
-        if (dStr === getLocalDate()) bgClass = "border-2 border-red-300";
-        let pointer = isEditAbsenMode ? "cursor-pointer hover:bg-slate-50" : "";
+        for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
 
-        let badge = "";
-        if (absenHariIni) {
-            let col = "bg-green-500";
-            if(absenHariIni.status_treatment === "Off") col = "bg-slate-400";
-            if(absenHariIni.status_treatment === "Izin") col = "bg-yellow-500";
-            if(absenHariIni.status_treatment === "Sakit") col = "bg-blue-400";
-            if(absenHariIni.status_treatment === "Cuti") col = "bg-orange-400";
-            if(absenHariIni.status_treatment === "Alfa") col = "bg-red-600";
-            badge = `<div class="mt-1 flex flex-col items-center gap-[2px] w-full px-[1px]"><span class="block w-full text-[6px] font-bold text-white ${col} rounded-[3px] truncate px-[2px]">${absenHariIni.status_treatment}</span></div>`;
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            
+            // Logika pencarian absen yang 100% aman
+            let absenHariIni = null;
+            for (let j = dataLokal.length - 1; j >= 0; j--) {
+                const d = dataLokal[j];
+                if (d && d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr)) {
+                    absenHariIni = d;
+                    break;
+                }
+            }
+            
+            let bgClass = "bg-white text-slate-700 border border-slate-100";
+            if (dStr === getLocalDate()) bgClass = "border-2 border-red-300";
+            let pointer = isEditAbsenMode ? "cursor-pointer hover:bg-slate-50" : "";
+
+            let badge = "";
+            if (absenHariIni) {
+                let col = "bg-green-500";
+                if(absenHariIni.status_treatment === "Off") col = "bg-slate-400";
+                if(absenHariIni.status_treatment === "Izin") col = "bg-yellow-500";
+                if(absenHariIni.status_treatment === "Sakit") col = "bg-blue-400";
+                if(absenHariIni.status_treatment === "Cuti") col = "bg-orange-400";
+                if(absenHariIni.status_treatment === "Alfa") col = "bg-red-600";
+                badge = `<div class="mt-1 flex flex-col items-center gap-[2px] w-full px-[1px]"><span class="block w-full text-[6px] font-bold text-white ${col} rounded-[3px] truncate px-[2px]">${absenHariIni.status_treatment}</span></div>`;
+            }
+
+            grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
         }
-
-        // Ditambahkan parameter `this` dan animasi transisi
-        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
+    } catch (error) {
+        console.error("Kalender Error:", error);
+        grid.innerHTML = `<div class="col-span-7 text-xs font-bold text-red-500 p-4 uppercase">Gagal Memuat Tanggal. Silakan Sinkronisasi Manual.</div>`;
     }
 }
 function changeCalMonth(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
