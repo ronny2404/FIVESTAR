@@ -6,9 +6,12 @@ body {
     overflow-x: hidden;
     background-color: #f8fafc;
     margin: 0;
+    height: 100vh;
 }
 
-/* SPLASH SCREEN STYLE */
+/* ==========================================
+   SPLASH SCREEN RAKSASA & TOMBOL MULAI
+   ========================================== */
 #splashScreen {
     position: fixed;
     inset: 0;
@@ -17,21 +20,50 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease-out;
+    justify-content: flex-start; /* Mulai dari atas */
+    padding-top: 60px; /* Jarak aman dari atas HP */
+    transition: opacity 0.5s ease-out, visibility 0.5s;
 }
 
 .splash-logo {
-    height: 150px;
+    height: 220px; /* UKURAN SUPER BESAR */
     width: auto;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-    animation: zoomIn 1s ease-out;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+    animation: bounceIn 1s ease-out;
+    margin-bottom: 20px;
 }
 
-@keyframes zoomIn {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); }
 }
+
+.splash-welcome {
+    text-align: center;
+    padding: 0 30px;
+    margin-bottom: auto; /* Mendorong tombol ke bawah */
+}
+
+/* TOMBOL MULAI APLIKASI (GANTI OTOMATIS TENTU) */
+.btn-mulai {
+    background-color: #ef4444; /* Merah Five Star */
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    padding: 20px 60px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(239,68,68,0.3);
+    transition: all 0.3s ease;
+    margin-bottom: 100px; /* Jarak dari kredit footer */
+    outline: none;
+}
+.btn-mulai:active { transform: scale(0.95); box-shadow: 0 5px 10px rgba(239,68,68,0.2); }
 
 .splash-footer {
     position: absolute;
@@ -43,44 +75,15 @@ body {
     letter-spacing: 2px;
 }
 
-/* LAYOUT AUTH SCROLL */
-.auth-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 40px 20px;
-}
-
-.auth-scrollable {
-    flex-grow: 1;
-    overflow-y: auto;
-    scrollbar-width: none;
-}
+/* LAYOUT AUTH & APP TETAP SAMA */
+.auth-container { height: 100vh; display: flex; flex-direction: column; padding: 40px 20px; }
+.auth-scrollable { flex-grow: 1; overflow-y: auto; scrollbar-width: none; }
 .auth-scrollable::-webkit-scrollbar { display: none; }
-
 .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
 .modal-blur { backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.6); }
-
-/* ANIMASI KETUKAN BIRU */
 .tap-flash { animation: flashBlue 0.3s ease-in-out; }
-@keyframes flashBlue {
-    0% { background-color: #ffffff; }
-    50% { background-color: #3b82f6 !important; transform: scale(1.05); }
-    100% { background-color: #ffffff; }
-}
-
-/* SISTEM INFO */
-.notif-container {
-    position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 400px; z-index: 9999;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
+@keyframes flashBlue { 0% { background-color: #ffffff; } 50% { background-color: #3b82f6 !important; transform: scale(1.05); } 100% { background-color: #ffffff; } }
+.notif-container { position: fixed; top: -120px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 9999; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
 .notif-active { top: 20px; }
-.notif-content {
-    background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 24px;
-    padding: 18px; display: flex; align-items: center; gap: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
+.notif-content { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 24px; padding: 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
 .page-section { transition: opacity 0.3s ease-in-out; }
