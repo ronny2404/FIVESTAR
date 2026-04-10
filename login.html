@@ -12,31 +12,47 @@
         
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; transition: 0.3s; }
         
-        /* Tombol Toggle di Pojok */
-        .theme-header { position: absolute; top: 20px; right: 20px; }
-        .theme-toggle { cursor: pointer; padding: 10px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; background: var(--input); color: var(--text); }
+        /* Fix Autofill Google agar tetap transparan/sesuai tema */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text);
+            -webkit-box-shadow: 0 0 0px 1000px var(--input) inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        .theme-header { position: absolute; top: 15px; right: 15px; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
+        .theme-toggle i { width: 18px; height: 18px; } /* Perkecil ikon toggle */
 
         .form-card { width: 85%; max-width: 350px; }
-        h2 { font-size: 38px; margin-bottom: 40px; font-weight: 700; }
-        .field { margin-bottom: 25px; }
-        label { display: block; opacity: 0.6; font-size: 14px; margin-bottom: 8px; }
-        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text); box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; }
+        .field { margin-bottom: 20px; position: relative; }
+        label { display: block; opacity: 0.6; font-size: 13px; margin-bottom: 6px; }
+        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 16px; }
+        
+        /* Ikon Mata */
+        .eye-icon { position: absolute; right: 12px; top: 34px; cursor: pointer; color: #888; }
+        
+        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 10px; }
         [data-theme="dark"] button { color: black; }
-        p { text-align: center; opacity: 0.6; margin-top: 30px; }
+        p { text-align: center; opacity: 0.6; margin-top: 25px; font-size: 14px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
-<body data-theme="dark">
-    <div class="theme-header">
-        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
+<body data-theme="light"> <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
     </div>
 
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="loginForm">
             <div class="field"><label>Email</label><input type="email" id="email" required></div>
-            <div class="field"><label>Password</label><input type="password" id="password" required></div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="password" required>
+                <i data-lucide="eye" class="eye-icon" id="togglePass"></i>
+            </div>
             <button type="submit">Masuk</button>
         </form>
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
@@ -49,7 +65,17 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Theme Toggle Logic
+        // Toggle Password
+        const passInput = document.getElementById('password');
+        const eyeBtn = document.getElementById('togglePass');
+        eyeBtn.onclick = () => {
+            const type = passInput.type === 'password' ? 'text' : 'password';
+            passInput.type = type;
+            eyeBtn.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
+            lucide.createIcons();
+        };
+
+        // Theme Toggle
         const btn = document.getElementById('themeBtn');
         btn.onclick = () => {
             const isDark = document.body.getAttribute('data-theme') === 'dark';
