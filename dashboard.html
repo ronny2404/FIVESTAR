@@ -11,44 +11,50 @@
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
         
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; transition: 0.3s; }
-        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); position: sticky; top: 0; z-index: 10; }
-        header span { font-size: 20px; font-weight: 700; }
         
-        .theme-toggle { cursor: pointer; padding: 10px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; }
+        /* CSS Fix Autofill Google agar tidak Putih di Dark Mode */
+        input:-webkit-autofill {
+            -webkit-text-fill-color: var(--text) !important;
+            -webkit-box-shadow: 0 0 0px 1000px var(--bg) inset !important;
+        }
+
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); position: sticky; top: 0; z-index: 10; }
+        header span { font-size: 18px; font-weight: 700; }
         
+        /* Toggle Lebih Kecil */
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; background: var(--bg); color: var(--text); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
         .page { padding: 20px; display: none; }
         .page.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .card { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .user-name { color: var(--accent); font-weight: 700; font-size: 22px; margin-bottom: 5px; display: block; }
-        .user-sub { color: #888; font-size: 14px; margin-bottom: 20px; display: block; }
-        .btn-out { background: #FF3B30; color: white; border: none; padding: 18px; width: 100%; border-radius: 35px; font-weight: 700; margin-top: 25px; cursor: pointer; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); }
+        .user-name { color: var(--accent); font-weight: 700; font-size: 20px; display: block; }
+        .btn-out { background: #FF3B30; color: white; border: none; padding: 16px; width: 100%; border-radius: 30px; font-weight: 700; margin-top: 20px; cursor: pointer; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--border); }
-        .nav-item { text-align: center; color: #888; font-size: 11px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { margin-bottom: 4px; }
+        .nav-item i { width: 20px; height: 20px; margin-bottom: 4px; }
     </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
     <header>
         <span id="headerName">Dashboard</span>
-        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
     </header>
 
-    <div id="absensi" class="page"><h2>Absensi</h2><p>Data kehadiran harian Anda akan muncul di sini.</p></div>
-    <div id="catatan" class="page"><h2>Catatan</h2><p>Daftar tugas pekerjaan massage & reflexology.</p></div>
-    <div id="gaji" class="page"><h2>Gaji</h2><p>Rincian Gaji dan bonus Anda.</p></div>
+    <div id="absensi" class="page"><h2>Absensi</h2><p>Data kehadiran harian.</p></div>
+    <div id="catatan" class="page"><h2>Catatan</h2><p>Daftar tugas massage & reflexology.</p></div>
+    <div id="gaji" class="page"><h2>Gaji</h2><p>Rincian gaji Anda.</p></div>
     
     <div id="profil" class="page active">
         <div class="card">
             <span id="displayName" class="user-name">Memuat Nama...</span>
-            <span id="displayEmail" class="user-sub">Memuat Email...</span>
-            <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
-            <p id="displayBio">Selamat datang di panel karyawan Five Star 2. Semua data Anda aman di sistem kami.</p>
-            <button id="outBtn" class="btn-out">Keluar dari Akun</button>
+            <span id="displayEmail" style="font-size: 14px; opacity: 0.6;">Email user</span>
+            <button id="outBtn" class="btn-out">Keluar</button>
         </div>
     </div>
 
@@ -64,42 +70,25 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", 
-            authDomain: "five-star-2404.firebaseapp.com", 
-            projectId: "five-star-2404", 
-            storageBucket: "five-star-2404.firebasestorage.app", 
-            messagingSenderId: "778881784522", 
-            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" 
-        };
-
-        const app = initializeApp(firebaseConfig);
+        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fbConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // 1. Ambil Data dari Firestore saat Login Berhasil
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-
+                const docSnap = await getDoc(doc(db, "users", user.uid));
                 if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('headerName').innerText = "Halo, " + data.nama.split(' ')[0]; // Ambil nama depan saja untuk header
-                    document.getElementById('displayName').innerText = data.nama;
-                    document.getElementById('displayEmail').innerText = user.email + " (@" + data.username + ")";
-                } else {
-                    document.getElementById('displayName').innerText = "User Baru";
+                    const d = docSnap.data();
+                    document.getElementById('headerName').innerText = "Halo, " + d.nama.split(' ')[0];
+                    document.getElementById('displayName').innerText = d.nama;
                     document.getElementById('displayEmail').innerText = user.email;
                 }
-            } else {
-                window.location.href = "login.html";
-            }
+            } else { window.location.href = "login.html"; }
         });
 
         document.getElementById('outBtn').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
 
-        // Mode Toggle
         const btn = document.getElementById('themeBtn');
         btn.onclick = () => {
             const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -114,7 +103,6 @@
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
         };
-
         lucide.createIcons();
     </script>
 </body>
