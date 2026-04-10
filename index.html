@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Beranda</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Roboto',sans-serif;background:#6200EE;color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
-h1{font-size:2em;margin-bottom:20px;}
-button{padding:14px 24px;border:none;border-radius:8px;background:white;color:#6200EE;font-size:1em;cursor:pointer;}
-button:hover{background:#BB86FC;color:white;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIVE STAR 2 - Home</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; margin: 0; }
+        .container { text-align: center; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn { display: inline-block; padding: 10px 20px; margin: 10px; text-decoration: none; border-radius: 5px; color: white; transition: 0.3s; }
+        .btn-login { background-color: #007bff; }
+        .btn-regis { background-color: #28a745; }
+        .btn:hover { opacity: 0.8; }
+    </style>
 </head>
 <body>
-<h1>Selamat Datang di Aplikasi</h1>
-<button onclick="window.location.href='login.html'">Mulai</button>
+    <div class="container">
+        <h1>Selamat Datang di FIVE STAR 2</h1>
+        <p>Silakan login atau daftar untuk melanjutkan.</p>
+        <a href="login.html" class="btn btn-login">Login</a>
+        <a href="register.html" class="btn btn-regis">Daftar</a>
+    </div>
 </body>
 </html>
