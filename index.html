@@ -1,1 +1,111 @@
-selamat datang 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Five Star App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="min-h-screen flex items-start justify-center p-4 text-slate-800">
+
+    <div id="syncIndicator" class="fixed top-4 right-4 z-[600] w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] transition-colors"></div>
+
+    <div id="successNotif" class="hidden fixed left-1/2 z-[500] notif-hidden w-[95%] max-w-sm transition-all duration-500">
+        <div id="notifBorder" class="glass border-l-4 shadow-2xl rounded-2xl p-4 flex items-center space-x-4">
+            <div id="notifIconBg" class="p-2 rounded-full"><i id="notifIcon" class="fa text-lg"></i></div>
+            <div class="flex-1"><p class="text-[10px] text-slate-400 font-bold uppercase">Sistem Info</p><p id="successMsg" class="text-sm font-bold text-slate-700"></p></div>
+        </div>
+    </div>
+
+    <div id="queueAbsenModal" class="hidden fixed inset-0 z-[400] flex items-center justify-center p-6 modal-blur">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl p-8 text-center">
+            <div class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-lg"><i class="fa fa-calendar-times-o text-4xl"></i></div>
+            <h3 class="text-xl font-extrabold text-slate-800 mb-1">Absensi Belum Diisi!</h3>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-3 mb-5"><p id="queueAbsenTargetDate" class="text-lg font-black text-red-600 uppercase"></p></div>
+            <select id="queueAbsenLokasi" class="w-full p-4 mb-4 bg-slate-50 border rounded-2xl font-black outline-none"><option value="" disabled selected>Pilih Lokasi...</option><option value="Five Star 1">Five Star 1</option><option value="Five Star 2">Five Star 2</option></select>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="submitQueueAbsen('Masuk')" class="bg-green-500 text-white p-4 rounded-xl font-black text-xs uppercase">Masuk</button>
+                <button onclick="submitQueueAbsen('Off')" class="bg-slate-400 text-white p-4 rounded-xl font-black text-xs uppercase">Off</button>
+            </div>
+            <button onclick="skipMissingAbsen()" class="w-full mt-4 bg-slate-100 text-slate-500 p-4 rounded-xl font-bold uppercase text-[10px]">Atur Nanti (Kunci Menu)</button>
+        </div>
+    </div>
+
+    <div class="w-full max-w-md space-y-6">
+        
+        <div id="mainPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full text-center page-section border border-slate-100">
+            <div id="lockBanner" class="hidden bg-red-50 border border-red-200 text-red-600 p-4 rounded-2xl mb-6 text-[10px] uppercase font-bold"><i class="fa fa-lock text-xl block mb-1"></i>Akses Terkunci! Lengkapi Absen.</div>
+            <div class="mb-10"><div id="userAvatar" class="w-20 h-20 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-black">R</div><h2 id="welcomeName" class="text-2xl font-black text-slate-800 uppercase">USER</h2></div>
+            <div class="grid grid-cols-1 gap-4">
+                <button onclick="showPage('kerjaPage')" class="ui-lockable flex justify-between bg-blue-500 text-white p-6 rounded-2xl font-bold shadow-lg"><span class="uppercase"><i class="fa fa-book mr-3"></i> Kerja</span></button>
+                <button onclick="showPage('kasbonPage')" class="ui-lockable flex justify-between bg-purple-500 text-white p-6 rounded-2xl font-bold shadow-lg"><span class="uppercase"><i class="fa fa-money mr-3"></i> Kasbon</span></button>
+                <button onclick="showPage('absenPage')" class="flex justify-between bg-red-500 text-white p-6 rounded-2xl font-bold shadow-lg"><span class="uppercase"><i class="fa fa-calendar mr-3"></i> Absensi</span></button>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <button onclick="showPage('totalJamPage')" class="ui-lockable bg-teal-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase shadow-lg"><i class="fa fa-clock-o block text-2xl mb-2"></i> Rekap Jam</button>
+                    <button onclick="showPage('gajiPage')" class="ui-lockable bg-orange-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase shadow-lg"><i class="fa fa-credit-card block text-2xl mb-2"></i> Hitung Gaji</button>
+                </div>
+            </div>
+            <button onclick="syncAllData()" class="w-full mt-6 text-slate-400 font-bold text-[10px] uppercase"><i class="fa fa-refresh mr-1"></i> Sinkronisasi Manual</button>
+        </div>
+
+        <div id="kerjaPage" class="hidden page-section bg-white p-8 rounded-[2.5rem] shadow-xl w-full">
+            <h2 class="text-2xl font-black text-blue-600 mb-6 uppercase text-center border-b pb-2">Catatan Kerja</h2>
+            <input type="date" id="kerjaDate" class="w-full p-4 mb-4 bg-slate-50 border rounded-2xl font-bold">
+            <select id="kerjaLokasi" class="w-full p-4 mb-4 bg-slate-50 border rounded-2xl font-bold"><option value="Five Star 1">Five Star 1</option><option value="Five Star 2">Five Star 2</option></select>
+            <select id="kerjaTreatment" class="w-full p-4 mb-4 bg-slate-50 border rounded-2xl font-bold"><option value="Massage">Massage</option><option value="Reflexy">Reflexy</option></select>
+            <input type="number" id="kerjaDurasi" placeholder="Durasi (Jam)" class="w-full p-4 mb-4 bg-slate-50 border rounded-2xl font-bold">
+            <button onclick="simpanCatatan()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-lg">Simpan</button>
+            <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase mt-4 text-[10px] text-center">Kembali</button>
+        </div>
+
+        <div id="gajiPage" class="hidden bg-white p-6 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
+            <h2 class="text-2xl font-black text-orange-600 mb-6 uppercase text-center">Slip Gaji</h2>
+            <input type="month" id="gajiBulan" class="w-full p-4 mb-6 bg-slate-50 border rounded-xl font-bold text-sm outline-none text-orange-600">
+            <button onclick="hitungGajiLocal()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-xs mb-6 uppercase shadow-lg">Cek Slip Gaji (0 Detik)</button>
+            
+            <div id="slipGajiContainer" class="hidden mt-2">
+                <p class="text-sm font-black text-slate-800 text-center mb-6">Take Home Pay: <br><span class="text-3xl text-orange-600" id="uiGajiBersih">Rp 0</span></p>
+                <button onclick="downloadPDF()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest"><i class="fa fa-print mr-2"></i> Unduh Slip (PDF)</button>
+            </div>
+            <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase mt-8 text-[10px] text-center">Kembali</button>
+        </div>
+
+    </div>
+
+    <div id="pdfAreaWrapper" style="display:none;">
+        <div id="pdfPrintArea" class="p-8 w-[600px] bg-white">
+            <h2 class="text-center font-bold text-2xl">FIVE STAR</h2>
+            <h3 class="text-center font-bold text-lg mb-6">Hotel & Family Massage</h3>
+            
+            <div class="pdf-row"><span class="pdf-bold">NAMA KARYAWAN</span><span id="pdfNama">-</span></div>
+            <div class="pdf-row"><span class="pdf-bold">PERIODE</span><span id="pdfPeriode">-</span></div>
+            <div class="pdf-dashed"></div>
+
+            <div class="pdf-row"><span>Gaji Pokok</span><span id="pdfGapok">0</span></div>
+            <div class="pdf-row"><span>Uang Makan (<span id="pdfHariMakan">0</span> Hr)</span><span id="pdfUangMakan">0</span></div>
+            <div class="pdf-dashed"></div>
+
+            <div class="pdf-row"><span>Massage (<span id="pdfJamM">0</span> Jam)</span><span id="pdfNomM">0</span></div>
+            <div class="pdf-row"><span>Reflexy (<span id="pdfJamR">0</span> Jam)</span><span id="pdfNomR">0</span></div>
+            <div class="pdf-row"><span>Bonus</span><span id="pdfBonus">0</span></div>
+            
+            <div class="mt-2 text-sm italic">Catatan: R & M FS1 : <span id="pdfInfoFS1">0</span> Jam</div>
+            <div class="pdf-dashed"></div>
+
+            <div class="pdf-row font-bold text-lg"><span>TOTAL KOTOR</span><span id="pdfBruto">0</span></div>
+            <div class="pdf-dashed"></div>
+
+            <div class="pdf-row"><span>Potongan Kasbon</span><span id="pdfKasbon">0</span></div>
+            <div class="pdf-row"><span>Potongan Absen/Izin</span><span id="pdfDenda">0</span></div>
+            <div class="pdf-dashed"></div>
+
+            <div class="pdf-row font-bold text-xl mt-4"><span>DITERIMA</span><span id="pdfBersih">0</span></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
