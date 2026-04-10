@@ -130,15 +130,49 @@ async function login() {
 async function register() {
     const user = document.getElementById('regUser').value.toLowerCase().trim();
     const pass = document.getElementById('regPass').value;
+    const confirmPass = document.getElementById('regConfirmPass').value;
     const name = document.getElementById('regName').value;
-    if(!user || !pass || !name) return showNotif("Lengkapi data!", "error");
+    const gender = document.getElementById('regGender').value;
+    const date = document.getElementById('regDate').value;
+    const address = document.getElementById('regAddress').value;
+
+    // Validasi Form
+    if(!user || !pass || !name || !confirmPass) return showNotif("Lengkapi data yang wajib!", "error");
+    if(pass !== confirmPass) return showNotif("Password tidak cocok!", "error");
 
     try { 
-        const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action: "register", username: user, password: pass, nama_lengkap: name}) }); 
+        // Bungkus semua data untuk dikirim ke Google Apps Script
+        const payload = {
+            action: "register", 
+            username: user, 
+            password: pass, 
+            nama_lengkap: name,
+            jk: gender,
+            tgl_lahir: date,
+            alamat: address
+        };
+
+        const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); 
         const result = await res.json(); 
-        if(result.status === 'success') { showNotif("Registrasi Berhasil!"); showPage('loginPage'); } 
-        else showNotif(result.message, "error"); 
-    } catch (e) { showNotif("Error Server!", "error"); }
+        
+        if(result.status === 'success') { 
+            showNotif("Registrasi Berhasil!"); 
+            // Kosongkan form setelah berhasil
+            document.getElementById('regUser').value = "";
+            document.getElementById('regPass').value = "";
+            document.getElementById('regConfirmPass').value = "";
+            document.getElementById('regName').value = "";
+            document.getElementById('regGender').value = "";
+            document.getElementById('regDate').value = "";
+            document.getElementById('regAddress').value = "";
+            
+            setTimeout(() => showPage('loginPage'), 1500);
+        } else {
+            showNotif(result.message, "error"); 
+        }
+    } catch (e) { 
+        showNotif("Error Server!", "error"); 
+    }
 }
 
 function doLogout() {
