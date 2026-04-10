@@ -324,20 +324,28 @@ function toggleEditAbsenMode() {
 function selectCalDate(dStr, element) { 
     if(!isEditAbsenMode) return; 
     
-    // 1. Tambahkan efek animasi sentuhan (warna merah & membesar)
-    element.classList.remove('bg-white', 'text-slate-700', 'border-2', 'border-red-300');
+    // 1. Hapus warna dasar, ubah latar jadi merah dan teks jadi putih saat disentuh
+    element.classList.remove('bg-white', 'text-slate-700', 'text-red-500', 'border-2', 'border-red-300');
     element.classList.add('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
     
-    // 2. Tunggu 150 milidetik, lalu kembalikan ke warna asli dan buka popup
+    // 2. Tunggu 150 milidetik, lalu kembalikan ke warna asli
     setTimeout(() => {
         element.classList.remove('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
-        element.classList.add('bg-white', 'text-slate-700');
+        element.classList.add('bg-white');
         
-        // Buka modal manual absen
+        // Deteksi hari Minggu (teks merah) vs Hari Biasa (teks gelap)
+        const selectedDate = new Date(dStr);
+        if(selectedDate.getDay() === 0) {
+            element.classList.add('text-red-500'); // Teks merah untuk hari Minggu
+        } else {
+            element.classList.add('text-slate-700'); // Teks gelap untuk hari biasa
+        }
+        
+        // Buka popup edit absen
         manualAbsenDateStr = dStr; 
         document.getElementById('manualAbsenTargetDate').innerText = dStr; 
         document.getElementById('manualAbsenModal').classList.remove('hidden'); 
-    }, 150);
+    }, 150); // Waktu ketukan 150 milidetik
 }
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 
