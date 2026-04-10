@@ -225,3 +225,29 @@ function showNotif(msg) {
 window.addEventListener('online', processQueue);
 window.addEventListener('offline', processQueue);
 setInterval(processQueue, 15000); 
+
+// ==========================================
+// INISIALISASI SAAT APLIKASI PERTAMA DIBUKA
+// ==========================================
+window.onload = () => { 
+    // Set warna indikator awal
+    const ind = document.getElementById('syncIndicator');
+    if (ind) {
+        ind.className = navigator.onLine 
+            ? "fixed top-4 right-4 z-[600] w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" 
+            : "fixed top-4 right-4 z-[600] w-3 h-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]";
+    }
+
+    // Penentuan Halaman (Cek sesi login)
+    if(localStorage.getItem('user_username')) {
+        showPage('mainPage'); // Jika sudah login, langsung ke menu utama
+        
+        // Panggil fungsi cek absen bolong jika fungsinya ada
+        if (typeof checkMissingAbsensi === "function") {
+            checkMissingAbsensi(); 
+        }
+        processQueue(); 
+    } else {
+        showPage('loginPage'); // Jika belum login, ke halaman login
+    }
+};
