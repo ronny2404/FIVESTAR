@@ -10,7 +10,7 @@ body {
 .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
 .modal-blur { backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.6); }
 
-/* ANIMASI KETUKAN BIRU (ANGKA TETAP KELIHATAN) */
+/* ANIMASI KETUKAN BIRU */
 .tap-flash { animation: flashBlue 0.3s ease-in-out; }
 @keyframes flashBlue {
     0% { background-color: #ffffff; }
@@ -18,7 +18,7 @@ body {
     100% { background-color: #ffffff; }
 }
 
-/* SISTEM INFO PREMIUM (TANPA BAR DURASI) */
+/* SISTEM INFO PREMIUM (TANPA BAR) */
 .notif-container {
     position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
     width: 90%; max-width: 400px; z-index: 9999;
@@ -34,11 +34,21 @@ body {
 .notif-success i { color: #22c55e; }
 .notif-error i { color: #ef4444; }
 
-.page-section { transition: opacity 0.3s ease-in-out; }
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* GAYA LOGO REGISTRASI */
+#regLogo_transparan {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+#regLogo_transparan img {
+    display: block;
+    margin: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
 
-/* CSS CETAK PDF */
-#pdfPrintArea { font-family: 'Courier New', Courier, monospace !important; color: black !important; background: white !important; line-height: 1.5; }
+.page-section { transition: opacity 0.3s ease-in-out; }
+
+/* CETAK PDF */
+#pdfPrintArea { font-family: 'Courier New', monospace; color: black; background: white; }
 .pdf-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
 .pdf-dashed { border-bottom: 1px dashed black; margin: 8px 0; }
-.pdf-bold { font-weight: bold; }
