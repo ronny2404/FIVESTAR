@@ -1,3 +1,4 @@
+// GANTI DENGAN URL DEPLOY GOOGLE APPS SCRIPT KAMU
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxKTXBmNy7XIy65IFf9dy0D7YOnjjqbg_x8LWAlTE6Ob9cxL1tptXLMlDoP0l98C3e/exec"; 
 const APP_VERSION = "3.0.0"; 
 
@@ -9,7 +10,7 @@ let isEditAbsenMode = false;
 let manualAbsenDateStr = "";
 
 // ==========================================
-// INISIALISASI (KUNCI KONTAK UTAMA)
+// INISIALISASI
 // ==========================================
 window.onload = () => { 
     updateSyncIndicator();
@@ -146,7 +147,7 @@ function doLogout() {
 }
 
 // ==========================================
-// FITUR ABSENSI (KALENDER & LOCK)
+// FITUR ABSENSI
 // ==========================================
 function getLocalDate() {
     const d = new Date();
@@ -216,7 +217,7 @@ function submitManualAbsen(status) {
     if(currentPage === 'absenPage') renderCalendar();
 }
 
-// KALENDER ABSEN (FIXED TANGGAL MERAH & HITAM)
+// KALENDER ABSEN (FIXED TANGGAL MERAH MINGGU)
 function renderCalendar() {
     const year = currentCalDate.getFullYear();
     const month = currentCalDate.getMonth();
@@ -233,16 +234,11 @@ function renderCalendar() {
 
         for (let i = 1; i <= daysInMonth; i++) {
             const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            const isSunday = new Date(year, month, i).getDay() === 0;
             
-            // Cek apakah hari ini hari Minggu
-            const dayOfWeek = new Date(year, month, i).getDay();
-            const isSunday = dayOfWeek === 0;
-            
-            // Warna teks: Merah jika Minggu, Slate-700 jika hari biasa
             let textColor = isSunday ? "text-red-500" : "text-slate-700";
             let bgClass = "bg-white border border-slate-100";
             if (dStr === getLocalDate()) bgClass = "bg-white border-2 border-red-300";
-            
             let pointer = isEditAbsenMode ? "cursor-pointer hover:bg-slate-50" : "";
 
             let absenHariIni = null;
@@ -265,7 +261,7 @@ function renderCalendar() {
             }
 
             grid.innerHTML += `
-                <div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${textColor} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150">
+                <div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${textColor} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-200">
                     <span class="text-xs font-bold leading-none mt-1">${i}</span>
                     ${badge}
                 </div>`;
@@ -289,29 +285,34 @@ function toggleEditAbsenMode() {
     renderCalendar(); 
 }
 
-// FUNGSI KETUKAN BIRU (FIXED WARNA TEKS TETAP)
+// ==========================================
+// FUNGSI KETUKAN BIRU (FIXED & FORCED)
+// ==========================================
 function selectCalDate(dStr, element) { 
     if(!isEditAbsenMode) return; 
     
-    // 1. Efek ketukan BIRU (Hanya background saja yang berubah)
-    element.classList.remove('bg-white');
-    element.classList.add('bg-blue-500', 'transform', 'scale-105', 'shadow-md');
+    // 1. Ganti latar belakang jadi biru secara paksa menggunakan STYLE
+    // Ini menjamin warna angka (hitam/merah) tidak berubah
+    element.style.backgroundColor = "#2563eb"; // Biru pekat (Tailwind blue-600)
+    element.style.transform = "scale(1.1)";
+    element.style.zIndex = "50";
     
-    // 2. Tunggu 150ms, lalu kembalikan ke background putih
+    // 2. Tunggu 200ms (supaya mata sempat melihat), lalu kembalikan ke asli
     setTimeout(() => {
-        element.classList.remove('bg-blue-500', 'transform', 'scale-105', 'shadow-md');
-        element.classList.add('bg-white');
+        element.style.backgroundColor = ""; 
+        element.style.transform = "";
+        element.style.zIndex = "";
         
         manualAbsenDateStr = dStr; 
         document.getElementById('manualAbsenTargetDate').innerText = dStr; 
         document.getElementById('manualAbsenModal').classList.remove('hidden'); 
-    }, 150);
+    }, 200);
 }
 
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 
 // ==========================================
-// FORMULIR & LAINNYA
+// FORMULIR & payroll
 // ==========================================
 function simpanCatatan() {
     const payload = { kategori: "Kerja", tanggal: document.getElementById('kerjaDate').value, lokasi: document.getElementById('kerjaLokasi').value, status_treatment: document.getElementById('kerjaTreatment').value, durasi_nominal: document.getElementById('kerjaDurasi').value };
