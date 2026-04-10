@@ -6,16 +6,19 @@
     <title>Masuk - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #121212; --accent: #39FF14; --input-bg: #1A1A1A; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
+        
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; transition: 0.3s; }
         .form-card { width: 85%; max-width: 350px; }
         h2 { font-size: 38px; margin-bottom: 40px; font-weight: 700; }
         .field { margin-bottom: 25px; }
-        label { display: block; color: #888; font-size: 14px; margin-bottom: 8px; }
-        input { width: 100%; background: var(--input-bg); border: 1px solid #333; border-radius: 12px; padding: 16px; color: white; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
-        input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 8px rgba(57, 255, 20, 0.2); }
-        button { width: 100%; padding: 18px; background: var(--accent); color: black; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; font-size: 16px; }
-        p { text-align: center; color: #888; margin-top: 30px; font-size: 14px; }
+        label { display: block; opacity: 0.6; font-size: 14px; margin-bottom: 8px; }
+        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text); box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--accent); outline: none; }
+        button { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        [data-theme="dark"] button { color: black; }
+        p { text-align: center; opacity: 0.6; margin-top: 30px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
@@ -23,23 +26,23 @@
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="loginForm">
-            <div class="field"><label>Email</label><input type="email" id="email" placeholder="Email" required></div>
-            <div class="field"><label>Password</label><input type="password" id="password" placeholder="Password" required></div>
+            <div class="field"><label>Email</label><input type="email" id="email" required></div>
+            <div class="field"><label>Password</label><input type="password" id="password" required></div>
             <button type="submit">Masuk</button>
         </form>
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         const firebaseConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
-                .then(() => window.location.href = "dashboard.html").catch(err => alert("Gagal Masuk: " + err.message));
+                .then(() => window.location.href = "dashboard.html").catch(err => alert(err.message));
         });
     </script>
 </body>
