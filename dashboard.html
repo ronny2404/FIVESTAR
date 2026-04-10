@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-<style>
-body {font-family: Arial,sans-serif; background:#f5f5f5; margin:0; padding:0;}
-.container {width:90%; max-width:400px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-h1 {text-align:center; margin-bottom:20px;}
-ul {list-style:none; padding:0;}
-ul li {margin:10px 0;}
-ul li a {text-decoration:none; color:#333;}
-ul li a:hover {color:#4CAF50;}
-.link {text-align:center; margin-top:10px;}
-.link a {color:#4CAF50; text-decoration:none;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FIVE STAR 2</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; }
+        nav { background: #333; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .content { padding: 2rem; text-align: center; }
+        button { background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>Dashboard</h1>
-<p>Selamat datang, <strong>User</strong>!</p>
-<ul>
-<li><a href="#">Catatan Kerja</a></li>
-<li><a href="#">Kasbon</a></li>
-<li><a href="#">Absensi</a></li>
-<li><a href="#">Rekap Jam & Gaji</a></li>
-</ul>
-<div class="link">
-<a href="index.html">Logout</a>
-</div>
-</div>
+    <nav>
+        <span>FIVE STAR 2 - Dashboard</span>
+        <button id="logoutBtn">Logout</button>
+    </nav>
+
+    <div class="content">
+        <h1>Selamat Datang, <span id="userEmail">...</span></h1>
+        <p>Ini adalah area rahasia khusus pengguna terdaftar.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ",
+            authDomain: "five-star-2404.firebaseapp.com",
+            projectId: "five-star-2404",
+            storageBucket: "five-star-2404.firebasestorage.app",
+            messagingSenderId: "778881784522",
+            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
+            measurementId: "G-Y71EN3MHVW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Cek status login
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('userEmail').innerText = user.email;
+            } else {
+                // Jika tidak ada user, tendang ke login
+                window.location.href = "login.html";
+            }
+        });
+
+        // Fungsi Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
 </body>
 </html>
