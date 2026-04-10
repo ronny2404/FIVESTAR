@@ -440,7 +440,17 @@ function showPage(id) {
         document.getElementById('welcomeName').innerText = name;
         document.getElementById('userAvatar').innerText = name ? name.charAt(0).toUpperCase() : 'U';
     }
-    if(id === 'absenPage') { isEditAbsenMode = false; currentCalDate = new Date(); renderCalendar(); }
+        if(id === 'absenPage') { 
+        isEditAbsenMode = false; 
+        const btnEdit = document.getElementById('btnToggleEditAbsen');
+        if(btnEdit) {
+            btnEdit.classList.remove('bg-red-500');
+            btnEdit.classList.add('bg-yellow-500');
+            btnEdit.innerHTML = `<i class="fa fa-pencil mr-2"></i> Edit Kehadiran`;
+        }
+        currentCalDate = new Date(); 
+        renderCalendar(); 
+    }
     if(id === 'kerjaPage') document.getElementById('kerjaDate').value = getLocalDate();
     if(id === 'kasbonPage') document.getElementById('kasbonDate').value = getLocalDate();
 }
