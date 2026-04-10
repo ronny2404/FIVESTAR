@@ -9,47 +9,47 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
-        
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; transition: 0.3s; overflow: hidden; }
-
-        /* Toggle Lebih Kecil */
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; transition: 0.3s; }
         .theme-header { position: absolute; top: 15px; right: 15px; }
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
-
         .container { text-align: center; width: 90%; max-width: 400px; padding: 20px; }
-        .logo-img { width: 220px; height: auto; margin-bottom: 30px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.1)); transition: 0.5s; }
-        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.4)); }
-
-        h1 { font-size: 42px; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
-        p { opacity: 0.7; margin-bottom: 50px; font-size: 16px; }
-
-        .btn { display: block; width: 100%; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-bottom: 15px; transition: 0.3s; box-sizing: border-box; text-align: center; }
+        .logo-img { width: 280px; height: auto; margin-bottom: 50px; transition: 0.5s; }
+        p { opacity: 0.7; margin-bottom: 60px; font-size: 16px; }
+        .btn { display: block; width: 100%; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-bottom: 15px; transition: 0.3s; text-align: center; font-size: 16px; }
         .btn-primary { background: var(--accent); color: #fff; border: none; }
         [data-theme="dark"] .btn-primary { color: #000; }
-        .btn-outline { border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline { border: 2px solid var(--accent); color: var(--accent); background: transparent; }
     </style>
 </head>
-<body data-theme="light">
+<body>
     <div class="theme-header">
         <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
     </div>
     <div class="container">
-        <img src="logo_fivestar.png" alt="Logo" class="logo-img">
-        <h1>Five Star 2</h1>
+        <img src="logo_fivestar.png" class="logo-img">
         <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
         <a href="login.html" class="btn btn-primary">Masuk</a>
         <a href="register.html" class="btn btn-outline">Daftar</a>
     </div>
     <script>
         const btn = document.getElementById('themeBtn');
-        btn.onclick = () => {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            btn.innerHTML = `<i data-lucide="${isDark ? 'moon' : 'sun'}"></i>`;
+        const applyTheme = (theme) => {
+            document.body.setAttribute('data-theme', theme);
+            btn.innerHTML = `<i data-lucide="${theme === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-        lucide.createIcons();
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        btn.onclick = () => {
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        };
     </script>
 </body>
 </html>
