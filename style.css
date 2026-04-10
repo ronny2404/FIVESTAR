@@ -1,1 +1,27 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overscroll-behavior-y: contain;
+    overflow-x: hidden;
+    background-color: #f8fafc;
+}
+
+.glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+.notif-hidden { transform: translate(-50%, -100px); opacity: 0; }
+.notif-show { transform: translate(-50%, 20px); opacity: 1; }
+.modal-blur { backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.6); }
+.page-section { transition: opacity 0.3s ease-in-out; }
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* CSS KHUSUS UNTUK CETAK PDF SLIP GAJI (Hitam Putih Klasik) */
+#pdfPrintArea {
+    font-family: 'Courier New', Courier, monospace !important;
+    color: black !important;
+    background: white !important;
+    line-height: 1.5;
+}
+.pdf-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.pdf-dashed { border-top: 1px dashed black; margin: 8px 0; }
+.pdf-bold { font-weight: bold; }
