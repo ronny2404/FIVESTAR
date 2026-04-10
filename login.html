@@ -5,21 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 <style>
-body {font-family: Arial,sans-serif; background:#f5f5f5; margin:0; padding:0;}
-.container {width:90%; max-width:400px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-h1 {text-align:center; margin-bottom:20px;}
-input[type="email"], input[type="password"] {width:100%; padding:10px; margin:10px 0 20px 0; border:1px solid #ccc; border-radius:5px;}
-button {width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;}
-button:hover {background:#45a049;}
-.link {text-align:center; margin-top:10px;}
-.link a {color:#4CAF50; text-decoration:none;}
-#message {color:red; text-align:center; margin-bottom:10px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Roboto',sans-serif;background:#f2f2f2;display:flex;justify-content:center;align-items:center;height:100vh;}
+.app-container{width:100%;max-width:400px;background:#fff;border-radius:16px;box-shadow:0 4px 10px rgba(0,0,0,0.2);overflow:hidden;}
+.header{background:#6200EE;color:white;padding:20px;text-align:center;font-size:1.5em;font-weight:500;}
+.form{padding:20px;}
+input[type="email"],input[type="password"]{width:100%;padding:12px 16px;margin:10px 0;border-radius:8px;border:1px solid #ccc;font-size:1em;}
+input[type="checkbox"]{margin-right:5px;}
+button{width:100%;padding:14px;background:#6200EE;color:white;border:none;border-radius:8px;font-size:1em;cursor:pointer;margin-top:10px;}
+button:hover{background:#3700B3;}
+.link{text-align:center;margin-top:15px;}
+.link a{color:#6200EE;text-decoration:none;}
+#error{color:red;text-align:center;margin-bottom:10px;font-size:0.9em;}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>Login</h1>
-<div id="message"></div>
+<div class="app-container">
+<div class="header">Login</div>
+<div class="form">
+<div id="error"></div>
 <form id="loginForm">
 <input type="email" id="email" placeholder="Email" required>
 <input type="password" id="password" placeholder="Password" required>
@@ -30,11 +34,12 @@ button:hover {background:#45a049;}
 Belum punya akun? <a href="register.html">Register</a>
 </div>
 </div>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script>
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ",
   authDomain: "five-star-2404.firebaseapp.com",
   projectId: "five-star-2404",
@@ -43,29 +48,24 @@ Belum punya akun? <a href="register.html">Register</a>
   appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
   measurementId: "G-Y71EN3MHVW"
 };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-  function togglePassword() {
-    const input = document.getElementById('password');
-    input.type = input.type === 'password' ? 'text' : 'password';
-  }
+function togglePassword(){const input=document.getElementById('password');input.type=input.type==='password'?'text':'password';}
 
-  const loginForm = document.getElementById('loginForm');
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    auth.signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        alert('Login berhasil!');
-        window.location.href = "dashboard.html";
-      })
-      .catch((error) => {
-        document.getElementById('message').innerText = error.message;
-      });
-  });
+document.getElementById('loginForm').addEventListener('submit',(e)=>{
+e.preventDefault();
+const email=document.getElementById('email').value;
+const password=document.getElementById('password').value;
+auth.signInWithEmailAndPassword(email,password)
+.then(userCredential=>{
+alert('Login berhasil!');
+window.location.href='dashboard.html';
+})
+.catch(err=>{
+document.getElementById('error').innerText=err.message;
+});
+});
 </script>
 </body>
 </html>
