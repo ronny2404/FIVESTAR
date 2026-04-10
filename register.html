@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<style>
+body {font-family: Arial,sans-serif; background:#f5f5f5; margin:0; padding:0;}
+.container {width:90%; max-width:400px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+h1 {text-align:center; margin-bottom:20px;}
+input[type="text"], input[type="email"], input[type="password"] {width:100%; padding:10px; margin:10px 0 20px 0; border:1px solid #ccc; border-radius:5px;}
+button {width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;}
+button:hover {background:#45a049;}
+.link {text-align:center; margin-top:10px;}
+.link a {color:#4CAF50; text-decoration:none;}
+#message {color:red; text-align:center; margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Register</h1>
+<div id="message"></div>
+<form id="registerForm">
+<input type="text" id="fullname" placeholder="Nama Lengkap" required>
+<input type="email" id="email" placeholder="Email" required>
+<input type="password" id="password" placeholder="Password" required>
+<div><input type="checkbox" onclick="togglePassword()"> Tampilkan Password</div>
+<button type="submit">Register</button>
+</form>
+<div class="link">
+Sudah punya akun? <a href="login.html">Login</a>
+</div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+  // Konfigurasi Firebase
+  const firebaseConfig = {
+    apiKey: "API_KEY",
+    authDomain: "PROJECT_ID.firebaseapp.com",
+    projectId: "PROJECT_ID",
+    storageBucket: "PROJECT_ID.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Toggle password
+  function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  // Register
+  const registerForm = document.getElementById('registerForm');
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const fullname = document.getElementById('fullname').value;
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        // Bisa simpan nama lengkap di user profile
+        user.updateProfile({ displayName: fullname });
+        alert('Register berhasil! Silakan login.');
+        window.location.href = "login.html";
+      })
+      .catch((error) => {
+        document.getElementById('message').innerText = error.message;
+      });
+  });
+</script>
+</body>
+</html>
