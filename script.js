@@ -1,4 +1,3 @@
-// GANTI DENGAN URL DEPLOY GOOGLE APPS SCRIPT KAMU
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxKTXBmNy7XIy65IFf9dy0D7YOnjjqbg_x8LWAlTE6Ob9cxL1tptXLMlDoP0l98C3e/exec"; 
 const APP_VERSION = "3.0.0"; 
 
@@ -136,43 +135,21 @@ async function register() {
     const date = document.getElementById('regDate').value;
     const address = document.getElementById('regAddress').value;
 
-    // Validasi Form
     if(!user || !pass || !name || !confirmPass) return showNotif("Lengkapi data yang wajib!", "error");
     if(pass !== confirmPass) return showNotif("Password tidak cocok!", "error");
 
     try { 
-        // Bungkus semua data untuk dikirim ke Google Apps Script
-        const payload = {
-            action: "register", 
-            username: user, 
-            password: pass, 
-            nama_lengkap: name,
-            jk: gender,
-            tgl_lahir: date,
-            alamat: address
-        };
-
+        const payload = { action: "register", username: user, password: pass, nama_lengkap: name, jk: gender, tgl_lahir: date, alamat: address };
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) }); 
         const result = await res.json(); 
         
         if(result.status === 'success') { 
             showNotif("Registrasi Berhasil!"); 
-            // Kosongkan form setelah berhasil
-            document.getElementById('regUser').value = "";
-            document.getElementById('regPass').value = "";
-            document.getElementById('regConfirmPass').value = "";
-            document.getElementById('regName').value = "";
-            document.getElementById('regGender').value = "";
-            document.getElementById('regDate').value = "";
-            document.getElementById('regAddress').value = "";
-            
+            document.getElementById('regUser').value = ""; document.getElementById('regPass').value = ""; document.getElementById('regConfirmPass').value = "";
+            document.getElementById('regName').value = ""; document.getElementById('regGender').value = ""; document.getElementById('regDate').value = ""; document.getElementById('regAddress').value = "";
             setTimeout(() => showPage('loginPage'), 1500);
-        } else {
-            showNotif(result.message, "error"); 
-        }
-    } catch (e) { 
-        showNotif("Error Server!", "error"); 
-    }
+        } else showNotif(result.message, "error"); 
+    } catch (e) { showNotif("Error Server!", "error"); }
 }
 
 function doLogout() {
@@ -204,7 +181,6 @@ function checkMissingAbsensi(silentMode = false) {
     let current = new Date(end);
     current.setDate(current.getDate() - 3); 
     
-    // Cek di dataLokal apakah ada kategori="Absensi" di tanggal tsb
     while (current <= end) {
         const dStr = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`;
         const hasAbsen = dataLokal.some(d => d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr));
@@ -280,12 +256,12 @@ function renderCalendar() {
     
     const dataLokal = getHydratedData();
 
-    for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
+    for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
 
     for (let i = 1; i <= daysInMonth; i++) {
         const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-        const absenHariIni = dataLokal.reverse().find(d => d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr)); // ambil yg terakhir
-        dataLokal.reverse(); // kembalikan urutan
+        const absenHariIni = dataLokal.reverse().find(d => d.kategori === "Absensi" && d.tanggal && d.tanggal.startsWith(dStr)); 
+        dataLokal.reverse(); 
         
         let bgClass = "bg-white text-slate-700 border border-slate-100";
         if (dStr === getLocalDate()) bgClass = "border-2 border-red-300";
@@ -296,14 +272,18 @@ function renderCalendar() {
             let col = "bg-green-500";
             if(absenHariIni.status_treatment === "Off") col = "bg-slate-400";
             if(absenHariIni.status_treatment === "Izin") col = "bg-yellow-500";
+            if(absenHariIni.status_treatment === "Sakit") col = "bg-blue-400";
+            if(absenHariIni.status_treatment === "Cuti") col = "bg-orange-400";
             if(absenHariIni.status_treatment === "Alfa") col = "bg-red-600";
             badge = `<div class="mt-1 flex flex-col items-center gap-[2px] w-full px-[1px]"><span class="block w-full text-[6px] font-bold text-white ${col} rounded-[3px] truncate px-[2px]">${absenHariIni.status_treatment}</span></div>`;
         }
 
-        grid.innerHTML += `<div onclick="selectCalDate('${dStr}')" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
+        // Ditambahkan parameter `this` dan animasi transisi
+        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${pointer} min-h-[55px] flex flex-col items-center overflow-hidden transition-all duration-150"><span class="text-xs font-bold leading-none mt-1">${i}</span>${badge}</div>`;
     }
 }
 function changeCalMonth(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
+
 function toggleEditAbsenMode() { 
     isEditAbsenMode = !isEditAbsenMode; 
     const btn = document.getElementById('btnToggleEditAbsen');
@@ -321,32 +301,27 @@ function toggleEditAbsenMode() {
     }
     renderCalendar(); 
 }
+
 function selectCalDate(dStr, element) { 
     if(!isEditAbsenMode) return; 
     
-    // 1. Hapus warna dasar, ubah latar jadi merah dan teks jadi putih saat disentuh
     element.classList.remove('bg-white', 'text-slate-700', 'text-red-500', 'border-2', 'border-red-300');
     element.classList.add('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
     
-    // 2. Tunggu 150 milidetik, lalu kembalikan ke warna asli
     setTimeout(() => {
         element.classList.remove('bg-red-500', 'text-white', 'transform', 'scale-105', 'shadow-md');
         element.classList.add('bg-white');
         
-        // Deteksi hari Minggu (teks merah) vs Hari Biasa (teks gelap)
         const selectedDate = new Date(dStr);
-        if(selectedDate.getDay() === 0) {
-            element.classList.add('text-red-500'); // Teks merah untuk hari Minggu
-        } else {
-            element.classList.add('text-slate-700'); // Teks gelap untuk hari biasa
-        }
+        if(selectedDate.getDay() === 0) element.classList.add('text-red-500');
+        else element.classList.add('text-slate-700');
         
-        // Buka popup edit absen
         manualAbsenDateStr = dStr; 
         document.getElementById('manualAbsenTargetDate').innerText = dStr; 
         document.getElementById('manualAbsenModal').classList.remove('hidden'); 
-    }, 150); // Waktu ketukan 150 milidetik
+    }, 150); 
 }
+
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 
 // ==========================================
@@ -414,7 +389,7 @@ function hitungGajiLocal() {
 
     const gapok = 900000; const uMakan = hKerja * 20000;
     const nomM = (jamM1 + jamM2) * 21000; const nomR = (jamR1 + jamR2) * 20000;
-    const bonus = 0; // Sesuaikan jika ada tarif bonus
+    const bonus = 0; 
     
     const kotor = gapok + uMakan + nomM + nomR + bonus;
     const bersih = kotor - kasbon - denda;
@@ -422,7 +397,6 @@ function hitungGajiLocal() {
     const f = num => num.toLocaleString('id-ID');
     document.getElementById('uiGajiBersih').innerText = "Rp " + f(bersih);
     
-    // Siapkan Cetakan PDF
     document.getElementById('pdfNama').innerText = localStorage.getItem('user_nama_lengkap');
     document.getElementById('pdfPeriode').innerText = bln;
     document.getElementById('pdfGapok').innerText = f(gapok);
@@ -465,14 +439,10 @@ function showPage(id) {
         document.getElementById('welcomeName').innerText = name;
         document.getElementById('userAvatar').innerText = name ? name.charAt(0).toUpperCase() : 'U';
     }
-        if(id === 'absenPage') { 
+    if(id === 'absenPage') { 
         isEditAbsenMode = false; 
         const btnEdit = document.getElementById('btnToggleEditAbsen');
-        if(btnEdit) {
-            btnEdit.classList.remove('bg-red-500');
-            btnEdit.classList.add('bg-yellow-500');
-            btnEdit.innerHTML = `<i class="fa fa-pencil mr-2"></i> Edit Kehadiran`;
-        }
+        if(btnEdit) { btnEdit.classList.remove('bg-red-500'); btnEdit.classList.add('bg-yellow-500'); btnEdit.innerHTML = `<i class="fa fa-pencil mr-2"></i> Edit Kehadiran`; }
         currentCalDate = new Date(); 
         renderCalendar(); 
     }
