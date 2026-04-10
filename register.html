@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 0; transition: 0.3s; }
+        
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 0; transition: 0.3s; }
+        
+        .theme-header { position: absolute; top: 20px; right: 20px; }
+        .theme-toggle { cursor: pointer; padding: 10px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; background: var(--input); color: var(--text); }
+
         .form-card { width: 90%; max-width: 400px; }
         h2 { font-size: 32px; margin-bottom: 25px; font-weight: 700; }
         .field { margin-bottom: 15px; }
@@ -18,16 +24,20 @@
         [data-theme="dark"] button { color: black; }
         .row { display: flex; gap: 10px; }
         .row .field { flex: 1; }
-        p { text-align: center; opacity: 0.6; margin-top: 20px; font-size: 14px; }
+        p { text-align: center; opacity: 0.6; margin-top: 20px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
+    <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
+    </div>
+
     <div class="form-card">
         <h2>Buat Akun</h2>
         <form id="regForm">
-            <div class="field"><label>Nama Lengkap</label><input type="text" id="fullName" placeholder="Nama Lengkap" required></div>
-            <div class="field"><label>Username</label><input type="text" id="username" placeholder="Username" required></div>
+            <div class="field"><label>Nama Lengkap</label><input type="text" id="fullName" required></div>
+            <div class="field"><label>Username</label><input type="text" id="username" required></div>
             <div class="row">
                 <div class="field"><label>Tgl Lahir</label><input type="date" id="birthDate" required></div>
                 <div class="field"><label>Gender</label>
@@ -50,51 +60,37 @@
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", 
-            authDomain: "five-star-2404.firebaseapp.com", 
-            projectId: "five-star-2404", 
-            storageBucket: "five-star-2404.firebasestorage.app", 
-            messagingSenderId: "778881784522", 
-            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" 
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
+        const btnT = document.getElementById('themeBtn');
+        btnT.onclick = () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            btnT.innerHTML = `<i data-lucide="${isDark ? 'moon' : 'sun'}"></i>`;
+            lucide.createIcons();
+        };
 
-        document.getElementById('regForm').addEventListener('submit', async (e) => {
+        document.getElementById('regForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnReg');
             const pass = document.getElementById('rpass').value;
             if(pass !== document.getElementById('confirmPass').value) return alert("Password tidak cocok!");
-
-            btn.innerText = "Memproses...";
-            btn.disabled = true;
-
+            
             try {
-                // 1. Auth Register
                 const res = await createUserWithEmailAndPassword(auth, document.getElementById('remail').value, pass);
-                
-                // 2. Simpan ke Firestore
                 await setDoc(doc(db, "users", res.user.uid), {
                     nama: document.getElementById('fullName').value,
                     username: document.getElementById('username').value,
                     tgl_lahir: document.getElementById('birthDate').value,
                     gender: document.getElementById('gender').value,
-                    email: res.user.email,
-                    createdAt: new Date()
+                    email: res.user.email
                 });
-
                 window.location.href = "dashboard.html";
-            } catch (err) {
-                alert(err.message);
-                btn.innerText = "Daftar Sekarang";
-                btn.disabled = false;
-            }
-        });
+            } catch (err) { alert(err.message); }
+        };
+        lucide.createIcons();
     </script>
 </body>
 </html>
