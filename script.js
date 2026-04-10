@@ -12,13 +12,6 @@ window.onload = () => {
     }
 };
 
-function getHydratedData() { 
-    try {
-        const val = localStorage.getItem('all_app_data');
-        return val ? JSON.parse(val) : [];
-    } catch (e) { return []; }
-}
-
 function showNotif(msg, type = "success") {
     const container = document.getElementById('successNotif');
     const box = document.getElementById('notifBox');
@@ -43,17 +36,15 @@ async function login() {
             localStorage.setItem('user_nama_lengkap', result.data.nama_lengkap);
             showPage('mainPage');
         } else showNotif(result.message, "error");
-    } catch (e) { showNotif("Offline / Server Error", "error"); }
+    } catch (e) { showNotif("Server Error", "error"); }
     document.getElementById('btnLogin').innerText = "MASUK";
 }
 
 async function register() {
     const user = document.getElementById('regUser').value.toLowerCase().trim();
     const pass = document.getElementById('regPass').value;
-    const confirm = document.getElementById('regConfirmPass').value;
     if(!user || !pass) return showNotif("Lengkapi data!", "error");
-    if(pass !== confirm) return showNotif("Password beda!", "error");
-    document.getElementById('btnRegister').innerText = "MENDAFTAR...";
+    document.getElementById('btnRegister').innerText = "PROSES...";
     try {
         const payload = {
             action: "register", username: user, password: pass,
@@ -64,7 +55,7 @@ async function register() {
         };
         const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
         const result = await res.json();
-        if(result.status === 'success') { showNotif("Berhasil Daftar!"); showPage('loginPage'); }
+        if(result.status === 'success') { showNotif("Berhasil!"); showPage('loginPage'); }
         else showNotif(result.message, "error");
     } catch (e) { showNotif("Error Server", "error"); }
     document.getElementById('btnRegister').innerText = "DAFTAR AKUN";
@@ -74,6 +65,10 @@ function showPage(id) {
     document.querySelectorAll('.page-section').forEach(p => p.classList.add('hidden'));
     const target = document.getElementById(id);
     if(target) target.classList.remove('hidden');
+    
+    // Auto-scroll ke atas setiap ganti halaman
+    document.querySelector('.content-scrollable').scrollTop = 0;
+
     if(id === 'mainPage') {
         const n = localStorage.getItem('user_nama_lengkap') || 'User';
         document.getElementById('welcomeName').innerText = n.toUpperCase();
@@ -91,20 +86,18 @@ function togglePass(id, icon) {
 function renderCalendar() {
     const year = currentCalDate.getFullYear();
     const month = currentCalDate.getMonth();
-    document.getElementById('calMonthYear').innerText = `${month+1} / ${year}`;
+    const bNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    document.getElementById('calMonthYear').innerText = `${bNames[month]} ${year}`;
     const grid = document.getElementById('calGrid'); grid.innerHTML = '';
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dataLokal = getHydratedData();
+
     for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
     for (let i = 1; i <= daysInMonth; i++) {
         const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
         const isSunday = new Date(year, month, i).getDay() === 0;
         let textColor = isSunday ? "text-red-500" : "text-slate-700";
-        let bgClass = "bg-white border border-slate-100";
-        const today = new Date();
-        if (dStr === `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`) bgClass = "border-2 border-red-300";
-        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl ${bgClass} ${textColor} min-h-[55px] flex flex-col items-center cursor-pointer transition-all"><span class="text-xs font-bold mt-1">${i}</span></div>`;
+        grid.innerHTML += `<div onclick="selectCalDate('${dStr}', this)" class="p-1 rounded-xl bg-white border min-h-[50px] flex flex-col items-center cursor-pointer ${textColor}"><span class="text-xs font-bold">${i}</span></div>`;
     }
 }
 
@@ -122,17 +115,11 @@ function selectCalDate(dStr, element) {
 function toggleEditAbsenMode() { 
     isEditAbsenMode = !isEditAbsenMode; 
     const btn = document.getElementById('btnToggleEditAbsen');
-    btn.innerHTML = isEditAbsenMode ? `Tutup Edit` : `<i class="fa fa-pencil mr-2"></i> Edit Kehadiran`;
+    btn.innerHTML = isEditAbsenMode ? `Tutup Edit` : `<i class="fa fa-pencil mr-2"></i> Edit Absen`;
     btn.classList.toggle('bg-yellow-500'); btn.classList.toggle('bg-red-500');
 }
 
 function changeCalMonth(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 function doLogout() { localStorage.clear(); window.location.reload(); }
-function simpanKerja() { showNotif("Tersimpan!"); showPage('mainPage'); }
-function simpanKasbon() { showNotif("Tersimpan!"); showPage('mainPage'); }
-function ambilTotalJamLocal() { document.getElementById('resTotalJam').innerText = "12"; }
-function hitungGajiLocal() { document.getElementById('uiGajiBersih').innerText = "Rp 1.000.000"; document.getElementById('slipGajiContainer').classList.remove('hidden'); }
-function downloadPDF() { alert("Fitur PDF aktif"); }
-async function syncAllData() { showNotif("Sinkron!"); }
-function submitManualAbsen(s) { showNotif("Absen dicatat"); closeManualAbsenModal(); }
+function submitManualAbsen(s) { showNotif("Tersimpan"); closeManualAbsenModal(); }
