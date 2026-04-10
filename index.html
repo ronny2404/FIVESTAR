@@ -2,30 +2,73 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Five Star 2 - Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
-        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; transition: 0.3s; }
+        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
+        
+        /* KUNCI SCROLL: Mencegah geser atas bawah */
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            touch-action: none; /* Mencegah pull-to-refresh di HP */
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            transition: 0.3s; 
+        }
+
         .theme-header { position: absolute; top: 15px; right: 15px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
-        .container { text-align: center; width: 90%; max-width: 400px; padding: 20px; }
-        .logo-img { width: 280px; height: auto; margin-bottom: 50px; transition: 0.5s; }
-        p { opacity: 0.7; margin-bottom: 60px; font-size: 16px; }
-        .btn { display: block; width: 100%; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-bottom: 15px; transition: 0.3s; text-align: center; font-size: 16px; }
+
+        .container { text-align: center; width: 85%; max-width: 350px; }
+
+        /* LOGO DIPERBESAR LAGI */
+        .logo-img { 
+            width: 260px; 
+            height: auto; 
+            margin-bottom: 30px; 
+            transition: 0.5s; 
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+        }
+        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.4)); }
+
+        p { opacity: 0.7; margin-bottom: 40px; font-size: 15px; line-height: 1.5; padding: 0 10px; }
+
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 40px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            margin-bottom: 12px; 
+            transition: 0.3s; 
+            box-sizing: border-box; 
+            text-align: center; 
+            font-size: 16px; 
+        }
         .btn-primary { background: var(--accent); color: #fff; border: none; }
         [data-theme="dark"] .btn-primary { color: #000; }
         .btn-outline { border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+        .btn:active { transform: scale(0.96); }
     </style>
 </head>
 <body>
-    <div class="theme-header">
-        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
-    </div>
+    <div class="theme-header"><div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div></div>
     <div class="container">
         <img src="logo_fivestar.png" class="logo-img">
         <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
@@ -34,21 +77,17 @@
     </div>
     <script>
         const btn = document.getElementById('themeBtn');
-        const applyTheme = (theme) => {
-            document.body.setAttribute('data-theme', theme);
-            btn.innerHTML = `<i data-lucide="${theme === 'dark' ? 'sun' : 'moon'}"></i>`;
+        const applyTheme = (t) => {
+            document.body.setAttribute('data-theme', t);
+            btn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        applyTheme(savedTheme);
-
+        const saved = localStorage.getItem('theme') || 'light';
+        applyTheme(saved);
         btn.onclick = () => {
-            const current = document.body.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
+            const now = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', now);
+            applyTheme(now);
         };
     </script>
 </body>
