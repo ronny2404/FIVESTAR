@@ -23,8 +23,20 @@
             max-width: 400px;
             width: 90%;
         }
-        h1 { color: #1e3c72; margin-bottom: 10px; }
-        p { color: #666; margin-bottom: 30px; }
+        /* Style untuk Logo */
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px; /* Batasi tinggi logo biar tidak terlalu besar */
+        }
+        p { 
+            color: #666; 
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
         .btn {
             display: block;
             width: 100%;
@@ -39,16 +51,30 @@
             text-decoration: none;
             box-sizing: border-box;
         }
-        .btn-login { background: #4285F4; color: white; }
-        .btn-login:hover { background: #3367D6; }
-        .btn-about { background: #f0f0f0; color: #333; }
-        .btn-about:hover { background: #e0e0e0; }
+        .btn-login { 
+            background: #4285F4; 
+            color: white; 
+        }
+        .btn-login:hover { 
+            background: #3367D6; 
+        }
+        .btn-about { 
+            background: #f0f0f0; 
+            color: #333; 
+        }
+        .btn-about:hover { 
+            background: #e0e0e0; 
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>👋 SELAMAT DATANG!</h1>
+        <!-- TAMPILAN LOGO GANTI TULISAN SELAMAT DATANG -->
+        <div class="logo-container">
+            <img src="logo_fivestar.png" alt="Logo Five Star 2">
+        </div>
+
         <p>Sistem Slip Gaji & Absensi Supreme</p>
         
         <a href="login.html" class="btn btn-login">
