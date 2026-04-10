@@ -7,106 +7,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg-color: #121212; --accent-color: #39FF14; --card-bg: #1E1E1E; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: white; margin: 0; padding-bottom: 80px; }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
         
-        header { padding: 20px; font-size: 24px; font-weight: 700; border-bottom: 1px solid #333; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 90px; transition: 0.3s; }
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); position: sticky; top: 0; z-index: 10; }
+        header span { font-size: 24px; font-weight: 700; }
         
-        .content-section { padding: 20px; display: none; }
-        .content-section.active { display: block; }
+        .theme-toggle { cursor: pointer; padding: 10px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; }
         
-        .card { background: var(--card-bg); padding: 25px; border-radius: 20px; margin-top: 20px; }
-        .user-email { color: var(--accent-color); font-weight: 700; margin-bottom: 15px; display: block; }
+        .page { padding: 20px; display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Tombol Keluar hanya di Profil */
-        .btn-logout { 
-            background: var(--accent-color); color: black; border: none; 
-            padding: 15px; width: 100%; border-radius: 30px; font-weight: 700; margin-top: 20px;
-        }
+        .card { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .user-email { color: var(--accent); font-weight: 700; margin-bottom: 10px; display: block; }
+        .btn-out { background: #FF3B30; color: white; border: none; padding: 18px; width: 100%; border-radius: 35px; font-weight: 700; margin-top: 25px; cursor: pointer; }
 
-        /* Bottom Navbar */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: #181818;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            border-top: 1px solid #333; z-index: 100;
-        }
-        .nav-item {
-            text-align: center; color: #888; text-decoration: none; font-size: 12px;
-            display: flex; flex-direction: column; align-items: center; cursor: pointer;
-        }
-        .nav-item.active { color: var(--accent-color); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--border); }
+        .nav-item { text-align: center; color: #888; font-size: 11px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
         .nav-item i { margin-bottom: 4px; }
     </style>
 </head>
-<body>
+<body data-theme="dark"> <header>
+        <span id="topTitle">Profil</span>
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
+    </header>
 
-    <header id="headerTitle">Dashboard</header>
-
-    <div id="absensi" class="content-section"><h2>Absensi</h2><p>Halaman Absensi Anda.</p></div>
-    <div id="catatan" class="content-section"><h2>Catatan</h2><p>Catatan pekerjaan harian.</p></div>
-    <div id="gaji" class="content-section"><h2>Gaji</h2><p>Rincian Gaji bulanan.</p></div>
+    <div id="absensi" class="page"><h2>Absensi</h2><p>Data kehadiran harian Anda.</p></div>
+    <div id="catatan" class="page"><h2>Catatan</h2><p>Daftar tugas Anda.</p></div>
+    <div id="gaji" class="page"><h2>Gaji</h2><p>Rincian Gaji bulan ini.</p></div>
     
-    <div id="profil" class="content-section active">
+    <div id="profil" class="page active">
         <div class="card">
             <h1>Profil Saya</h1>
-            <span id="userEmail" class="user-email">Memuat...</span>
-            <p>Ini adalah area profil personal Anda. Di sini Anda dapat melihat status Absensi, Catatan, dan Gaji Anda.</p>
-            <button id="logoutBtn" class="btn-logout">Keluar</button>
+            <span id="uEmail" class="user-email">Memuat...</span>
+            <p>Kelola data personal Anda di sini.</p>
+            <button id="outBtn" class="btn-out">Keluar</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="showPage('absensi', this)">
-            <i data-lucide="calendar-check"></i><span>Absensi</span>
-        </div>
-        <div class="nav-item" onclick="showPage('catatan', this)">
-            <i data-lucide="file-text"></i><span>Catatan</span>
-        </div>
-        <div class="nav-item" onclick="showPage('gaji', this)">
-            <i data-lucide="wallet"></i><span>Gaji</span>
-        </div>
-        <div class="nav-item active" onclick="showPage('profil', this)">
-            <i data-lucide="user"></i><span>Profil</span>
-        </div>
+        <div class="nav-item" onclick="sw('absensi', this)"><i data-lucide="calendar"></i><span>Absensi</span></div>
+        <div class="nav-item" onclick="sw('catatan', this)"><i data-lucide="edit-3"></i><span>Catatan</span></div>
+        <div class="nav-item" onclick="sw('gaji', this)"><i data-lucide="wallet"></i><span>Gaji</span></div>
+        <div class="nav-item active" onclick="sw('profil', this)"><i data-lucide="user"></i><span>Profil</span></div>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app);
+        
+        onAuthStateChanged(auth, u => { if(u) document.getElementById('uEmail').innerText = u.email; else window.location.href="login.html"; });
+        document.getElementById('outBtn').onclick = () => signOut(auth).then(()=> window.location.href="index.html");
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ",
-            authDomain: "five-star-2404.firebaseapp.com",
-            projectId: "five-star-2404",
-            storageBucket: "five-star-2404.firebasestorage.app",
-            messagingSenderId: "778881784522",
-            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
-            measurementId: "G-Y71EN3MHVW"
+        // Mode Toggle
+        const btn = document.getElementById('themeBtn');
+        btn.onclick = () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            btn.innerHTML = `<i data-lucide="${isDark ? 'moon' : 'sun'}"></i>`;
+            lucide.createIcons();
         };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) document.getElementById('userEmail').innerText = user.email;
-            else window.location.href = "login.html";
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "index.html");
-        });
-
-        // Initialize Icons
-        lucide.createIcons();
-
-        // Navigation Logic
-        window.showPage = function(pageId, element) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        window.sw = (id, el) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(pageId).classList.add('active');
-            element.classList.add('active');
-            document.getElementById('headerTitle').innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
-        }
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+            document.getElementById('topTitle').innerText = id.charAt(0).toUpperCase() + id.slice(1);
+        };
+        lucide.createIcons();
     </script>
 </body>
 </html>
