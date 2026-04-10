@@ -20,16 +20,14 @@
                 <p id="notifTitle" class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Sistem Info</p>
                 <p id="successMsg" class="text-sm font-bold text-slate-700 leading-tight"></p>
             </div>
-            <div class="notif-progress"><div id="notifProgressBar" class="notif-bar"></div></div>
         </div>
     </div>
 
     <div id="queueAbsenModal" class="hidden fixed inset-0 z-[400] flex items-center justify-center p-6 modal-blur">
-        <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl p-8 text-center relative overflow-hidden border">
-            <h3 class="text-xl font-extrabold text-slate-800 mb-1">Absensi Belum Diisi!</h3>
-            <div class="bg-red-50 border border-red-100 rounded-2xl p-3 mb-5 mt-4"><p id="queueAbsenTargetDate" class="text-lg font-black text-red-600 uppercase"></p></div>
-            <select id="queueAbsenLokasi" class="w-full p-4 bg-slate-50 border rounded-2xl font-black mb-4">
-                <option value="" disabled selected>Pilih Lokasi...</option>
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl p-8 text-center relative border">
+            <h3 class="text-xl font-extrabold text-slate-800 mb-1">Absensi Bolong!</h3>
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-3 mb-5 mt-4 text-red-600 font-black uppercase" id="queueAbsenTargetDate"></div>
+            <select id="queueAbsenLokasi" class="w-full p-4 bg-slate-50 border rounded-2xl font-black mb-4 outline-none">
                 <option value="Five Star 1">Five Star 1</option><option value="Five Star 2">Five Star 2</option>
             </select>
             <div class="grid grid-cols-2 gap-3 mb-4">
@@ -40,15 +38,15 @@
                 <button onclick="submitQueueAbsen('Cuti')" class="bg-orange-400 text-white p-4 rounded-xl font-black text-xs uppercase shadow-md active:scale-95 transition">Cuti</button>
                 <button onclick="submitQueueAbsen('Alfa')" class="bg-red-100 text-red-700 p-4 rounded-xl font-black text-xs uppercase shadow-md active:scale-95 transition">Alfa</button>
             </div>
-            <button onclick="skipMissingAbsen()" class="w-full bg-slate-100 text-slate-500 p-4 rounded-xl font-bold uppercase text-[10px]">Atur Nanti (Kunci Menu)</button>
+            <button onclick="skipMissingAbsen()" class="w-full bg-slate-100 text-slate-500 p-4 rounded-xl font-bold uppercase text-[10px]">Atur Nanti</button>
         </div>
     </div>
 
     <div id="manualAbsenModal" class="hidden fixed inset-0 z-[410] flex items-center justify-center p-6 modal-blur">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl p-8 text-center relative border">
-            <button onclick="closeManualAbsenModal()" class="absolute top-6 right-6 text-slate-400"><i class="fa fa-times"></i></button>
-            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-3 mb-5 mt-4"><p id="manualAbsenTargetDate" class="text-lg font-black text-blue-600 uppercase"></p></div>
-            <select id="manualAbsenLokasi" class="w-full p-4 bg-slate-50 border rounded-2xl font-black mb-4"><option value="Five Star 1">Five Star 1</option><option value="Five Star 2">Five Star 2</option></select>
+            <button onclick="closeManualAbsenModal()" class="absolute top-6 right-6 text-slate-400 p-2"><i class="fa fa-times"></i></button>
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-3 mb-5 mt-4 text-blue-600 font-black uppercase" id="manualAbsenTargetDate"></div>
+            <select id="manualAbsenLokasi" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold mb-4 outline-none"><option value="Five Star 1">Five Star 1</option><option value="Five Star 2">Five Star 2</option></select>
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="submitManualAbsen('Masuk')" class="bg-green-500 text-white p-4 rounded-xl font-black text-xs uppercase">Masuk</button>
                 <button onclick="submitManualAbsen('Off')" class="bg-slate-400 text-white p-4 rounded-xl font-black text-xs uppercase">Off</button>
@@ -64,12 +62,12 @@
         
         <div id="loginPage" class="hidden bg-white p-8 pt-12 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100 text-center">
             <h1 class="text-4xl font-black text-red-600 uppercase mb-1">FIVE STAR</h1>
-            <p class="text-xl font-bold text-yellow-500 uppercase tracking-widest mb-12">Hotel & Family Massage</p>
+            <p class="text-xl font-bold text-yellow-500 uppercase tracking-widest mb-12">Massage & Reflexy</p>
             <div class="space-y-4">
-                <input type="text" id="loginUser" placeholder="Username" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none lowercase font-semibold">
+                <input type="text" id="loginUser" placeholder="Username" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-semibold">
                 <div class="relative">
                     <input type="password" id="loginPass" placeholder="Password" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none">
-                    <i onclick="togglePass('loginPass', this)" class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 cursor-pointer p-2"></i>
+                    <i onclick="togglePass('loginPass', this)" class="fa fa-eye absolute right-4 top-1/2 -translate-y-1/2 text-slate-300 cursor-pointer p-2 z-20"></i>
                 </div>
                 <button onclick="login()" id="btnLogin" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold uppercase shadow-lg active:scale-95 transition-all">Masuk</button>
                 <p class="text-sm font-semibold text-slate-400 mt-4">Belum ada akun? <span onclick="showPage('registerPage')" class="text-blue-600 font-bold underline cursor-pointer">Daftar</span></p>
@@ -77,45 +75,45 @@
         </div>
 
         <div id="registerPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 uppercase text-center">Registrasi Baru</h2>
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 uppercase text-center">Registrasi</h2>
             <div class="space-y-3">
-                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Username</label><input type="text" id="regUser" class="w-full bg-transparent outline-none lowercase text-sm font-bold"></div>
-                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Nama Lengkap</label><input type="text" id="regName" class="w-full bg-transparent outline-none uppercase text-sm font-bold text-blue-600"></div>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Username</label><input type="text" id="regUser" class="w-full bg-transparent outline-none font-bold text-sm"></div>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Nama Lengkap</label><input type="text" id="regName" class="w-full bg-transparent outline-none uppercase font-bold text-sm text-blue-600"></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Kelamin</label><select id="regGender" class="w-full bg-transparent outline-none text-sm font-bold"><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Tgl Lahir</label><input type="date" id="regDate" class="w-full bg-transparent outline-none text-sm font-bold text-blue-600"></div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Kelamin</label><select id="regGender" class="w-full bg-transparent outline-none font-bold text-sm"><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Tgl Lahir</label><input type="date" id="regDate" class="w-full bg-transparent outline-none font-bold text-sm text-blue-600"></div>
                 </div>
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block">Alamat</label><textarea id="regAddress" class="w-full bg-transparent outline-none h-16 text-sm"></textarea></div>
                 
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block">Password</label>
                     <input type="password" id="regPass" class="w-full bg-transparent outline-none text-sm">
-                    <i onclick="togglePass('regPass', this)" class="fa fa-eye absolute right-4 top-8 text-slate-300 cursor-pointer p-1"></i>
+                    <i onclick="togglePass('regPass', this)" class="fa fa-eye absolute right-4 top-8 text-slate-300 cursor-pointer"></i>
                 </div>
                 <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 relative">
                     <label class="text-[9px] font-bold text-slate-400 uppercase block">Konfirmasi</label>
                     <input type="password" id="regConfirmPass" class="w-full bg-transparent outline-none text-sm">
-                    <i onclick="togglePass('regConfirmPass', this)" class="fa fa-eye absolute right-4 top-8 text-slate-300 cursor-pointer p-1"></i>
+                    <i onclick="togglePass('regConfirmPass', this)" class="fa fa-eye absolute right-4 top-8 text-slate-300 cursor-pointer"></i>
                 </div>
                 
                 <button onclick="register()" id="btnRegister" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold uppercase shadow-lg mt-4 active:scale-95 transition-all">Daftar Akun</button>
-                <button onclick="showPage('loginPage')" class="w-full text-slate-400 font-bold text-[10px] mt-2 uppercase text-center tracking-widest">Kembali</button>
+                <button onclick="showPage('loginPage')" class="w-full text-slate-400 font-bold text-[10px] mt-2 uppercase text-center tracking-widest">Batal</button>
             </div>
         </div>
 
         <div id="mainPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full text-center page-section border border-slate-100">
             <div id="lockBanner" class="hidden bg-red-50 border border-red-200 text-red-600 p-4 rounded-2xl mb-6 text-[10px] uppercase font-bold shadow-inner"><i class="fa fa-lock block mb-1"></i>Akses Terkunci! Lengkapi Absen.</div>
             <div class="mb-10"><div id="userAvatar" class="w-20 h-20 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-black shadow-lg uppercase">U</div><h2 id="welcomeName" class="text-2xl font-black text-slate-800 uppercase leading-none">USER</h2></div>
-            <div class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 gap-4 text-left">
                 <button onclick="showPage('kerjaPage')" class="ui-lockable flex items-center justify-between bg-blue-500 text-white p-6 rounded-2xl font-bold shadow-lg active:scale-95 transition"><span class="uppercase text-lg"><i class="fa fa-book mr-3"></i> Kerja</span><i class="fa fa-arrow-right opacity-30"></i></button>
                 <button onclick="showPage('kasbonPage')" class="ui-lockable flex items-center justify-between bg-purple-500 text-white p-6 rounded-2xl font-bold shadow-lg active:scale-95 transition"><span class="uppercase text-lg"><i class="fa fa-money mr-3"></i> Kasbon</span><i class="fa fa-arrow-right opacity-30"></i></button>
                 <button onclick="showPage('absenPage')" class="flex items-center justify-between bg-red-500 text-white p-6 rounded-2xl font-bold shadow-lg active:scale-95 transition"><span class="uppercase text-lg"><i class="fa fa-calendar-check-o mr-3"></i> Absensi</span><i class="fa fa-arrow-right opacity-30"></i></button>
                 <div class="grid grid-cols-2 gap-4 mt-2">
-                    <button onclick="showPage('totalJamPage')" class="ui-lockable bg-teal-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase shadow-lg"><i class="fa fa-clock-o block text-2xl mb-2"></i> Rekap Jam</button>
-                    <button onclick="showPage('gajiPage')" class="ui-lockable bg-orange-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase shadow-lg"><i class="fa fa-credit-card block text-2xl mb-2"></i> Hitung Gaji</button>
+                    <button onclick="showPage('totalJamPage')" class="ui-lockable bg-teal-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase active:scale-95 transition shadow-lg"><i class="fa fa-clock-o block text-2xl mb-2"></i> Rekap Jam</button>
+                    <button onclick="showPage('gajiPage')" class="ui-lockable bg-orange-500 text-white p-5 rounded-2xl font-bold text-[10px] uppercase active:scale-95 transition shadow-lg"><i class="fa fa-credit-card block text-2xl mb-2"></i> Hitung Gaji</button>
                 </div>
                 <button onclick="showAccount()" class="bg-slate-800 text-white p-5 rounded-2xl font-bold uppercase mt-2 text-xs tracking-widest active:scale-95 transition shadow-lg"><i class="fa fa-user mr-2"></i> Akun Saya</button>
-                <button onclick="syncAllData(true)" class="w-full mt-4 text-slate-400 font-bold text-[10px] uppercase tracking-widest active:scale-95 transition"><i class="fa fa-refresh mr-1"></i> Sinkronisasi Manual</button>
+                <button onclick="syncAllData(true)" class="w-full mt-4 text-slate-400 font-bold text-[10px] uppercase tracking-widest text-center"><i class="fa fa-refresh mr-1"></i> Sinkron Manual</button>
             </div>
         </div>
 
@@ -127,7 +125,7 @@
                 <select id="kerjaTreatment" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold"><option value="Massage">Massage</option><option value="Reflexy">Reflexy</option></select>
                 <select id="kerjaDurasi" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold"><option value="0.5">0.5 Jam</option><option value="1">1 Jam</option><option value="1.5">1.5 Jam</option><option value="2">2 Jam</option><option value="3">3 Jam</option><option value="4">4 Jam</option></select>
                 <button onclick="simpanKerja()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-lg active:scale-95 transition-all">Simpan</button>
-                <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] text-center mt-2">Batal</button>
+                <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] text-center mt-2 tracking-widest">Batal</button>
             </div>
         </div>
 
@@ -136,17 +134,34 @@
             <div class="space-y-4 text-sm mt-4">
                 <input type="date" id="kasbonDate" class="w-full p-4 bg-slate-50 border rounded-2xl font-black text-purple-600 outline-none">
                 <select id="kasbonJenis" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold"><option value="Kantor">Kantor</option><option value="Paket">Paket</option></select>
-                <input type="number" id="kasbonJumlah" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-black text-purple-600 text-xl" placeholder="Nominal Rp">
+                <input type="number" id="kasbonJumlah" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-black text-purple-600 text-xl text-center" placeholder="Nominal Rp">
                 <button onclick="simpanKasbon()" class="w-full bg-purple-600 text-white py-5 rounded-2xl font-black uppercase shadow-lg active:scale-95 transition-all">Simpan</button>
-                <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] text-center mt-2">Batal</button>
+                <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] text-center mt-2 tracking-widest">Batal</button>
             </div>
+        </div>
+
+        <div id="absenPage" class="hidden bg-white p-6 rounded-[2.5rem] shadow-xl w-full page-section text-center">
+            <h2 class="text-2xl font-black text-red-600 mb-4 uppercase">Kalender Absen</h2>
+            <div class="bg-slate-50 p-4 rounded-3xl border mb-4">
+                <div class="flex justify-between items-center mb-4">
+                    <button onclick="changeCalMonth(-1)" class="w-8 h-8 flex items-center justify-center bg-white border rounded-full active:scale-90"><i class="fa fa-chevron-left text-red-500"></i></button>
+                    <h3 id="calMonthYear" class="font-black text-slate-700 uppercase text-sm"></h3>
+                    <button onclick="changeCalMonth(1)" class="w-8 h-8 flex items-center justify-center bg-white border rounded-full active:scale-90"><i class="fa fa-chevron-right text-red-500"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center border-b pb-2 mb-2 font-black text-[9px] uppercase">
+                    <div class="text-red-500">Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
+                </div>
+                <div id="calGrid" class="grid grid-cols-7 gap-1 text-center"></div>
+            </div>
+            <button id="btnToggleEditAbsen" onclick="toggleEditAbsenMode()" class="w-full bg-yellow-500 text-white p-4 rounded-2xl shadow-lg uppercase font-black text-sm mb-4 active:scale-95 transition"><i class="fa fa-pencil mr-2"></i> Edit Kehadiran</button>
+            <button onclick="showPage('mainPage')" class="w-full text-slate-400 font-bold uppercase text-[10px] tracking-widest">Menu Utama</button>
         </div>
 
         <div id="totalJamPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100 text-center">
             <h2 class="text-2xl font-black text-teal-600 mb-6 uppercase border-b pb-2">Rekap Jam</h2>
             <div class="bg-teal-600 p-8 rounded-[2rem] text-white shadow-lg mb-6"><h1 class="text-6xl font-black tracking-tighter" id="resTotalJam">0</h1><p class="text-[10px] font-bold mt-2 uppercase tracking-widest">Total Jam Kerja</p></div>
             <button onclick="ambilTotalJamLocal()" class="w-full bg-teal-600 text-white py-4 rounded-2xl font-bold uppercase text-xs mb-4">Cek Rekap</button>
-            <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px]">Tutup</button>
+            <button onclick="showPage('mainPage')" class="w-full text-slate-300 font-bold uppercase text-[10px] tracking-widest">Tutup</button>
         </div>
 
         <div id="gajiPage" class="hidden bg-white p-6 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
@@ -163,19 +178,19 @@
         <div id="accountViewPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section text-center">
             <h2 class="text-xl font-black mb-8 uppercase text-slate-800 border-b pb-4">Profil Saya</h2>
             <div class="bg-slate-50 p-6 rounded-2xl space-y-4 text-xs mb-8 text-left shadow-inner">
-                <div class="flex justify-between border-b pb-2"><span class="font-bold text-slate-400">NAMA:</span><span id="viewName" class="font-black uppercase text-slate-700"></span></div>
-                <div class="flex justify-between border-b pb-2"><span class="font-bold text-slate-400">ID:</span><span id="viewUser" class="font-bold text-slate-700"></span></div>
+                <div class="flex justify-between border-b pb-2"><span class="font-bold text-slate-400 uppercase">NAMA:</span><span id="viewName" class="font-black uppercase text-slate-700"></span></div>
+                <div class="flex justify-between border-b pb-2"><span class="font-bold text-slate-400 uppercase">USER ID:</span><span id="viewUser" class="font-bold text-slate-700"></span></div>
             </div>
-            <button onclick="doLogout()" class="w-full bg-red-50 text-red-500 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest mb-4">Logout</button>
-            <button onclick="showPage('mainPage')" class="w-full bg-slate-100 py-4 rounded-2xl font-bold uppercase text-[10px]">Kembali</button>
+            <button onclick="doLogout()" class="w-full bg-red-50 text-red-500 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest active:scale-95 transition">Logout Akun</button>
+            <button onclick="showPage('mainPage')" class="w-full bg-slate-100 py-4 rounded-2xl font-bold uppercase text-[10px] mt-4">Kembali</button>
         </div>
     </div>
 
     <div id="pdfAreaWrapper" style="display:none;">
         <div id="pdfPrintArea" class="p-8 w-[500px] bg-white text-black">
             <h2 class="text-center font-bold text-2xl">FIVE STAR</h2>
-            <h3 class="text-center font-bold text-lg mb-6">Hotel & Family Massage</h3>
-            <div class="pdf-row"><span class="pdf-bold">NAMA</span><span id="pdfNama">-</span></div>
+            <h3 class="text-center font-bold text-lg mb-6">Massage & Reflexy</h3>
+            <div class="pdf-row"><span class="pdf-bold">NAMA KARYAWAN</span><span id="pdfNama">-</span></div>
             <div class="pdf-row"><span class="pdf-bold">PERIODE</span><span id="pdfPeriode">-</span></div>
             <div class="pdf-dashed"></div>
             <div class="pdf-row font-bold text-xl mt-4"><span>DITERIMA</span><span id="pdfBersih">0</span></div>
