@@ -1,5 +1,5 @@
 // GANTI DENGAN URL GAS ASLIMU
-const SCRIPT_URL = "URL_GAS_KAMU_DISINI"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxKTXBmNy7XIy65IFf9dy0D7YOnjjqbg_x8LWAlTE6Ob9cxL1tptXLMlDoP0l98C3e/exec"; 
 
 let offlineQueue = JSON.parse(localStorage.getItem('fs_queue')) || [];
 let missingAbsenQueue = [];
