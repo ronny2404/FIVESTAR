@@ -3,53 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - FIVE STAR 2</title>
+    <title>Daftar - Five Star 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; }
-        form { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; transition: 0.3s; }
+        .form-card { width: 85%; max-width: 350px; }
+        h2 { font-size: 38px; margin-bottom: 40px; font-weight: 700; }
+        .field { margin-bottom: 25px; }
+        label { display: block; opacity: 0.6; font-size: 14px; margin-bottom: 8px; }
+        input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 16px; color: var(--text); box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        [data-theme="dark"] button { color: black; }
+        p { text-align: center; opacity: 0.6; margin-top: 30px; }
+        a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
-    <form id="registerForm">
-        <h2>Daftar Baru</h2>
-        <input type="email" id="regEmail" placeholder="Email" required>
-        <input type="password" id="regPassword" placeholder="Password (min 6 karakter)" required>
-        <button type="submit">Daftar Sekarang</button>
-        <p>Sudah punya akun? <a href="login.html">Login</a></p>
-    </form>
-
+    <div class="form-card">
+        <h2>Daftar</h2>
+        <form id="regForm">
+            <div class="field"><label>Email</label><input type="email" id="remail" required></div>
+            <div class="field"><label>Password</label><input type="password" id="rpass" required></div>
+            <button type="submit">Buat Akun</button>
+        </form>
+        <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
+    </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ",
-            authDomain: "five-star-2404.firebaseapp.com",
-            projectId: "five-star-2404",
-            storageBucket: "five-star-2404.firebasestorage.app",
-            messagingSenderId: "778881784522",
-            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
-            measurementId: "G-Y71EN3MHVW"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
-        document.getElementById('registerForm').addEventListener('submit', (e) => {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('regForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert("Registrasi Berhasil!");
-                    window.location.href = "dashboard.html";
-                })
-                .catch((error) => {
-                    alert("Error: " + error.message);
-                });
+            createUserWithEmailAndPassword(auth, document.getElementById('remail').value, document.getElementById('rpass').value)
+                .then(() => window.location.href = "dashboard.html").catch(err => alert(err.message));
         });
     </script>
 </body>
