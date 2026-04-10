@@ -9,104 +9,66 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 0; transition: 0.3s; }
-        
-        input:-webkit-autofill { -webkit-text-fill-color: var(--text); -webkit-box-shadow: 0 0 0px 1000px var(--input) inset; }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 30px 0; transition: 0.3s; }
+        input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; }
         .theme-header { position: absolute; top: 15px; right: 15px; }
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
-
         .form-card { width: 90%; max-width: 400px; }
-        h2 { font-size: 32px; margin-bottom: 25px; font-weight: 700; }
         .field { margin-bottom: 15px; position: relative; }
         label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 5px; font-weight: 600; }
         input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; }
-        .eye-icon { position: absolute; right: 12px; top: 32px; cursor: pointer; color: #888; }
-        
-        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        .eye-icon { position: absolute; right: 12px; top: 32px; cursor: pointer; color: #888; width: 18px; }
+        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 15px; }
         [data-theme="dark"] button { color: black; }
-        .row { display: flex; gap: 10px; }
-        .row .field { flex: 1; }
-        p { text-align: center; opacity: 0.6; margin-top: 20px; font-size: 14px; }
+        .row { display: flex; gap: 10px; } .row .field { flex: 1; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
-<body data-theme="light">
-    <div class="theme-header">
-        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
-    </div>
-
+<body>
+    <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
     <div class="form-card">
-        <h2>Buat Akun</h2>
-        <form id="regForm">
-            <div class="field"><label>Nama Lengkap</label><input type="text" id="fullName" required></div>
-            <div class="field"><label>Username</label><input type="text" id="username" required></div>
+        <h2>Daftar</h2>
+        <form id="rForm">
+            <div class="field"><label>Nama Lengkap</label><input type="text" id="fn" required></div>
+            <div class="field"><label>Username</label><input type="text" id="un" required></div>
             <div class="row">
-                <div class="field"><label>Tgl Lahir</label><input type="date" id="birthDate" required></div>
-                <div class="field"><label>Gender</label>
-                    <select id="gender" required>
-                        <option value="L">Pria</option>
-                        <option value="P">Wanita</option>
-                    </select>
-                </div>
+                <div class="field"><label>Tgl Lahir</label><input type="date" id="bd" required></div>
+                <div class="field"><label>Gender</label><select id="gd"><option value="L">Pria</option><option value="P">Wanita</option></select></div>
             </div>
-            <div class="field"><label>Email</label><input type="email" id="remail" required></div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="rpass" required>
-                <i data-lucide="eye" class="eye-icon" onclick="toggleP('rpass', this)"></i>
-            </div>
-            <div class="field">
-                <label>Konfirmasi Password</label>
-                <input type="password" id="confirmPass" required>
-                <i data-lucide="eye" class="eye-icon" onclick="toggleP('confirmPass', this)"></i>
-            </div>
+            <div class="field"><label>Email</label><input type="email" id="em" required></div>
+            <div class="field"><label>Password</label><input type="password" id="ps" required><i data-lucide="eye" class="eye-icon" onclick="tP('ps', this)"></i></div>
+            <div class="field"><label>Konfirmasi Password</label><input type="password" id="cp" required><i data-lucide="eye" class="eye-icon" onclick="tP('cp', this)"></i></div>
             <button type="submit">Daftar Sekarang</button>
         </form>
+        <p style="text-align:center; font-size:14px; opacity:0.7">Sudah punya akun? <a href="login.html">Masuk</a></p>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
-
-        window.toggleP = (id, el) => {
-            const inp = document.getElementById(id);
-            const isP = inp.type === 'password';
-            inp.type = isP ? 'text' : 'password';
-            el.setAttribute('data-lucide', isP ? 'eye-off' : 'eye');
+        
+        window.tP = (id, el) => { const i = document.getElementById(id); const isP = i.type === 'password'; i.type = isP ? 'text' : 'password'; el.setAttribute('data-lucide', isP ? 'eye-off' : 'eye'); lucide.createIcons(); };
+        
+        const tBtn = document.getElementById('tBtn');
+        const applyTheme = (theme) => {
+            document.body.setAttribute('data-theme', theme);
+            tBtn.innerHTML = `<i data-lucide="${theme === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-
-        const btnT = document.getElementById('themeBtn');
-        btnT.onclick = () => {
-            const isD = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isD ? 'light' : 'dark');
-            btnT.innerHTML = `<i data-lucide="${isD ? 'moon' : 'sun'}"></i>`;
-            lucide.createIcons();
+        applyTheme(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => {
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', nt);
+            applyTheme(nt);
         };
 
-        document.getElementById('regForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const pass = document.getElementById('rpass').value;
-            if(pass !== document.getElementById('confirmPass').value) return alert("Password tidak cocok!");
-            try {
-                const res = await createUserWithEmailAndPassword(auth, document.getElementById('remail').value, pass);
-                await setDoc(doc(db, "users", res.user.uid), {
-                    nama: document.getElementById('fullName').value,
-                    username: document.getElementById('username').value,
-                    tgl_lahir: document.getElementById('birthDate').value,
-                    gender: document.getElementById('gender').value,
-                    email: res.user.email
-                });
-                window.location.href = "dashboard.html";
-            } catch (err) { alert(err.message); }
-        };
-        lucide.createIcons();
+        document.getElementById('rForm').onsubmit = async (e) => { e.preventDefault(); const p = document.getElementById('ps').value; if(p !== document.getElementById('cp').value) return alert("Password tidak cocok!");
+            try { const res = await createUserWithEmailAndPassword(auth, document.getElementById('em').value, p);
+                await setDoc(doc(db, "users", res.user.uid), { nama: document.getElementById('fn').value, username: document.getElementById('un').value, bd: document.getElementById('bd').value, gd: document.getElementById('gd').value, email: res.user.email });
+                window.location.href = "dashboard.html"; } catch (err) { alert(err.message); } };
     </script>
 </body>
 </html>
