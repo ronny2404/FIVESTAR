@@ -5,7 +5,38 @@ body {
     overscroll-behavior-y: contain;
     overflow-x: hidden;
     background-color: #f8fafc;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+
+/* CONTAINER UTAMA AGAR LOGO TETAP DI ATAS */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* LOGO TETAP (FIXED) */
+.header-fixed {
+    flex-shrink: 0;
+    padding: 20px;
+    text-align: center;
+    background-color: #f8fafc;
+    z-index: 50;
+}
+
+/* AREA FORM YANG BISA DI-SCROLL */
+.content-scrollable {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 20px 40px 20px;
+    scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
+}
+.content-scrollable::-webkit-scrollbar { display: none; } /* Sembunyikan scrollbar di Chrome/Safari */
 
 .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
 .modal-blur { backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.6); }
@@ -18,7 +49,7 @@ body {
     100% { background-color: #ffffff; }
 }
 
-/* SISTEM INFO PREMIUM (TANPA BAR) */
+/* SISTEM INFO PREMIUM */
 .notif-container {
     position: fixed; top: -120px; left: 50%; transform: translateX(-50%);
     width: 90%; max-width: 400px; z-index: 9999;
@@ -34,21 +65,11 @@ body {
 .notif-success i { color: #22c55e; }
 .notif-error i { color: #ef4444; }
 
-/* GAYA LOGO REGISTRASI */
-#regLogo_transparan {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-#regLogo_transparan img {
-    display: block;
-    margin: auto;
+/* LOGO STYLE */
+.logo-img {
+    height: 80px;
+    width: auto;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .page-section { transition: opacity 0.3s ease-in-out; }
-
-/* CETAK PDF */
-#pdfPrintArea { font-family: 'Courier New', monospace; color: black; background: white; }
-.pdf-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-.pdf-dashed { border-bottom: 1px dashed black; margin: 8px 0; }
