@@ -304,7 +304,23 @@ function renderCalendar() {
     }
 }
 function changeCalMonth(dir) { currentCalDate.setMonth(currentCalDate.getMonth() + dir); renderCalendar(); }
-function toggleEditAbsenMode() { isEditAbsenMode = !isEditAbsenMode; renderCalendar(); showNotif(isEditAbsenMode ? "Pilih tanggal untuk edit" : "Mode edit dimatikan"); }
+function toggleEditAbsenMode() { 
+    isEditAbsenMode = !isEditAbsenMode; 
+    const btn = document.getElementById('btnToggleEditAbsen');
+    
+    if (isEditAbsenMode) {
+        btn.classList.remove('bg-yellow-500');
+        btn.classList.add('bg-red-500');
+        btn.innerHTML = `<i class="fa fa-times mr-2"></i> Tutup Mode Edit`;
+        showNotif("Mode Edit Aktif! Klik tanggal di kalender.");
+    } else {
+        btn.classList.remove('bg-red-500');
+        btn.classList.add('bg-yellow-500');
+        btn.innerHTML = `<i class="fa fa-pencil mr-2"></i> Edit Kehadiran`;
+        showNotif("Mode edit dimatikan");
+    }
+    renderCalendar(); 
+}
 function selectCalDate(dStr) { if(!isEditAbsenMode) return; manualAbsenDateStr = dStr; document.getElementById('manualAbsenTargetDate').innerText = dStr; document.getElementById('manualAbsenModal').classList.remove('hidden'); }
 function closeManualAbsenModal() { document.getElementById('manualAbsenModal').classList.add('hidden'); }
 
