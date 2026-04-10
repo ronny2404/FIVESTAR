@@ -88,14 +88,55 @@
             </div>
         </div>
 
-        <div id="registerPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
+                <div id="registerPage" class="hidden bg-white p-8 rounded-[2.5rem] shadow-xl w-full page-section border border-slate-100">
             <h2 class="text-2xl font-bold text-slate-800 mb-6 uppercase tracking-tight text-center">Registrasi Baru</h2>
             <div class="space-y-3">
-                <div class="bg-slate-50 border rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Username</label><input type="text" id="regUser" class="w-full bg-transparent outline-none lowercase font-semibold text-sm text-slate-700"></div>
-                <div class="bg-slate-50 border rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Password</label>
-                    <div class="flex"><input type="password" id="regPass" class="w-full bg-transparent outline-none text-sm text-slate-700"><i onclick="togglePass('regPass', this)" class="fa fa-eye text-slate-300 cursor-pointer p-1"></i></div>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Username</label>
+                    <input type="text" id="regUser" class="w-full bg-transparent outline-none lowercase font-semibold text-sm text-slate-700">
                 </div>
-                <div class="bg-slate-50 border rounded-xl px-4 py-2"><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Nama Lengkap</label><input type="text" id="regName" class="w-full bg-transparent outline-none uppercase font-bold text-blue-600 text-sm"></div>
+                
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Nama Lengkap</label>
+                    <input type="text" id="regName" class="w-full bg-transparent outline-none uppercase font-bold text-blue-600 text-sm">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                        <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Jenis Kelamin</label>
+                        <select id="regGender" class="w-full bg-transparent font-bold outline-none text-sm text-slate-700">
+                            <option value="" selected disabled></option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                        <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Tanggal Lahir</label>
+                        <input type="date" id="regDate" class="w-full bg-transparent font-bold outline-none text-blue-600 text-sm">
+                    </div>
+                </div>
+                
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Alamat Lengkap</label>
+                    <textarea id="regAddress" class="w-full bg-transparent outline-none resize-none h-16 text-sm font-semibold text-slate-700"></textarea>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Password</label>
+                    <div class="flex items-center justify-between">
+                        <input type="password" id="regPass" class="w-full bg-transparent outline-none text-sm text-slate-700">
+                        <i onclick="togglePass('regPass', this)" class="fa fa-eye text-slate-300 cursor-pointer p-1"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Konfirmasi Password</label>
+                    <div class="flex items-center justify-between">
+                        <input type="password" id="regConfirmPass" class="w-full bg-transparent outline-none text-sm text-slate-700">
+                        <i onclick="togglePass('regConfirmPass', this)" class="fa fa-eye text-slate-300 cursor-pointer p-1"></i>
+                    </div>
+                </div>
+                
                 <button onclick="register()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold uppercase shadow-lg active:scale-95 transition-all mt-4 text-sm">Daftar Akun</button>
                 <button onclick="showPage('loginPage')" class="w-full text-slate-400 font-bold text-[10px] mt-2 uppercase text-center tracking-widest">Batal / Kembali</button>
             </div>
