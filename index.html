@@ -5,33 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Five Star 2 - Welcome</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; }
-        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; }
+        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --input: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --input: #1A1A1A; --border: #333; }
         
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; transition: 0.3s; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            transition: 0.3s; 
+            overflow: hidden;
+        }
+
+        /* Tombol Toggle di Pojok Kanan Atas */
+        .theme-header { position: absolute; top: 20px; right: 20px; }
+        .theme-toggle { 
+            cursor: pointer; 
+            padding: 12px; 
+            border-radius: 50%; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            background: var(--input); 
+            color: var(--text);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
         .container { text-align: center; width: 90%; max-width: 400px; padding: 20px; }
-        .logo-img { width: 140px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.2)); }
-        h1 { font-size: 36px; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
-        p { opacity: 0.7; margin-bottom: 50px; line-height: 1.6; }
-        .btn { display: block; width: 100%; padding: 18px; border-radius: 35px; font-weight: 700; text-decoration: none; margin-bottom: 15px; transition: 0.3s; box-sizing: border-box; text-align: center; }
-        .btn-primary { background: var(--accent); color: #fff; border: none; }
-        [data-theme="dark"] .btn-primary { color: #000; }
-        .btn-outline { border: 2px solid var(--accent); color: var(--accent); }
+
+        /* Ukuran Logo Diperbesar */
+        .logo-img { 
+            width: 220px; /* Ukuran lebih besar dari sebelumnya */
+            height: auto;
+            margin-bottom: 30px; 
+            filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.3));
+            transition: 0.5s;
+        }
+        
+        [data-theme="dark"] .logo-img {
+            filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.5));
+        }
+
+        h1 { font-size: 42px; color: var(--accent); margin-bottom: 10px; font-weight: 700; letter-spacing: -1px; }
+        p { opacity: 0.7; margin-bottom: 60px; line-height: 1.6; font-size: 18px; }
+
+        .btn { 
+            display: block; 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 40px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            margin-bottom: 15px; 
+            transition: 0.3s; 
+            box-sizing: border-box; 
+            text-align: center; 
+            font-size: 16px;
+        }
+
+        .btn-primary { background: var(--accent); color: #fff; border: none; box-shadow: 0 10px 20px rgba(0, 122, 255, 0.2); }
+        [data-theme="dark"] .btn-primary { color: #000; box-shadow: 0 10px 20px rgba(57, 255, 20, 0.2); }
+        
+        .btn-outline { border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+        
+        .btn:active { transform: scale(0.96); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <img src="logo_fivestar.png" alt="Logo" class="logo-img">
-        <h1>Five Star</h1>
-        <p>Akses akun Anda atau daftar baru untuk pengalaman ultra-modern.</p>
-        <a href="login.html" class="btn btn-primary">Masuk</a>
-        <a href="register.html" class="btn btn-outline">Buat Akun</a>
+<body data-theme="dark"> <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="sun"></i></div>
     </div>
+
+    <div class="container">
+        <img src="logo_fivestar.png" alt="Logo Five Star" class="logo-img">
+        
+        <h1>Five Star 2</h1>
+        <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
+        
+        <a href="login.html" class="btn btn-primary">Masuk</a>
+        <a href="register.html" class="btn btn-outline">Mulai Daftar</a>
+    </div>
+
     <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
+        // Logic Tema (Light/Dark)
+        const btn = document.getElementById('themeBtn');
+        const body = document.body;
+
+        btn.onclick = () => {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            
+            // Update Ikon
+            btn.innerHTML = `<i data-lucide="${isDark ? 'moon' : 'sun'}"></i>`;
+            lucide.createIcons();
+            
+            // Simpan pilihan user agar saat pindah halaman tetap sama (Opsional)
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        };
+
+        // Cek jika user sudah pernah memilih tema sebelumnya
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.setAttribute('data-theme', savedTheme);
+            btn.innerHTML = `<i data-lucide="${savedTheme === 'dark' ? 'sun' : 'moon'}"></i>`;
         }
+
+        lucide.createIcons();
     </script>
 </body>
 </html>
