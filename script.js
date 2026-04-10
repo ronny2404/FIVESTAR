@@ -5,26 +5,33 @@ let isEditAbsenMode = false;
 let manualAbsenDateStr = "";
 
 // ==========================================
-// INISIALISASI & SPLASH SCREEN
+// INISIALISASI & SPLASH SCREEN ENGINE (FIXED)
 // ==========================================
 window.onload = () => { 
     updateSyncIndicator();
-    
-    // Timer 4 detik untuk Splash Screen
-    setTimeout(() => {
-        const splash = document.getElementById('splashScreen');
-        splash.style.opacity = '0';
-        
-        setTimeout(() => {
-            splash.style.display = 'none';
-            if(localStorage.getItem('user_username')) {
-                showPage('mainPage'); 
-            } else {
-                showPage('loginPage'); 
-            }
-        }, 800);
-    }, 4000); 
+    // Di onload ini kita TIDAK MENUTUP otomatis.
+    // SplashScreen akan diam sampai tombol diklik.
 };
+
+// Fungsi Baru: Menutup Sambutan Saat Tombol Diklik
+function tutupSplashScreen() {
+    const splash = document.getElementById('splashScreen');
+    
+    // Mulai animasi pudar (0.5 detik sesuai CSS)
+    splash.style.opacity = '0';
+    
+    // Setelah pudar selesai, sembunyikan total dan masuk aplikasi
+    setTimeout(() => {
+        splash.style.display = 'none';
+        
+        // Logika masuk ke halaman yang tepat
+        if(localStorage.getItem('user_username')) {
+            showPage('mainPage'); 
+        } else {
+            showPage('loginPage'); 
+        }
+    }, 500); 
+}
 
 function showNotif(msg, type = "success") {
     const container = document.getElementById('successNotif');
@@ -89,6 +96,7 @@ function showPage(id) {
     if (id === 'loginPage' || id === 'registerPage') {
         authWrapper.classList.remove('hidden');
         appContent.classList.add('hidden');
+        document.querySelector('.auth-content-scroll').scrollTop = 0;
     } else {
         authWrapper.classList.add('hidden');
         appContent.classList.remove('hidden');
@@ -165,5 +173,6 @@ function ambilTotalJamLocal() { document.getElementById('resTotalJam').innerText
 function hitungGajiLocal() { document.getElementById('uiGajiBersih').innerText = "Rp 1.000.000"; document.getElementById('slipGajiContainer').classList.remove('hidden'); }
 function downloadPDF() { alert("Fitur PDF aktif"); }
 function submitManualAbsen(s) { showNotif("Berhasil"); closeManualAbsenModal(); }
+function checkMissingAbsensi() {}
 function updateSyncIndicator() { document.getElementById('syncIndicator').style.backgroundColor = navigator.onLine ? "#22c55e" : "#ef4444"; }
 function showAccount() { showPage('accountViewPage'); document.getElementById('viewName').innerText = localStorage.getItem('user_nama_lengkap'); document.getElementById('viewUser').innerText = localStorage.getItem('user_username'); }
