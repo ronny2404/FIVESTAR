@@ -1,193 +1,40 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN - SISTEM SUPREME</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-        }
-        .header {
-            background: #1e3c72;
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h2 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .header p {
-            opacity: 0.8;
-            font-size: 14px;
-        }
-        .form-area {
-            padding: 30px;
-        }
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        .input-group input:focus {
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
-            outline: none;
-        }
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            color: #1e3c72;
-        }
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
-        }
-        .btn-login {
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
-            color: white;
-        }
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
-        }
-        .btn-register {
-            background: #f0f0f0;
-            color: #333;
-        }
-        .btn-register:hover {
-            background: #e0e0e0;
-        }
-        .toggle-text {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-            color: #666;
-        }
-        .toggle-text a {
-            color: #1e3c72;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        #dashboard {
-            display: none;
-            text-align: center;
-            padding: 50px 20px;
-        }
-        #dashboard h2 {
-            color: #1e3c72;
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        #dashboard p {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .btn-logout {
-            background: #dc3545;
-            color: white;
-        }
-        .btn-logout:hover {
-            background: #c82333;
-        }
-    </style>
-    <!-- Font Awesome untuk ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Font Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+body {font-family: Arial,sans-serif; background:#f5f5f5; margin:0; padding:0;}
+.container {width:90%; max-width:400px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+h1 {text-align:center; margin-bottom:20px;}
+input[type="email"], input[type="password"] {width:100%; padding:10px; margin:10px 0 20px 0; border:1px solid #ccc; border-radius:5px;}
+button {width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;}
+button:hover {background:#45a049;}
+.link {text-align:center; margin-top:10px;}
+.link a {color:#4CAF50; text-decoration:none;}
+#message {color:red; text-align:center; margin-bottom:10px;}
+</style>
 </head>
 <body>
+<div class="container">
+<h1>Login</h1>
+<div id="message"></div>
+<form id="loginForm">
+<input type="email" id="email" placeholder="Email" required>
+<input type="password" id="password" placeholder="Password" required>
+<div><input type="checkbox" onclick="togglePassword()"> Tampilkan Password</div>
+<button type="submit">Login</button>
+</form>
+<div class="link">
+Belum punya akun? <a href="register.html">Register</a>
+</div>
+</div>
 
-    <!-- FORM LOGIN & REGISTER -->
-    <div id="formBox" class="container">
-        <div class="header">
-            <h2 id="formTitle">SILAKAN LOGIN</h2>
-            <p>Masuk ke akun Sistem Supreme Anda</p>
-        </div>
-        <div class="form-area">
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" placeholder="Alamat Email">
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" id="pass" placeholder="Password">
-            </div>
-            
-            <button class="btn btn-login" onclick="loginUser()">
-                <i class="fas fa-sign-in-alt"></i> MASUK
-            </button>
-            
-            <button class="btn btn-register" onclick="toggleForm()">
-                <i class="fas fa-user-plus"></i> BUAT AKUN BARU
-            </button>
-            
-            <p class="toggle-text" id="toggleText">
-                Belum punya akun? <a href="#" onclick="toggleForm()">Daftar di sini</a>
-            </p>
-        </div>
-    </div>
-
-    <!-- HALAMAN DASHBOARD (SETELAH LOGIN) -->
-    <div id="dashboard" class="container">
-        <h2>👋 SELAMAT DATANG!</h2>
-        <p id="userEmail"></p>
-        <button class="btn btn-logout" onclick="logoutUser()">
-            <i class="fas fa-sign-out-alt"></i> KELUAR / LOGOUT
-        </button>
-        <!-- Tombol ke Halaman Utama -->
-        <button class="btn btn-login mt-3" onclick="window.location.href='index.html'">
-            <i class="fas fa-home"></i> KE HALAMAN UTAMA
-        </button>
-    </div>
-
-    <!-- SDK FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-
-    <script>
-        // ==============================================
-        // 🔥 KONFIGURASI FIREBASE (GANTI DENGAN KODE KAMU)
-        // ==============================================
-        const firebaseConfig = {
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
   apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ",
   authDomain: "five-star-2404.firebaseapp.com",
   projectId: "five-star-2404",
@@ -196,105 +43,29 @@
   appId: "1:778881784522:web:6d6d43d6213fdaf4b43233",
   measurementId: "G-Y71EN3MHVW"
 };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-        // INISIALISASI FIREBASE
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+  function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
 
-        // VARIABEL UNTUK TOGGLE FORM
-        let isLogin = true;
+  const loginForm = document.getElementById('loginForm');
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        // GANTI FORM LOGIN <-> REGISTER
-        function toggleForm() {
-            isLogin = !isLogin;
-            const title = document.getElementById('formTitle');
-            const btnLogin = document.querySelector('.btn-login');
-            const btnReg = document.querySelector('.btn-register');
-            const text = document.getElementById('toggleText');
-
-            if(isLogin) {
-                title.innerText = "SILAKAN LOGIN";
-                btnLogin.style.display = "block";
-                btnReg.innerText = "BUAT AKUN BARU";
-                btnReg.onclick = toggleForm;
-                text.innerHTML = 'Belum punya akun? <a href="#" onclick="toggleForm()">Daftar di sini</a>';
-            } else {
-                title.innerText = "DAFTAR AKUN BARU";
-                btnLogin.style.display = "none"; // Sembunyikan tombol masuk saat mode daftar
-                btnReg.innerText = "DAFTAR SEKARANG";
-                btnReg.onclick = registerUser;
-                text.innerHTML = 'Sudah punya akun? <a href="#" onclick="toggleForm()">Login di sini</a>';
-            }
-        }
-
-        // FUNGSI DAFTAR AKUN BARU
-        function registerUser() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-
-            if(!email || !pass) {
-                alert("⚠️ Email dan Password tidak boleh kosong!");
-                return;
-            }
-
-            auth.createUserWithEmailAndPassword(email, pass)
-            .then((userCredential) => {
-                alert("✅ DAFTAR BERHASIL! Silakan login.");
-                toggleForm(); // Kembali ke form login
-                // Kosongkan input
-                document.getElementById('email').value = '';
-                document.getElementById('pass').value = '';
-            })
-            .catch((error) => {
-                alert("❌ Error: " + error.message);
-            });
-        }
-
-        // FUNGSI LOGIN
-        function loginUser() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-
-            if(!email || !pass) {
-                alert("⚠️ Email dan Password tidak boleh kosong!");
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, pass)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                showDashboard(user);
-            })
-            .catch((error) => {
-                alert("❌ Error: " + error.message);
-            });
-        }
-
-        // TAMPILKAN DASHBOARD
-        function showDashboard(user) {
-            document.getElementById('formBox').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('userEmail').innerText = "Email: " + user.email;
-        }
-
-        // FUNGSI LOGOUT
-        function logoutUser() {
-            auth.signOut().then(() => {
-                document.getElementById('formBox').style.display = 'block';
-                document.getElementById('dashboard').style.display = 'none';
-                // Kosongkan input
-                document.getElementById('email').value = '';
-                document.getElementById('pass').value = '';
-            });
-        }
-
-        // CEK STATUS LOGIN (JIKA REFRESH HALAMAN)
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                showDashboard(user);
-            }
-        });
-    </script>
-
+    auth.signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        alert('Login berhasil!');
+        window.location.href = "dashboard.html";
+      })
+      .catch((error) => {
+        document.getElementById('message').innerText = error.message;
+      });
+  });
+</script>
 </body>
 </html>
