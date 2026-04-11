@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -10,13 +10,15 @@
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
         
-        /* KUNCI SCROLL: Mencegah geser atas bawah */
+        /* FULL LOCK: Mencegah Scroll & Zoom */
         html, body { 
             height: 100%; 
             margin: 0; 
             padding: 0; 
             overflow: hidden; 
-            touch-action: none; /* Mencegah pull-to-refresh di HP */
+            touch-action: none; 
+            position: fixed; /* Kunci total di iOS/Android */
+            width: 100%;
         }
 
         body { 
@@ -25,29 +27,38 @@
             color: var(--text); 
             display: flex; 
             flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
+            justify-content: center; /* Konten pas tengah secara vertikal */
+            align-items: center; /* Konten pas tengah secara horizontal */
             transition: 0.3s; 
         }
 
-        .theme-header { position: absolute; top: 15px; right: 15px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); color: var(--text); }
+        .theme-header { position: absolute; top: 20px; right: 20px; }
+        .theme-toggle { cursor: pointer; padding: 7px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); color: var(--text); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .theme-toggle i { width: 18px; height: 18px; }
 
-        .container { text-align: center; width: 85%; max-width: 350px; }
+        .container { 
+            text-align: center; 
+            width: 85%; 
+            max-width: 320px; /* Dipersempit sedikit agar tombol tidak terlalu lebar */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Kunci semua isi container di tengah */
+        }
 
-        /* LOGO DIPERBESAR LAGI */
+        /* --- LOGO JUMBO & PASTI TENGAH --- */
         .logo-img { 
-            width: 500px; 
+            width: 500px; /* Ukuran Jumbo sesuai permintaan */
             height: auto; 
-            margin-bottom: 30px; 
+            margin: 0 auto 50px auto; /* '0 auto' memastikan margin kiri-kanan otomatis jadi tengah */
+            display: block; /* Penting untuk margin: auto bekerja */
             transition: 0.5s; 
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
         }
         [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.4)); }
 
-        p { opacity: 0.7; margin-bottom: 40px; font-size: 15px; line-height: 1.5; padding: 0 10px; }
+        p { opacity: 0.7; margin: 0 0 50px 0; font-size: 15px; line-height: 1.5; padding: 0 10px; }
 
+        /* Tombol Modern */
         .btn { 
             display: block; 
             width: 100%; 
@@ -55,35 +66,44 @@
             border-radius: 40px; 
             font-weight: 700; 
             text-decoration: none; 
-            margin-bottom: 12px; 
+            margin-bottom: 15px; 
             transition: 0.3s; 
             box-sizing: border-box; 
             text-align: center; 
             font-size: 16px; 
         }
-        .btn-primary { background: var(--accent); color: #fff; border: none; }
-        [data-theme="dark"] .btn-primary { color: #000; }
+        .btn-primary { background: var(--accent); color: #fff; border: none; box-shadow: 0 4px 10px rgba(0,122,255,0.15); }
+        [data-theme="dark"] .btn-primary { color: #000; box-shadow: 0 4px 15px rgba(57,255,20,0.2); }
         .btn-outline { border: 2px solid var(--accent); color: var(--accent); background: transparent; }
-        .btn:active { transform: scale(0.96); }
+        
+        .btn:active { transform: scale(0.97); }
     </style>
 </head>
-<body>
-    <div class="theme-header"><div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div></div>
+<body data-theme="light"> <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
+    </div>
+
     <div class="container">
-        <img src="logo_fivestar.png" class="logo-img">
+        <img src="logo_fivestar.png" alt="Logo Five Star" class="logo-img">
+        
         <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
+        
         <a href="login.html" class="btn btn-primary">Masuk</a>
         <a href="register.html" class="btn btn-outline">Daftar</a>
     </div>
+
     <script>
+        // Tema Logic (Default Light Mode + Local Storage)
         const btn = document.getElementById('themeBtn');
         const applyTheme = (t) => {
             document.body.setAttribute('data-theme', t);
             btn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
+
         const saved = localStorage.getItem('theme') || 'light';
         applyTheme(saved);
+
         btn.onclick = () => {
             const now = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', now);
