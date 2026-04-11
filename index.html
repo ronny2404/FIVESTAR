@@ -149,6 +149,18 @@
         };
 
         lucide.createIcons();
+// Tambahkan di bagian paling bawah script index.html
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+const auth = getAuth(initializeApp(fbConfig));
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        window.location.href = "dashboard.html"; // Jika sudah login, langsung ke dashboard
+    }
+});
     </script>
 </body>
 </html>
