@@ -9,130 +9,79 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        
         html, body { height: 100%; margin: 0; overflow: hidden; touch-action: none; width: 100%; position: fixed; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; }
-        
-        /* Fix Autofill Background Kuning/Putih */
         input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; transition: background-color 5000s ease-in-out 0s; }
-
         .theme-header { position: absolute; top: 15px; right: 15px; }
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
-        
         .form-card { width: 85%; max-width: 350px; margin-top: -30px; } 
         h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; }
         .field { margin-bottom: 15px; position: relative; }
         label { display: block; opacity: 0.6; font-size: 13px; margin-bottom: 6px; }
         input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; padding-right: 45px; color: var(--text); font-size: 16px; box-sizing: border-box; }
-        
         .eye-icon { position: absolute; right: 12px; top: 34px; cursor: pointer; color: #888; width: 22px; height: 22px; z-index: 10; }
-        
         button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; transition: 0.3s; }
         [data-theme="dark"] button { color: #000; }
-        
-        /* Tombol Google */
         .btn-google { background: var(--card); color: var(--text); border: 1px solid var(--border); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn-google img { width: 18px; }
-        [data-theme="dark"] .btn-google { background: #1A1A1A; color: #FFF; }
-
         p { text-align: center; margin-top: 25px; opacity: 0.7; font-size: 14px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
-    
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="lForm">
             <div class="field"><label>Email</label><input type="email" id="email" required></div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="pass" required>
-                <i data-lucide="eye" class="eye-icon" id="eBtn" onclick="togglePass()"></i>
-            </div>
+            <div class="field"><label>Password</label><input type="password" id="pass" required><i data-lucide="eye" class="eye-icon" id="eBtn" onclick="togglePass()"></i></div>
             <button type="submit">Masuk</button>
         </form>
-
-        <button class="btn-google" id="gBtn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
-            Masuk dengan Google
-        </button>
-
+        <button class="btn-google" id="gBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"> Masuk dengan Google</button>
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            GoogleAuthProvider, 
-            signInWithRedirect, 
-            getRedirectResult 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const fb = { 
-            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", 
-            authDomain: "five-star-2404.firebaseapp.com", 
-            projectId: "five-star-2404", 
-            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" 
-        };
-        
-        const app = initializeApp(fb);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // 1. CEK HASIL LOGIN GOOGLE (PENTING UNTUK REDIRECT)
-        getRedirectResult(auth)
-            .then(async (result) => {
-                if (result && result.user) {
-                    const user = result.user;
-                    const s = await getDoc(doc(db, "users", user.uid));
-                    if (!s.exists()) {
-                        await setDoc(doc(db, "users", user.uid), {
-                            nama: user.displayName,
-                            email: user.email,
-                            alamat: "-",
-                            gender: "-",
-                            bd: "",
-                            createdAt: new Date()
-                        });
-                    }
-                    window.location.href = "absensi.html";
+        // --- PROSES HASIL LOGIN GOOGLE ---
+        getRedirectResult(auth).then(async (result) => {
+            if (result?.user) {
+                const user = result.user;
+                const s = await getDoc(doc(db, "users", user.uid));
+                if (!s.exists()) {
+                    await setDoc(doc(db, "users", user.uid), {
+                        nama: user.displayName, email: user.email, alamat: "-", gender: "-", bd: "", createdAt: new Date()
+                    });
                 }
-            }).catch((err) => {
-                console.error(err);
-                if (err.code === 'auth/credential-already-in-use') {
-                    alert("Email ini sudah terdaftar dengan metode lain.");
-                }
-            });
+                window.location.href = "absensi.html";
+            }
+        }).catch((err) => { alert("Gagal Login Google: " + err.message); });
 
-        // 2. CEK STATUS LOGIN BIASA
-        onAuthStateChanged(auth, (u) => { 
-            if (u) window.location.href = "absensi.html"; 
-        });
+        // --- CEK STATUS LOGIN ---
+        onAuthStateChanged(auth, (u) => { if (u) window.location.href = "absensi.html"; });
 
-        // 3. EVENT KLIK GOOGLE (MENGGUNAKAN REDIRECT)
+        // --- TOMBOL GOOGLE ---
         document.getElementById('gBtn').onclick = () => {
             provider.setCustomParameters({ prompt: 'select_account' });
             signInWithRedirect(auth, provider);
         };
 
-        // 4. LOGIN EMAIL BIASA
+        // --- TOMBOL EMAIL BIASA ---
         document.getElementById('lForm').onsubmit = (e) => {
             e.preventDefault();
-            const em = document.getElementById('email').value;
-            const ps = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, em, ps)
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
                 .then(() => window.location.href="absensi.html")
                 .catch(() => alert("Email atau Password salah!"));
         };
 
-        // UI LOGIC (Mata & Tema)
+        // UI LOGIC
         window.togglePass = () => {
             const p = document.getElementById('pass'); const e = document.getElementById('eBtn');
             const isP = p.type === 'password'; p.type = isP ? 'text' : 'password';
@@ -150,7 +99,6 @@
             const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', nt); applyT(nt);
         };
-
         lucide.createIcons();
     </script>
 </body>
