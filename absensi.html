@@ -9,86 +9,38 @@
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
-        
-        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: pan-y; width: 100%; position: fixed; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
-        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
-        
-        /* --- FIX HEADER TEBAL --- */
-        header span { font-size: 20px; font-weight: 700; color: var(--text); } 
-
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
-        .theme-toggle i { width: 18px; height: 18px; }
-
+        header span { font-size: 20px; font-weight: 700; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); }
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        
         .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; }
-        .user-name { color: var(--accent); font-weight: 700; font-size: 20px; display: block; margin-top: 5px; }
-
-        /* Bottom Nav - Fix 4 Items Sejajar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
-        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; transition: 0.2s; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
         .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
-
-    <header>
-        <span id="hn">Absensi</span>
-        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <span id="welcomeName" class="user-name">Halo!</span>
-            <p style="font-size: 14px; opacity: 0.7;">Silakan lakukan absensi hari ini di panel Five Star 2.</p>
-            <button style="background:var(--accent); color:white; border:none; padding:16px 30px; border-radius:30px; font-weight:700; width:100%; margin-top:15px; cursor:pointer;">Absen Masuk</button>
-        </div>
-    </div>
-
+    <header><span>Absensi</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    <div class="container"><div class="card"><h2>Halo!</h2><p>Silakan absen hari ini.</p><button style="background:var(--accent); color:white; border:none; padding:15px; border-radius:30px; font-weight:700; width:100%;">Absen Masuk</button></div></div>
     <nav class="bottom-nav">
         <a href="absensi.html" class="nav-item active"><i data-lucide="calendar"></i><span>Absensi</span></a>
         <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fbConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        onAuthStateChanged(auth, async (user) => { 
-            if(user) { 
-                const s = await getDoc(doc(db, "users", user.uid)); 
-                if(s.exists()){ 
-                    const d = s.data(); 
-                    document.getElementById('hn').innerText = "Halo, "+d.nama.split(' ')[0]; 
-                    document.getElementById('welcomeName').innerText = "Selamat Datang, " + d.nama;
-                } 
-            } else { window.location.href="login.html"; } 
-        });
-
-        // Tema Logic
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app);
+        onAuthStateChanged(auth, (u) => { if(!u) window.location.href="login.html"; });
         const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => {
-            document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
-            lucide.createIcons();
-        };
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt); applyT(nt);
-        };
-
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
         lucide.createIcons();
     </script>
 </body>
