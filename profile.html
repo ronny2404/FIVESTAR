@@ -117,8 +117,8 @@
 
         function render() {
             document.getElementById('pN').innerText = uD.nama || "User";
-            document.getElementById('pG').innerText = uD.gender === 'L' ? 'Laki-laki' : 'W
-Perempuan';
+            document.getElementById('pG').innerText = uD.gender === 'L' ? 'Pria' : 'W
+Wanita';
             document.getElementById('pA').innerText = uD.alamat || "-";
             if(uD.bd) { const b = new Date(uD.bd); document.getElementById('pU').innerText = (new Date().getFullYear() - b.getFullYear()) + " Tahun"; }
         }
