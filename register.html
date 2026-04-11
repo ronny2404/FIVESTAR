@@ -9,126 +9,54 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; --input: #1A1A1A; }
-        
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; padding: 30px 0; box-sizing: border-box; }
-        input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; }
-
-        .theme-header { position: absolute; top: 15px; right: 15px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
-        .theme-toggle i { width: 18px; height: 18px; }
-
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; padding: 30px 0; }
         .form-card { width: 90%; max-width: 400px; }
-        h2 { font-size: 32px; margin-bottom: 25px; font-weight: 700; }
-        
-        .field { margin-bottom: 15px; position: relative; }
+        .field { margin-bottom: 15px; }
         label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--accent); outline: none; }
-        
+        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; }
         .row { display: flex; gap: 10px; } .row .field { flex: 1; }
-        
         button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 15px; cursor: pointer; font-size: 16px; }
         [data-theme="dark"] button { color: #000; }
-        button:active { transform: scale(0.97); }
-
-        p { text-align: center; font-size: 14px; margin-top: 20px; opacity: 0.7; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
-    <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
-    
     <div class="form-card">
         <h2>Daftar</h2>
         <form id="rForm">
             <div class="field"><label>Nama Lengkap</label><input type="text" id="fn" required></div>
-            <div class="field"><label>Username</label><input type="text" id="un" required></div>
-            
-            <div class="field"><label>Alamat Lengkap</label><input type="text" id="almt" placeholder="Jl. Contoh No. 123" required></div>
-            
+            <div class="field"><label>Alamat Lengkap</label><input type="text" id="almt" required></div>
             <div class="row">
                 <div class="field"><label>Tgl Lahir</label><input type="date" id="bd" required></div>
-                <div class="field">
-                    <label>Gender</label>
-                    <select id="gd" required>
-                        <option value="L">Pria</option>
-                        <option value="P">Wanita</option>
-                    </select>
-                </div>
+                <div class="field"><label>Gender</label><select id="gd"><option value="L">Pria</option><option value="P">Wanita</option></select></div>
             </div>
-            
             <div class="field"><label>Email</label><input type="email" id="em" required></div>
             <div class="field"><label>Password</label><input type="password" id="ps" required minlength="6"></div>
-            
             <button type="submit">Daftar Sekarang</button>
         </form>
-        <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
+        <p style="text-align:center; font-size:14px;">Sudah punya akun? <a href="login.html">Masuk</a></p>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fbConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Auto Redirect jika sudah login
-        onAuthStateChanged(auth, (user) => {
-            if (user) window.location.href = "absensi.html";
-        });
-
-        // Tema Logic
-        const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => {
-            document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
-            lucide.createIcons();
-        };
-        applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt); applyT(nt);
-        };
-
-        // Form Submit (Register)
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
         document.getElementById('rForm').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Mendaftar...";
-            btn.disabled = true;
-
-            const em = document.getElementById('em').value;
-            const ps = document.getElementById('ps').value;
-
             try {
-                // 1. Buat User di Auth
-                const res = await createUserWithEmailAndPassword(auth, em, ps);
-                
-                // 2. Simpan Data Lengkap ke Firestore
+                const res = await createUserWithEmailAndPassword(auth, document.getElementById('em').value, document.getElementById('ps').value);
                 await setDoc(doc(db, "users", res.user.uid), {
                     nama: document.getElementById('fn').value,
-                    username: document.getElementById('un').value,
-                    alamat: document.getElementById('almt').value, // SIMPAN ALAMAT
+                    alamat: document.getElementById('almt').value,
                     bd: document.getElementById('bd').value,
                     gender: document.getElementById('gd').value,
-                    email: res.user.email,
-                    createdAt: new Date()
+                    email: res.user.email
                 });
-
-                // 3. Sukses, pindah halaman
                 window.location.href = "absensi.html";
-
-            } catch (err) {
-                alert("Gagal Daftar: " + err.message);
-                btn.innerText = "Daftar Sekarang";
-                btn.disabled = false;
-            }
+            } catch (err) { alert(err.message); }
         };
-
-        lucide.createIcons();
+        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>
 </html>
