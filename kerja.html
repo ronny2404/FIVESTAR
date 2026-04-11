@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Input Kerja - Five Star 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        
+        html, body { height: 100%; margin: 0; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
+        header span { font-size: 20px; font-weight: 700; }
+        .back-btn { text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 5px; font-weight: 600; font-size: 14px; }
+        
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
+        .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; font-weight: 800; opacity: 0.6; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 16px; 
+            border: 1px solid var(--border); 
+            background: var(--card); 
+            color: var(--text); 
+            font-family: inherit; 
+            font-size: 16px; 
+            box-sizing: border-box;
+            outline: none;
+            -webkit-appearance: none; /* Bersihkan style default iOS */
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); border-width: 2px; }
+
+        textarea { height: 100px; resize: none; }
+
+        .btn-simpan { 
+            width: 100%; 
+            padding: 18px; 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            border-radius: 40px; 
+            font-weight: 800; 
+            font-size: 16px; 
+            margin-top: 10px; 
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+        [data-theme="dark"] .btn-simpan { color: #000; }
+        .btn-simpan:active { transform: scale(0.97); opacity: 0.8; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
+        .nav-item.active { color: var(--accent); font-weight: 700; }
+        .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catatan.html" class="back-btn"><i data-lucide="chevron-left"></i><span>Menu</span></a>
+        <span>Input Kerja</span>
+        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
+    </header>
+    
+    <div class="container">
+        <div class="form-group">
+            <label>Tanggal</label>
+            <input type="date" id="inTgl">
+        </div>
+
+        <div class="form-group">
+            <label>Lokasi Cabang</label>
+            <select id="inLoc">
+                <option value="FIVE STAR 1">FIVE STAR 1</option>
+                <option value="FIVE STAR 2">FIVE STAR 2</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Jenis Treatment</label>
+            <select id="inTreat">
+                <option value="Massage">Massage</option>
+                <option value="Reflexy">Reflexy</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Durasi Jam</label>
+            <select id="inDur">
+                </select>
+        </div>
+
+        <div class="form-group">
+            <label>Keterangan</label>
+            <textarea id="inKet" placeholder="Tulis catatan (misal: No Kamar atau Request)"></textarea>
+        </div>
+
+        <button class="btn-simpan" id="btnSimpan">Simpan Data</button>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
+        <a href="catatan.html" class="nav-item active"><i data-lucide="edit-3"></i><span>Catatan</span></a>
+        <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
+        <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
+    </nav>
+
+    <script type="module">
+        // INGAT HALAMAN TERAKHIR
+        localStorage.setItem('lastVisitedPage', 'kerja.html');
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
+
+        const selDur = document.getElementById('inDur');
+        const selLoc = document.getElementById('inLoc');
+        const inTgl = document.getElementById('inTgl');
+
+        // 1. GENERATE OPSI DURASI ½ SAMPAI 10 JAM
+        for (let i = 0.5; i <= 10; i += 0.5) {
+            let labelText = "";
+            if (i === 0.5) labelText = "½ Jam";
+            else if (i % 1 === 0) labelText = i + " Jam";
+            else labelText = Math.floor(i) + "½ Jam";
+            
+            let opt = new Option(labelText, i);
+            selDur.add(opt);
+        }
+
+        // 2. SET OTOMATIS TANGGAL HARI INI
+        inTgl.valueAsDate = new Date();
+
+        // 3. LOAD PILIHAN LOKASI TERAKHIR DARI MEMORI
+        const savedLoc = localStorage.getItem('lastLocChoice');
+        if (savedLoc) selLoc.value = savedLoc;
+
+        onAuthStateChanged(auth, (u) => { if (!u) window.location.href = "login.html"; });
+
+        // 4. LOGIKA SIMPAN KE FIREBASE
+        document.getElementById('btnSimpan').onclick = async () => {
+            const user = auth.currentUser;
+            const locValue = selLoc.value;
+            const tglValue = inTgl.value;
+            const treatValue = document.getElementById('inTreat').value;
+            const durValue = parseFloat(selDur.value);
+            const ketValue = document.getElementById('inKet').value;
+
+            if (!tglValue) return alert("Pilih tanggal kerja!");
+
+            try {
+                // Simpan ke Firestore
+                await addDoc(collection(db, "catatan_kerja"), {
+                    uid: user.uid,
+                    nama: user.displayName || "Karyawan",
+                    tanggal: tglValue,
+                    lokasi: locValue,
+                    treatment: treatValue,
+                    durasi: durValue,
+                    keterangan: ketValue,
+                    createdAt: serverTimestamp()
+                });
+
+                // Simpan lokasi ke memori agar diingat di input berikutnya
+                localStorage.setItem('lastLocChoice', locValue);
+
+                alert("Data berhasil disimpan!");
+                window.location.href = "catatan.html"; // Balik ke menu catatan
+            } catch (err) {
+                alert("Gagal simpan: " + err.message);
+            }
+        };
+
+        // TEMA LOGIC
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
+        };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { 
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', nt); 
+            applyT(nt); 
+        };
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
