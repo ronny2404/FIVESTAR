@@ -9,13 +9,14 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        
         html, body { height: 100%; margin: 0; overflow: hidden; width: 100%; position: fixed; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; }
         
-        /* Theme Toggle Style */
-        .theme-header { position: absolute; top: 15px; right: 15px; z-index: 100; }
-        .theme-toggle { cursor: pointer; padding: 8px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); color: var(--text); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; transition: background-color 5000s ease-in-out 0s; }
+
+        /* SAMAKAN TOGGLE DENGAN ABSENSI */
+        .theme-header { position: absolute; top: 15px; right: 20px; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
 
         .form-card { width: 85%; max-width: 350px; margin-top: -30px; text-align: center; } 
         h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; text-align: left; }
@@ -37,21 +38,13 @@
     </style>
 </head>
 <body>
-    <div class="theme-header">
-        <div class="theme-toggle" id="tBtn">
-            <i data-lucide="moon"></i>
-        </div>
-    </div>
-
+    <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
+    
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="lForm">
             <div class="field"><label>Email</label><input type="email" id="email" required></div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="pass" required>
-                <i data-lucide="eye" class="eye-icon" id="eBtn" onclick="togglePass()"></i>
-            </div>
+            <div class="field"><label>Password</label><input type="password" id="pass" required><i data-lucide="eye" class="eye-icon" id="eBtn" onclick="togglePass()"></i></div>
             <button type="submit">Masuk</button>
         </form>
 
@@ -60,7 +53,7 @@
             Masuk dengan Google
         </button>
 
-        <div id="statusMsg">Memproses...</div>
+        <div id="statusMsg">Memproses Akun...</div>
 
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
     </div>
@@ -75,61 +68,32 @@
         const provider = new GoogleAuthProvider();
         const msg = document.getElementById('statusMsg');
 
-        // Fungsi Redirect Pasti
-        const goDashboard = () => { window.location.assign("absensi.html"); };
+        const goDashboard = () => { window.location.href = "absensi.html"; };
 
-        // Cek Status Login
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                msg.style.display = 'block';
-                msg.innerText = "Akun Aktif. Mengalihkan...";
-                goDashboard();
-            }
+        onAuthStateChanged(auth, (u) => { 
+            if (u) { msg.style.display = 'block'; msg.innerText = "Berhasil Terhubung! Mengalihkan..."; setTimeout(goDashboard, 800); } 
         });
 
-        // Login Google
         document.getElementById('gBtn').onclick = async () => {
             try {
-                msg.style.display = 'block';
-                msg.innerText = "Menunggu Pilihan Akun...";
+                msg.style.display = 'block'; msg.innerText = "Membuka Pilihan Akun...";
                 provider.setCustomParameters({ prompt: 'select_account' });
                 const res = await signInWithPopup(auth, provider);
-                
-                const u = res.user;
-                const s = await getDoc(doc(db, "users", u.uid));
+                const s = await getDoc(doc(db, "users", res.user.uid));
                 if (!s.exists()) {
-                    await setDoc(doc(db, "users", u.uid), {
-                        nama: u.displayName, email: u.email, alamat: "-", gender: "-", bd: "", createdAt: new Date()
-                    });
+                    await setDoc(doc(db, "users", res.user.uid), { nama: res.user.displayName, email: res.user.email, alamat: "-", gender: "-", bd: "", createdAt: new Date() });
                 }
                 goDashboard();
             } catch (err) {
-                msg.style.display = 'none';
-                alert("Gagal: " + err.message);
+                console.error(err); msg.style.display = 'none';
+                if (err.code === 'auth/popup-blocked') { alert("Pop-up diblokir! Izinkan pop-up di browser Chrome Anda."); } 
+                else if (err.code !== 'auth/cancelled-popup-request') { alert("Gagal: " + err.message); }
             }
         };
 
-        // Login Manual
         document.getElementById('lForm').onsubmit = (e) => {
             e.preventDefault();
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
-                .then(goDashboard).catch(() => alert("Email/Password Salah"));
-        };
-
-        // Logic Tema (Toggle Mode)
-        const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => {
-            document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
-            lucide.createIcons();
-        };
-        
-        applyT(localStorage.getItem('theme') || 'light');
-        
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt);
-            applyT(nt);
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).then(goDashboard).catch(() => alert("Email/Password Salah"));
         };
 
         window.togglePass = () => {
@@ -138,6 +102,10 @@
             e.setAttribute('data-lucide', isP ? 'eye-off' : 'eye'); lucide.createIcons();
         };
 
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
         lucide.createIcons();
     </script>
 </body>
