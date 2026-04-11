@@ -14,8 +14,8 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
         
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
-        header span { font-size: 20px; font-weight: 700; }
-        .back-btn { text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 5px; font-weight: 600; font-size: 14px; }
+        header span { font-size: 20px; font-weight: 700; flex: 1; text-align: center; margin-left: 30px; }
+        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
 
@@ -29,27 +29,40 @@
             box-sizing: border-box; outline: none; cursor: pointer;
         }
 
-        /* KALENDER MODAL STYLE */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--card); width: 90%; max-width: 350px; border-radius: 28px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        /* MODAL KALENDER */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .modal-content { 
+            background: var(--card); width: 82%; max-width: 330px; border-radius: 30px; 
+            padding: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); box-sizing: border-box;
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-        .cal-day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.4; padding-bottom: 5px; }
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .cal-day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.4; padding-bottom: 10px; }
         .cal-day-name.sun { color: var(--sunday); opacity: 1; }
-        .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer; }
-        .cal-date:active { background: var(--border); }
-        .cal-date.selected { background: var(--accent); color: white !important; }
-        .cal-date.sunday { color: var(--sunday); }
+        .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 50%; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .today-border { border-color: var(--text) !important; }
+        .locked { opacity: 0.2; pointer-events: none; }
+        .cal-date.selected { background: var(--accent); color: white !important; border-color: transparent !important; }
         [data-theme="dark"] .cal-date.selected { color: #000 !important; }
 
+        /* BUTTONS */
         .btn-simpan { 
             width: 100%; padding: 18px; background: var(--accent); color: white; 
             border: none; border-radius: 40px; font-weight: 800; font-size: 16px; 
             margin-top: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         [data-theme="dark"] .btn-simpan { color: #000; }
+        
+        .btn-batal {
+            width: 100%; padding: 15px; background: none; color: var(--text);
+            border: none; font-weight: 700; font-size: 15px; margin-top: 10px;
+            cursor: pointer; opacity: 0.5;
+        }
 
+        /* Nav Bawah */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -58,16 +71,16 @@
 </head>
 <body>
     <header>
-        <a href="catatan.html" class="back-btn"><i data-lucide="chevron-left"></i><span>Menu</span></a>
         <span>Input Kerja</span>
         <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
     </header>
     
     <div class="container">
         <div class="form-group">
-            <label>Tanggal</label>
-            <input type="text" id="displayTgl" readonly placeholder="Pilih Tanggal...">
-            <input type="hidden" id="inTgl"> </div>
+            <label>Tanggal Pelayanan</label>
+            <input type="text" id="displayTgl" readonly placeholder="Pilih tanggal...">
+            <input type="hidden" id="inTgl">
+        </div>
 
         <div class="form-group">
             <label>Lokasi Cabang</label>
@@ -89,23 +102,24 @@
 
         <div class="form-group">
             <label>Keterangan</label>
-            <textarea id="inKet" placeholder="Tulis catatan..."></textarea>
+            <textarea id="inKet" placeholder="Catatan..."></textarea>
         </div>
 
-        <button class="btn-simpan" id="btnSimpan">Simpan Data</button>
+        <button class="btn-simpan" id="btnSimpan">Simpan Data Kerja</button>
+        <button class="btn-batal" onclick="window.location.href='catatan.html'">Kembali / Batal</button>
     </div>
 
     <div class="modal" id="calModal">
         <div class="modal-content">
             <div class="cal-header">
-                <button onclick="moveMonth(-1)" style="background:none; border:none; color:var(--text);"><i data-lucide="chevron-left"></i></button>
-                <h3 id="calMonthYear" style="margin:0; font-size:16px;">April 2026</h3>
-                <button onclick="moveMonth(1)" style="background:none; border:none; color:var(--text);"><i data-lucide="chevron-right"></i></button>
+                <button onclick="moveMonth(-1)" style="background:none; border:none; color:var(--text); cursor:pointer;"><i data-lucide="chevron-left"></i></button>
+                <h3 id="calMonthYear" style="margin:0; font-size:16px; font-weight:800;">...</h3>
+                <button onclick="moveMonth(1)" style="background:none; border:none; color:var(--text); cursor:pointer;"><i data-lucide="chevron-right"></i></button>
             </div>
             <div class="cal-grid" id="calGrid">
                 <div class="cal-day-name sun">M</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div><div class="cal-day-name">R</div><div class="cal-day-name">K</div><div class="cal-day-name">J</div><div class="cal-day-name">S</div>
             </div>
-            <button onclick="closeCal()" style="width:100%; margin-top:20px; background:none; border:none; color:var(--accent); font-weight:700;">Tutup</button>
+            <button onclick="closeCal()" style="width:100%; margin-top:25px; background:none; border:none; color:var(--accent); font-weight:800; font-size:15px; cursor:pointer;">TUTUP</button>
         </div>
     </div>
 
@@ -125,15 +139,14 @@
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
 
-        // LOGIKA DURASI ½ JAM
         const selDur = document.getElementById('inDur');
         for (let i = 0.5; i <= 10; i += 0.5) {
             let labelText = i === 0.5 ? "½ Jam" : (i % 1 === 0 ? i + " Jam" : Math.floor(i) + "½ Jam");
             selDur.add(new Option(labelText, i));
         }
 
-        // LOGIKA KALENDER VISUAL
         let vDate = new Date();
+        const realToday = new Date(); realToday.setHours(0,0,0,0);
         const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         
         function renderCalendar() {
@@ -141,18 +154,19 @@
             const myLabel = document.getElementById('calMonthYear');
             const m = vDate.getMonth(); const y = vDate.getFullYear();
             myLabel.innerText = `${months[m]} ${y}`;
-            
             const firstDay = new Date(y, m, 1).getDay();
             const daysInMonth = new Date(y, m + 1, 0).getDate();
-            
             const headers = grid.querySelectorAll('.cal-day-name');
             grid.innerHTML = ''; headers.forEach(h => grid.appendChild(h));
 
             for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
 
             for (let d = 1; d <= daysInMonth; d++) {
+                const loopDate = new Date(y, m, d); loopDate.setHours(0,0,0,0);
                 const box = document.createElement('div');
-                box.className = `cal-date ${new Date(y, m, d).getDay() === 0 ? 'sunday' : ''}`;
+                box.className = `cal-date ${loopDate.getDay() === 0 ? 'sunday' : ''}`;
+                if (loopDate.getTime() === realToday.getTime()) box.classList.add('today-border');
+                if (loopDate.getTime() > realToday.getTime()) box.classList.add('locked');
                 box.innerText = d;
                 box.onclick = () => selectDate(d, m, y);
                 grid.appendChild(box);
@@ -170,10 +184,8 @@
         window.closeCal = () => document.getElementById('calModal').style.display = 'none';
         document.getElementById('displayTgl').onclick = () => { document.getElementById('calModal').style.display = 'flex'; renderCalendar(); lucide.createIcons(); };
 
-        // INITIAL SET TANGGAL HARI INI
         selectDate(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
 
-        // LOGIKA SIMPAN
         document.getElementById('btnSimpan').onclick = async () => {
             const user = auth.currentUser;
             const tgl = document.getElementById('inTgl').value;
@@ -189,10 +201,9 @@
                 localStorage.setItem('lastLocChoice', document.getElementById('inLoc').value);
                 alert("Data Berhasil Disimpan!");
                 window.location.href = "catatan.html";
-            } catch (err) { alert("Error: " + err.message); }
+            } catch (err) { alert("Error!"); }
         };
 
-        // THEME LOGIC
         const tBtn = document.getElementById('tBtn');
         const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
