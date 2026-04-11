@@ -8,19 +8,26 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --input: #FFFFFF; }
-        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; --input: #1A1A1A; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; margin: 0; transition: 0.3s; padding: 30px 0; }
-        .form-card { width: 90%; max-width: 400px; }
-        .field { margin-bottom: 15px; }
-        label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
+        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: none; width: 100%; position: fixed; } /* Kunci Scroll */
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; }
+        .theme-header { position: absolute; top: 15px; right: 15px; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); }
+        .form-card { width: 90%; max-width: 400px; margin-top: -30px; } /* Geser Header ke atas */
+        h2 { font-size: 32px; margin-bottom: 20px; font-weight: 700; }
+        .field { margin-bottom: 12px; position: relative; }
+        label { display: block; opacity: 0.7; font-size: 13px; margin-bottom: 4px; font-weight: 600; }
+        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text); font-size: 15px; box-sizing: border-box; }
+        .eye-icon { position: absolute; right: 12px; top: 32px; cursor: pointer; color: #888; width: 20px; height: 20px; z-index: 10; }
         .row { display: flex; gap: 10px; } .row .field { flex: 1; }
-        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 15px; cursor: pointer; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; }
         [data-theme="dark"] button { color: #000; }
+        p { text-align: center; margin-top: 15px; opacity: 0.7; font-size: 13px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
+    <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
     <div class="form-card">
         <h2>Daftar</h2>
         <form id="rForm">
@@ -31,10 +38,11 @@
                 <div class="field"><label>Gender</label><select id="gd"><option value="L">Pria</option><option value="P">Wanita</option></select></div>
             </div>
             <div class="field"><label>Email</label><input type="email" id="em" required></div>
-            <div class="field"><label>Password</label><input type="password" id="ps" required minlength="6"></div>
+            <div class="field"><label>Password</label><input type="password" id="ps" required minlength="6"><i data-lucide="eye" class="eye-icon" onclick="togglePass('ps', this)"></i></div>
+            <div class="field"><label>Konfirmasi Password</label><input type="password" id="cps" required><i data-lucide="eye" class="eye-icon" onclick="togglePass('cps', this)"></i></div>
             <button type="submit">Daftar Sekarang</button>
         </form>
-        <p style="text-align:center; font-size:14px;">Sudah punya akun? <a href="login.html">Masuk</a></p>
+        <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
     </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -42,21 +50,27 @@
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
+        
+        // Fungsi Mata Password
+        window.togglePass = (id, el) => { const i = document.getElementById(id); const isP = i.type === 'password'; i.type = isP ? 'text' : 'password'; el.setAttribute('data-lucide', isP ? 'eye-off' : 'eye'); lucide.createIcons(); };
+        
+        // Toggle Theme
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
+
         document.getElementById('rForm').onsubmit = async (e) => {
             e.preventDefault();
+            const p = document.getElementById('ps').value; const cp = document.getElementById('cps').value;
+            if(p !== cp) return alert("Password Konfirmasi Tidak Cocok!");
             try {
-                const res = await createUserWithEmailAndPassword(auth, document.getElementById('em').value, document.getElementById('ps').value);
-                await setDoc(doc(db, "users", res.user.uid), {
-                    nama: document.getElementById('fn').value,
-                    alamat: document.getElementById('almt').value,
-                    bd: document.getElementById('bd').value,
-                    gender: document.getElementById('gd').value,
-                    email: res.user.email
-                });
+                const res = await createUserWithEmailAndPassword(auth, document.getElementById('em').value, p);
+                await setDoc(doc(db, "users", res.user.uid), { nama: document.getElementById('fn').value, alamat: document.getElementById('almt').value, bd: document.getElementById('bd').value, gender: document.getElementById('gd').value, email: res.user.email });
                 window.location.href = "absensi.html";
             } catch (err) { alert(err.message); }
         };
-        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        lucide.createIcons();
     </script>
 </body>
 </html>
