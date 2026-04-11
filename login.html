@@ -72,6 +72,10 @@
 
         document.getElementById('lForm').onsubmit = (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, document.getElementById('em').value, pInp.value).then(() => window.location.href="dashboard.html").catch(err => alert(err.message)); };
         lucide.createIcons();
+// Tambahkan di dalam <script type="module"> milik login.html
+onAuthStateChanged(auth, (user) => {
+    if (user) window.location.href = "dashboard.html";
+});
     </script>
 </body>
 </html>
