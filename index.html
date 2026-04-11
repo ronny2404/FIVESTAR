@@ -3,54 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Five Star 2</title>
+    <title>Five Star 2 - Selamat Datang</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
-        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: none; width: 100%; position: fixed; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: background 0.3s; }
-        .theme-header { position: absolute; top: 20px; right: 20px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); }
+        
+        /* Kunci Layar: No Scroll & No Zoom */
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            touch-action: none; 
+            width: 100%;
+            position: fixed;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            transition: background 0.3s; 
+        }
+
+        /* Toggle Mode */
+        .theme-header { position: absolute; top: 20px; right: 20px; z-index: 10; }
+        .theme-toggle { 
+            cursor: pointer; 
+            padding: 7px; 
+            border-radius: 50%; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            background: var(--card); 
+            color: var(--text); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
         .theme-toggle i { width: 18px; height: 18px; }
-        .container { text-align: center; width: 95%; max-width: 850px; display: flex; flex-direction: column; align-items: center; }
-        /* LOGO JUMBO 800PX & RESPONSIF */
-        .logo-img { width: 800px; max-width: 100%; height: auto; display: block; margin: 0 auto 30px auto; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1)); }
-        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.4)); }
-        p { opacity: 0.7; margin: 0 0 40px 0; font-size: 15px; line-height: 1.5; max-width: 300px; }
-        .btn { display: block; width: 100%; max-width: 300px; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; margin-bottom: 12px; transition: 0.3s; text-align: center; font-size: 16px; box-sizing: border-box; }
-        .btn-primary { background: var(--accent); color: #fff; }
+
+        .container { 
+            text-align: center; 
+            width: 95%; 
+            max-width: 1000px; /* Sesuai lebar logo */
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        /* LOGO JUMBO 1000PX */
+        .logo-img { 
+            width: 1000px; 
+            max-width: 100%; /* Agar tidak terpotong di HP */
+            height: auto; 
+            display: block; 
+            margin: 0 auto 30px auto; 
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
+            transition: 0.5s;
+        }
+        [data-theme="dark"] .logo-img { 
+            filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.4)); 
+        }
+
+        p { 
+            opacity: 0.7; 
+            margin: 0 0 50px 0; 
+            font-size: 16px; 
+            line-height: 1.6; 
+            max-width: 320px;
+        }
+
+        /* Tombol Modern */
+        .btn { 
+            display: block; 
+            width: 100%; 
+            max-width: 300px;
+            padding: 18px; 
+            border-radius: 40px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            margin-bottom: 15px; 
+            transition: 0.3s; 
+            box-sizing: border-box; 
+            text-align: center; 
+            font-size: 16px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .btn-primary { background: var(--accent); color: #fff; border: none; }
         [data-theme="dark"] .btn-primary { color: #000; }
         .btn-outline { border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+        
+        .btn:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
-    <div class="theme-header"><div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div></div>
+
+    <div class="theme-header">
+        <div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div>
+    </div>
+
     <div class="container">
-        <img src="logo_fivestar.png" alt="Logo" class="logo-img">
+        <img src="logo_fivestar.png" alt="Logo Five Star 2" class="logo-img">
+        
         <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
+        
         <a href="login.html" class="btn btn-primary">Masuk</a>
         <a href="register.html" class="btn btn-outline">Daftar Akun</a>
     </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const auth = getAuth(initializeApp(fbConfig));
-        // AUTO REDIRECT JIKA LOGIN
-        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "absensi.html"; });
-        const tBtn = document.getElementById('themeBtn');
+
+        // Firebase Config (RONNY'S PROJECT)
+        const fbConfig = { 
+            apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", 
+            authDomain: "five-star-2404.firebaseapp.com", 
+            projectId: "five-star-2404", 
+            storageBucket: "five-star-2404.firebasestorage.app",
+            messagingSenderId: "778881784522",
+            appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" 
+        };
+        const app = initializeApp(fbConfig);
+        const auth = getAuth(app);
+
+        // --- FITUR AUTO-LOGIN ---
+        // Jika browser mendeteksi token login aktif, langsung pindah ke halaman Absensi
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "absensi.html";
+            }
+        });
+
+        // Tema Logic (Default Light Mode + Local Storage)
+        const btn = document.getElementById('themeBtn');
         const applyTheme = (t) => {
             document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
+            btn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-        applyTheme(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt); applyTheme(nt);
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(savedTheme);
+
+        btn.onclick = () => {
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
         };
+
         lucide.createIcons();
     </script>
 </body>
