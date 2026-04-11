@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Profil - Five Star 2</title>
+    <title>Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        html, body { height: 100%; margin: 0; overflow: hidden; }
+        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: pan-y; width: 100%; position: fixed; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
@@ -34,31 +34,37 @@
             <div class="info-label">Jenis Kelamin</div><div id="pG" class="info-value">...</div>
             <div class="info-label">Alamat</div><div id="pA" class="info-value">...</div>
             <div class="info-label">Umur</div><div id="pU" class="info-value">-</div>
-            <button class="btn btn-primary" id="goEdit">Edit Profil & Alamat</button>
+            <button class="btn btn-primary" id="goEdit">Edit Profil</button>
+            <button class="btn btn-outline" id="goPass">Ganti Password</button>
             <button class="btn btn-outline" id="oB">Logout</button>
+            <button class="btn btn-danger" id="delB">Hapus Akun Permanen</button>
         </div>
         <div id="eMode" class="card" style="display:none;">
             <h3>Edit Profil</h3>
             <form id="eF">
-                <input type="text" id="efN" placeholder="Nama" required style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <input type="text" id="efA" placeholder="Alamat" required style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <input type="date" id="efB" required style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <select id="efG" style="width:100%; padding:12px; margin-bottom:15px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);"><option value="L">Pria</option><option value="P">Wanita</option></select>
-                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                <input type="text" id="efN" placeholder="Nama" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <input type="text" id="efA" placeholder="Alamat" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <input type="date" id="efB" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <select id="efG" style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);"><option value="L">Pria</option><option value="P">Wanita</option></select>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
+            </form>
+        </div>
+        <div id="pMode" class="card" style="display:none;">
+            <h3>Ganti Password</h3>
+            <form id="pF">
+                <input type="password" id="pOld" placeholder="Password Lama" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <input type="password" id="pNew" placeholder="Password Baru" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <button type="submit" class="btn btn-primary">Update</button>
                 <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
             </form>
         </div>
     </div>
-    <nav class="bottom-nav">
-        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
-        <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
-        <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
-        <a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a>
-    </nav>
+    <nav class="bottom-nav"><a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a><a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a><a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a><a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a></nav>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
         let uD = null;
@@ -74,22 +80,14 @@
             document.getElementById('pA').innerText = uD.alamat || "-";
             if(uD.bd) { const b = new Date(uD.bd); document.getElementById('pU').innerText = (new Date().getFullYear() - b.getFullYear()) + " Tahun"; }
         }
-        document.getElementById('goEdit').onclick = () => {
-            document.getElementById('vMode').style.display = 'none'; document.getElementById('eMode').style.display = 'block';
-            document.getElementById('efN').value = uD.nama; document.getElementById('efA').value = uD.alamat || "";
-            document.getElementById('efB').value = uD.bd || ""; document.getElementById('efG').value = uD.gender || "L";
-        };
-        document.getElementById('eF').onsubmit = async (e) => {
-            e.preventDefault();
-            const up = { ...uD, nama: document.getElementById('efN').value, alamat: document.getElementById('efA').value, bd: document.getElementById('efB').value, gender: document.getElementById('efG').value };
-            await setDoc(doc(db, "users", auth.currentUser.uid), up); alert("Berhasil!"); location.reload();
-        };
+        document.getElementById('goEdit').onclick = () => { document.getElementById('vMode').style.display = 'none'; document.getElementById('eMode').style.display = 'block'; document.getElementById('efN').value = uD.nama; document.getElementById('efA').value = uD.alamat || ""; document.getElementById('efB').value = uD.bd || ""; document.getElementById('efG').value = uD.gender || "L"; };
+        document.getElementById('eF').onsubmit = async (e) => { e.preventDefault(); const up = { ...uD, nama: document.getElementById('efN').value, alamat: document.getElementById('efA').value, bd: document.getElementById('efB').value, gender: document.getElementById('efG').value }; await setDoc(doc(db, "users", auth.currentUser.uid), up); location.reload(); };
+        document.getElementById('goPass').onclick = () => { document.getElementById('vMode').style.display = 'none'; document.getElementById('pMode').style.display = 'block'; };
+        document.getElementById('pF').onsubmit = async (e) => { e.preventDefault(); const oldP = document.getElementById('pOld').value; const newP = document.getElementById('pNew').value; const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP); try { await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); alert("Sip!"); location.reload(); } catch { alert("Gagal!"); } };
+        document.getElementById('delB').onclick = async () => { if(confirm("Hapus Permanen?")) { await deleteDoc(doc(db, "users", auth.currentUser.uid)); await deleteUser(auth.currentUser); window.location.href="index.html"; } };
         document.getElementById('oB').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
-        
-        // Theme
-        const applyT = (t) => { document.body.setAttribute('data-theme', t); lucide.createIcons(); };
-        applyT(localStorage.getItem('theme') || 'light');
-        lucide.createIcons();
+        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        const tBtn = document.getElementById('tBtn'); tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); document.body.setAttribute('data-theme', nt); lucide.createIcons(); }; lucide.createIcons();
     </script>
 </body>
 </html>
