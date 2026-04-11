@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
-        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
         
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
@@ -16,50 +16,40 @@
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
         .back-btn { text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 5px; font-weight: 600; font-size: 14px; }
-        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
 
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 11px; font-weight: 800; opacity: 0.6; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
         
         input, select, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 16px; 
-            border: 1px solid var(--border); 
-            background: var(--card); 
-            color: var(--text); 
-            font-family: inherit; 
-            font-size: 16px; 
-            box-sizing: border-box;
-            outline: none;
-            -webkit-appearance: none; /* Bersihkan style default iOS */
+            width: 100%; padding: 14px; border-radius: 16px; border: 1px solid var(--border); 
+            background: var(--card); color: var(--text); font-family: inherit; font-size: 16px; 
+            box-sizing: border-box; outline: none; cursor: pointer;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent); border-width: 2px; }
 
-        textarea { height: 100px; resize: none; }
+        /* KALENDER MODAL STYLE */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card); width: 90%; max-width: 350px; border-radius: 28px; padding: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .cal-day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.4; padding-bottom: 5px; }
+        .cal-day-name.sun { color: var(--sunday); opacity: 1; }
+        .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 10px; cursor: pointer; }
+        .cal-date:active { background: var(--border); }
+        .cal-date.selected { background: var(--accent); color: white !important; }
+        .cal-date.sunday { color: var(--sunday); }
+        [data-theme="dark"] .cal-date.selected { color: #000 !important; }
 
         .btn-simpan { 
-            width: 100%; 
-            padding: 18px; 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            border-radius: 40px; 
-            font-weight: 800; 
-            font-size: 16px; 
-            margin-top: 10px; 
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: 0.2s;
+            width: 100%; padding: 18px; background: var(--accent); color: white; 
+            border: none; border-radius: 40px; font-weight: 800; font-size: 16px; 
+            margin-top: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         [data-theme="dark"] .btn-simpan { color: #000; }
-        .btn-simpan:active { transform: scale(0.97); opacity: 0.8; }
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -76,8 +66,8 @@
     <div class="container">
         <div class="form-group">
             <label>Tanggal</label>
-            <input type="date" id="inTgl">
-        </div>
+            <input type="text" id="displayTgl" readonly placeholder="Pilih Tanggal...">
+            <input type="hidden" id="inTgl"> </div>
 
         <div class="form-group">
             <label>Lokasi Cabang</label>
@@ -89,24 +79,34 @@
 
         <div class="form-group">
             <label>Jenis Treatment</label>
-            <select id="inTreat">
-                <option value="Massage">Massage</option>
-                <option value="Reflexy">Reflexy</option>
-            </select>
+            <select id="inTreat"><option value="Massage">Massage</option><option value="Reflexy">Reflexy</option></select>
         </div>
 
         <div class="form-group">
             <label>Durasi Jam</label>
-            <select id="inDur">
-                </select>
+            <select id="inDur"></select>
         </div>
 
         <div class="form-group">
             <label>Keterangan</label>
-            <textarea id="inKet" placeholder="Tulis catatan (misal: No Kamar atau Request)"></textarea>
+            <textarea id="inKet" placeholder="Tulis catatan..."></textarea>
         </div>
 
         <button class="btn-simpan" id="btnSimpan">Simpan Data</button>
+    </div>
+
+    <div class="modal" id="calModal">
+        <div class="modal-content">
+            <div class="cal-header">
+                <button onclick="moveMonth(-1)" style="background:none; border:none; color:var(--text);"><i data-lucide="chevron-left"></i></button>
+                <h3 id="calMonthYear" style="margin:0; font-size:16px;">April 2026</h3>
+                <button onclick="moveMonth(1)" style="background:none; border:none; color:var(--text);"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div class="cal-grid" id="calGrid">
+                <div class="cal-day-name sun">M</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div><div class="cal-day-name">R</div><div class="cal-day-name">K</div><div class="cal-day-name">J</div><div class="cal-day-name">S</div>
+            </div>
+            <button onclick="closeCal()" style="width:100%; margin-top:20px; background:none; border:none; color:var(--accent); font-weight:700;">Tutup</button>
+        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -117,9 +117,7 @@
     </nav>
 
     <script type="module">
-        // INGAT HALAMAN TERAKHIR
         localStorage.setItem('lastVisitedPage', 'kerja.html');
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -127,78 +125,78 @@
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
 
+        // LOGIKA DURASI ½ JAM
         const selDur = document.getElementById('inDur');
-        const selLoc = document.getElementById('inLoc');
-        const inTgl = document.getElementById('inTgl');
-
-        // 1. GENERATE OPSI DURASI ½ SAMPAI 10 JAM
         for (let i = 0.5; i <= 10; i += 0.5) {
-            let labelText = "";
-            if (i === 0.5) labelText = "½ Jam";
-            else if (i % 1 === 0) labelText = i + " Jam";
-            else labelText = Math.floor(i) + "½ Jam";
-            
-            let opt = new Option(labelText, i);
-            selDur.add(opt);
+            let labelText = i === 0.5 ? "½ Jam" : (i % 1 === 0 ? i + " Jam" : Math.floor(i) + "½ Jam");
+            selDur.add(new Option(labelText, i));
         }
 
-        // 2. SET OTOMATIS TANGGAL HARI INI
-        inTgl.valueAsDate = new Date();
+        // LOGIKA KALENDER VISUAL
+        let vDate = new Date();
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        
+        function renderCalendar() {
+            const grid = document.getElementById('calGrid');
+            const myLabel = document.getElementById('calMonthYear');
+            const m = vDate.getMonth(); const y = vDate.getFullYear();
+            myLabel.innerText = `${months[m]} ${y}`;
+            
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            
+            const headers = grid.querySelectorAll('.cal-day-name');
+            grid.innerHTML = ''; headers.forEach(h => grid.appendChild(h));
 
-        // 3. LOAD PILIHAN LOKASI TERAKHIR DARI MEMORI
-        const savedLoc = localStorage.getItem('lastLocChoice');
-        if (savedLoc) selLoc.value = savedLoc;
+            for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
 
-        onAuthStateChanged(auth, (u) => { if (!u) window.location.href = "login.html"; });
+            for (let d = 1; d <= daysInMonth; d++) {
+                const box = document.createElement('div');
+                box.className = `cal-date ${new Date(y, m, d).getDay() === 0 ? 'sunday' : ''}`;
+                box.innerText = d;
+                box.onclick = () => selectDate(d, m, y);
+                grid.appendChild(box);
+            }
+        }
 
-        // 4. LOGIKA SIMPAN KE FIREBASE
+        function selectDate(d, m, y) {
+            const fullDate = `${d < 10 ? '0'+d : d}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
+            document.getElementById('displayTgl').value = fullDate;
+            document.getElementById('inTgl').value = `${y}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${d < 10 ? '0'+d : d}`;
+            closeCal();
+        }
+
+        window.moveMonth = (dir) => { vDate.setMonth(vDate.getMonth() + dir); renderCalendar(); lucide.createIcons(); };
+        window.closeCal = () => document.getElementById('calModal').style.display = 'none';
+        document.getElementById('displayTgl').onclick = () => { document.getElementById('calModal').style.display = 'flex'; renderCalendar(); lucide.createIcons(); };
+
+        // INITIAL SET TANGGAL HARI INI
+        selectDate(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
+
+        // LOGIKA SIMPAN
         document.getElementById('btnSimpan').onclick = async () => {
             const user = auth.currentUser;
-            const locValue = selLoc.value;
-            const tglValue = inTgl.value;
-            const treatValue = document.getElementById('inTreat').value;
-            const durValue = parseFloat(selDur.value);
-            const ketValue = document.getElementById('inKet').value;
-
-            if (!tglValue) return alert("Pilih tanggal kerja!");
-
+            const tgl = document.getElementById('inTgl').value;
+            if (!tgl) return alert("Pilih tanggal!");
             try {
-                // Simpan ke Firestore
                 await addDoc(collection(db, "catatan_kerja"), {
-                    uid: user.uid,
-                    nama: user.displayName || "Karyawan",
-                    tanggal: tglValue,
-                    lokasi: locValue,
-                    treatment: treatValue,
-                    durasi: durValue,
-                    keterangan: ketValue,
+                    uid: user.uid, nama: user.displayName || "Karyawan",
+                    tanggal: tgl, lokasi: document.getElementById('inLoc').value,
+                    treatment: document.getElementById('inTreat').value,
+                    durasi: parseFloat(selDur.value), keterangan: document.getElementById('inKet').value,
                     createdAt: serverTimestamp()
                 });
-
-                // Simpan lokasi ke memori agar diingat di input berikutnya
-                localStorage.setItem('lastLocChoice', locValue);
-
-                alert("Data berhasil disimpan!");
-                window.location.href = "catatan.html"; // Balik ke menu catatan
-            } catch (err) {
-                alert("Gagal simpan: " + err.message);
-            }
+                localStorage.setItem('lastLocChoice', document.getElementById('inLoc').value);
+                alert("Data Berhasil Disimpan!");
+                window.location.href = "catatan.html";
+            } catch (err) { alert("Error: " + err.message); }
         };
 
-        // TEMA LOGIC
+        // THEME LOGIC
         const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => { 
-            document.body.setAttribute('data-theme', t); 
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
-            lucide.createIcons(); 
-        };
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => { 
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
-            localStorage.setItem('theme', nt); 
-            applyT(nt); 
-        };
-
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
         lucide.createIcons();
     </script>
 </body>
