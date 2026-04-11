@@ -46,6 +46,48 @@ localStorage.setItem('lastVisitedPage', window.location.pathname.split('/').pop(
         applyT(localStorage.getItem('theme') || 'light');
         tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
         lucide.createIcons();
+
+// Import fungsi yang dibutuhkan
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const db = getFirestore(app); // 'app' sudah didefinisikan di config Firebase kamu
+
+// Fungsi untuk Absen Masuk
+async function simpanAbsen() {
+    const user = auth.currentUser; // Ambil data user yang sedang login
+
+    if (user) {
+        try {
+            // 1. Ambil Waktu Lokal
+            const sekarang = new Date();
+            const tanggal = sekarang.toLocaleDateString('id-ID'); // Contoh: 12/04/2026
+            const jam = sekarang.toLocaleTimeString('id-ID'); // Contoh: 08:00:15
+
+            // 2. Simpan ke Firestore (Koleksi: absensi)
+            await addDoc(collection(db, "absensi"), {
+                uid: user.uid,
+                email: user.email,
+                nama: user.displayName || "Karyawan", // Pastikan nama terisi
+                tanggal: tanggal,
+                jam: jam,
+                status: "Masuk",
+                timestamp: serverTimestamp() // Waktu server agar akurat & tidak bisa dimanipulasi HP
+            });
+
+            alert("Berhasil! Absen Masuk kamu sudah tercatat.");
+            
+        } catch (error) {
+            console.error("Gagal simpan absen: ", error);
+            alert("Terjadi kesalahan, coba lagi.");
+        }
+    } else {
+        alert("Kamu belum login!");
+    }
+}
+
+// Pasang fungsi ke tombol "Absen Masuk"
+document.querySelector('button').onclick = simpanAbsen;
+
     </script>
 </body>
 </html>
