@@ -41,22 +41,16 @@
         .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         
-        /* Nama Hari Minggu Merah */
         .cal-day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.4; padding-bottom: 10px; }
         .cal-day-name.sun { color: var(--sunday); opacity: 1; }
         
         .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 50%; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
-        
-        /* Tanggal Minggu Merah */
         .cal-date.sunday { color: var(--sunday) !important; }
-        
         .today-border { border-color: var(--text) !important; }
         .locked { opacity: 0.2; pointer-events: none; }
-        
         .cal-date.selected { background: var(--accent); color: white !important; border-color: transparent !important; }
         [data-theme="dark"] .cal-date.selected { color: #000 !important; }
 
-        /* BUTTONS */
         .btn-simpan { 
             width: 100%; padding: 18px; background: var(--accent); color: white; 
             border: none; border-radius: 40px; font-weight: 800; font-size: 16px; 
@@ -99,7 +93,10 @@
 
         <div class="form-group">
             <label>Jenis Treatment</label>
-            <select id="inTreat"><option value="Massage">Massage</option><option value="Reflexy">Reflexy</option></select>
+            <select id="inTreat">
+                <option value="Massage">Massage</option>
+                <option value="Reflexy">Reflexy</option>
+            </select>
         </div>
 
         <div class="form-group">
@@ -165,20 +162,14 @@
             const daysInMonth = new Date(y, m + 1, 0).getDate();
             const headers = grid.querySelectorAll('.cal-day-name');
             grid.innerHTML = ''; headers.forEach(h => grid.appendChild(h));
-
             for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
-
             for (let d = 1; d <= daysInMonth; d++) {
                 const loopDate = new Date(y, m, d); loopDate.setHours(0,0,0,0);
                 const box = document.createElement('div');
-                
-                // CEK APAKAH HARI MINGGU
                 const isSunday = loopDate.getDay() === 0;
                 box.className = `cal-date ${isSunday ? 'sunday' : ''}`;
-                
                 if (loopDate.getTime() === realToday.getTime()) box.classList.add('today-border');
                 if (loopDate.getTime() > realToday.getTime()) box.classList.add('locked');
-
                 box.innerText = d;
                 box.onclick = () => selectDate(d, m, y);
                 grid.appendChild(box);
@@ -196,21 +187,41 @@
         window.closeCal = () => document.getElementById('calModal').style.display = 'none';
         document.getElementById('displayTgl').onclick = () => { document.getElementById('calModal').style.display = 'flex'; renderCalendar(); lucide.createIcons(); };
 
+        // ATUR PILIHAN TERAKHIR PADA SAAT PAGE LOAD
+        onAuthStateChanged(auth, (u) => { 
+            if (u) {
+                const savedLoc = localStorage.getItem('lastLocChoice');
+                if (savedLoc) document.getElementById('inLoc').value = savedLoc;
+
+                const savedTreat = localStorage.getItem('lastTreatChoice');
+                if (savedTreat) document.getElementById('inTreat').value = savedTreat;
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
         selectDate(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
 
         document.getElementById('btnSimpan').onclick = async () => {
             const user = auth.currentUser;
             const tgl = document.getElementById('inTgl').value;
+            const loc = document.getElementById('inLoc').value;
+            const treat = document.getElementById('inTreat').value;
+
             if (!tgl) return alert("Pilih tanggal!");
+
             try {
                 await addDoc(collection(db, "catatan_kerja"), {
                     uid: user.uid, nama: user.displayName || "Karyawan",
-                    tanggal: tgl, lokasi: document.getElementById('inLoc').value,
-                    treatment: document.getElementById('inTreat').value,
+                    tanggal: tgl, lokasi: loc, treatment: treat,
                     durasi: parseFloat(selDur.value), keterangan: document.getElementById('inKet').value,
                     createdAt: serverTimestamp()
                 });
-                localStorage.setItem('lastLocChoice', document.getElementById('inLoc').value);
+
+                // SIMPAN PILIHAN TERAKHIR KE MEMORI HP
+                localStorage.setItem('lastLocChoice', loc);
+                localStorage.setItem('lastTreatChoice', treat);
+
                 alert("Data Kerja Berhasil Disimpan!");
                 window.location.href = "catatan.html";
             } catch (err) { alert("Gagal Simpan!"); }
