@@ -7,87 +7,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* CSS VARIABLE: Light Mode sebagai default (:root) */
-        :root { 
-            --bg: #F5F5F7; 
-            --nav: #FFFFFF; 
-            --text: #1D1D1F; 
-            --accent: #007AFF; 
-            --card: #FFFFFF; 
-            --border: #E5E5E7; 
-            --danger: #FF3B30; 
-            --input-bg: #FFFFFF; 
-        }
-        /* Dark Mode diaktifkan lewat atribut data-theme */
-        [data-theme="dark"] { 
-            --bg: #121212; 
-            --nav: #181818; 
-            --text: #FFFFFF; 
-            --accent: #39FF14; 
-            --card: #1E1E1E; 
-            --border: #333; 
-            --input-bg: #1A1A1A; 
-        }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --input-bg: #FFFFFF; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input-bg: #1A1A1A; }
         
-        /* Kunci Scroll & Zoom */
-        html, body { 
-            height: 100%; 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden; 
-            touch-action: pan-y; /* Masih bisa scroll internal card jika perlu */
-        }
-
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            transition: background 0.3s; 
-        }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; touch-action: pan-y; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
         
-        header { 
-            padding: 15px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-            background: var(--nav); 
-        }
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 18px; font-weight: 700; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); }
+        .theme-toggle i { width: 18px; height: 18px; }
 
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
+        .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
+        .profile-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        .container { 
-            padding: 20px; 
-            height: calc(100% - 150px); 
-            overflow-y: auto; /* Card bisa scroll jika isi kepanjangan di layar kecil */
-        }
-        
-        .profile-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-
-        /* View Mode */
         .info-group { margin-bottom: 18px; }
         .info-label { font-size: 11px; opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .info-value { font-size: 16px; font-weight: 600; margin-top: 4px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 
-        /* Edit Mode */
-        .edit-field { margin-bottom: 18px; }
-        .edit-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-        input, select { 
-            width: 100%; background: var(--input-bg); border: 1px solid var(--border); 
-            border-radius: 12px; padding: 14px; color: var(--text); font-size: 15px; box-sizing: border-box; 
-        }
-
-        .btn { padding: 16px; border-radius: 30px; border: none; font-weight: 700; cursor: pointer; text-align: center; width: 100%; transition: 0.2s; font-size: 15px; margin-bottom: 10px; }
+        .btn { padding: 16px; border-radius: 30px; border: none; font-weight: 700; cursor: pointer; width: 100%; font-size: 15px; margin-bottom: 10px; transition: 0.2s; }
         .btn-primary { background: var(--accent); color: white; }
         [data-theme="dark"] .btn-primary { color: #000; }
         .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-delete { color: var(--danger); border: 1px solid var(--danger); font-size: 13px; background: transparent; margin-top: 10px; }
+        .btn-delete { color: var(--danger); border: 1px solid var(--danger); background: transparent; font-size: 13px; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+        /* Fix Bottom Nav - 4 Items */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); }
+        .nav-item i { width: 20px; height: 20px; margin-bottom: 4px; }
+
+        /* Edit Form Style */
+        .edit-field { margin-bottom: 15px; }
+        .edit-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        input, select { width: 100%; background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text); font-size: 15px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -126,6 +79,7 @@
 
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
+        <a href="dashboard.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="dashboard.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
@@ -140,36 +94,30 @@
 
         let userD = null;
 
-        // TEMA: DEFAULT LIGHT MODE
+        // TEMA LOGIC
         const tBtn = document.getElementById('tBtn');
         const applyT = (t) => {
             document.body.setAttribute('data-theme', t);
             tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-        // Logika: Cek storage, jika kosong pakai 'light'
-        const savedT = localStorage.getItem('theme') || 'light';
-        applyT(savedT);
-
+        applyT(localStorage.getItem('theme') || 'light');
         tBtn.onclick = () => {
             const now = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', now);
             applyT(now);
         };
 
-        // LOAD DATA
+        // DATA LOGIC
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 const s = await getDoc(doc(db, "users", u.uid));
-                if (s.exists()) {
-                    userD = s.data();
-                    renderView();
-                }
+                if (s.exists()) { userD = s.data(); renderView(); }
             } else { window.location.href = "login.html"; }
         });
 
         function renderView() {
-            document.getElementById('pName').innerText = userD.nama;
+            document.getElementById('pName').innerText = userD.nama || "User";
             document.getElementById('pGender').innerText = userD.gender === 'L' ? 'Pria' : 'Wanita';
             document.getElementById('pAddress').innerText = userD.alamat || "-";
             if(userD.bd || userD.tgl_lahir) {
@@ -179,12 +127,11 @@
             }
         }
 
-        // NAVIGASI EDIT
         document.getElementById('editBtn').onclick = () => {
-            document.getElementById('fnEdit').value = userD.nama;
+            document.getElementById('fnEdit').value = userD.nama || "";
             document.getElementById('almtEdit').value = userD.alamat || "";
             document.getElementById('bdEdit').value = userD.bd || userD.tgl_lahir || "";
-            document.getElementById('gdEdit').value = userD.gender;
+            document.getElementById('gdEdit').value = userD.gender || "L";
             document.getElementById('viewMode').style.display = 'none';
             document.getElementById('editMode').style.display = 'block';
         };
@@ -194,25 +141,31 @@
             document.getElementById('viewMode').style.display = 'block';
         };
 
-        // SIMPAN
         document.getElementById('editForm').onsubmit = async (e) => {
             e.preventDefault();
             const u = auth.currentUser;
-            const up = {
+            const up = { ...userD, 
                 nama: document.getElementById('fnEdit').value,
                 alamat: document.getElementById('almtEdit').value,
                 bd: document.getElementById('bdEdit').value,
-                gender: document.getElementById('gdEdit').value,
-                email: u.email
+                gender: document.getElementById('gdEdit').value
             };
             await setDoc(doc(db, "users", u.uid), up);
-            userD = up;
-            renderView();
+            userD = up; renderView();
             document.getElementById('cancelBtn').click();
             alert("Berhasil diperbarui!");
         };
 
         document.getElementById('oBtn').onclick = () => signOut(auth).then(() => window.location.href="index.html");
+        
+        document.getElementById('delBtn').onclick = async () => {
+            if(confirm("Hapus akun permanen?")){
+                const u = auth.currentUser;
+                await deleteDoc(doc(db, "users", u.uid));
+                await deleteUser(u).then(() => window.location.href="index.html").catch(() => alert("Login ulang dulu untuk hapus akun."));
+            }
+        };
+
         lucide.createIcons();
     </script>
 </body>
