@@ -28,7 +28,37 @@
         button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; }
         [data-theme="dark"] button { color: #000; }
         
-        .btn-google { background: var(--card); color: var(--text); border: 1px solid var(--border); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* --- FIX TEKS TOMBOL GOOGLE DI DARK MODE --- */
+.btn-google { 
+    background: var(--card); 
+    color: var(--text); /* Mengikuti variabel teks */
+    border: 1px solid var(--border); 
+    margin-top: 15px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    width: 100%;
+    padding: 16px;
+    border-radius: 35px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Pastikan saat Tema Gelap, teksnya dipaksa Putih */
+[data-theme="dark"] .btn-google { 
+    background-color: #1E1E1E !important; 
+    color: #FFFFFF !important; 
+    border: 1px solid #333 !important;
+}
+
+/* Tambahkan juga agar teks "Belum punya akun?" ikut putih */
+[data-theme="dark"] p {
+    color: #FFFFFF !important;
+    opacity: 0.8;
+}
+
         .btn-google img { width: 18px; }
 
         #statusMsg { margin-top: 20px; font-size: 14px; font-weight: 600; color: #ff9500; display: none; }
