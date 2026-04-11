@@ -56,7 +56,7 @@
             <div class="info-label">Alamat Lengkap</div><div id="pA" class="info-value">...</div>
             <div class="info-label">Umur</div><div id="pU" class="info-value">-</div>
             
-            <button class="btn btn-primary" id="goEdit" style="margin-top: 15px;">Edit Profil & Alamat</button>
+            <button class="btn btn-primary" id="goEdit" style="margin-top: 15px;">Edit Profil</button>
             <button class="btn btn-outline" id="goPass">Ganti Password</button>
             <button class="btn btn-outline" id="oB">Logout</button>
             <button class="btn btn-danger" id="delB" style="margin-top: 20px;">Hapus Akun Permanen</button>
@@ -71,8 +71,9 @@
                 <div class="edit-field">
                     <label>Gender</label>
                     <select id="efG">
-                        <option value="L">Pria</option>
-                        <option value="P">Wanita</option>
+                        <option value=" "> </option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Simpan Perubahan</button>
@@ -144,7 +145,7 @@
 
         function render() {
             document.getElementById('pN').innerText = uD.nama || "User";
-            document.getElementById('pG').innerText = uD.gender === 'L' ? 'Pria' : (uD.gender === 'P' ? 'Wanita' : '-');
+            document.getElementById('pG').innerText = uD.gender === 'L' ? 'Laki-laki' : (uD.gender === 'P' ? 'Perempuan' : '-');
             document.getElementById('pA').innerText = uD.alamat || "-";
             if(uD.bd) { 
                 const b = new Date(uD.bd); 
