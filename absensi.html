@@ -7,87 +7,222 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
-        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --sunday: #FF3B30; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
+        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
-        .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; }
+        
+        .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
+        
+        /* KALENDER STYLE */
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .day-name { text-align: center; font-size: 11px; font-weight: 700; opacity: 0.5; padding-bottom: 5px; }
+        .day-name.sun { color: var(--sunday); opacity: 1; }
+        
+        .date-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; aspect-ratio: 1/1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; transition: 0.2s; cursor: pointer; }
+        .date-box span { font-size: 14px; font-weight: 600; }
+        .date-box.sunday span { color: var(--sunday); }
+        
+        /* Status Absen di Kotak */
+        .status-tag { font-size: 8px; font-weight: 700; padding: 2px 4px; border-radius: 4px; margin-top: 4px; text-transform: uppercase; text-align: center; max-width: 90%; overflow: hidden; }
+        .loc-tag { font-size: 7px; opacity: 0.6; margin-top: 2px; }
+
+        /* Warna Status */
+        .st-masuk { background: #E1F5FE; color: #0288D1; }
+        .st-off { background: #F5F5F5; color: #757575; }
+        .st-izin { background: #FFF9C4; color: #FBC02D; }
+        .st-sakit { background: #FFE0B2; color: #F57C00; }
+        .st-alpha { background: #FFEBEE; color: #D32F2F; }
+        .st-cuti { background: #F3E5F5; color: #7B1FA2; }
+        [data-theme="dark"] .st-masuk { background: #01579B; color: #81D4FA; }
+        [data-theme="dark"] .st-off { background: #424242; color: #BDBDBD; }
+
+        /* MODE EDIT */
+        .edit-banner { background: var(--accent); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; display: none; border-radius: 10px; margin-bottom: 15px; }
+        .date-box.editing { border: 2px dashed var(--accent); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* MODAL EDIT */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 24px; padding: 25px; }
+        .modal-content h3 { margin: 0 0 20px 0; text-align: center; }
+        select, button.save { width: 100%; padding: 12px; border-radius: 12px; margin-bottom: 10px; font-family: inherit; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; }
+        button.save { background: var(--accent); color: white; border: none; font-weight: 700; margin-top: 10px; }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
         .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
+        
+        .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 90; }
     </style>
 </head>
 <body>
-    <header><span>Absensi</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
-    <div class="container"><div class="card"><h2>Halo!</h2><p>Silakan absen hari ini.</p><button style="background:var(--accent); color:white; border:none; padding:15px; border-radius:30px; font-weight:700; width:100%;">Absen Masuk</button></div></div>
+    <header><span>Five Star 2</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    
+    <div class="container">
+        <div class="edit-banner" id="eBanner">MODE EDIT AKTIF: KETUK TANGGAL UNTUK UBAH</div>
+        
+        <div class="cal-header">
+            <h2 id="monthName" style="margin:0; font-size: 18px;">April 2026</h2>
+        </div>
+
+        <div class="cal-grid" id="calGrid">
+            <div class="day-name">SEN</div><div class="day-name">SEL</div><div class="day-name">RAB</div><div class="day-name">KAM</div><div class="day-name">JUM</div><div class="day-name">SAB</div><div class="day-name sun">MING</div>
+            </div>
+    </div>
+
+    <button class="btn-edit-toggle" id="editToggle"><i data-lucide="edit-3"></i><span>Edit Absen</span></button>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3 id="modalDateLabel">Edit Tanggal</h3>
+            <label style="font-size: 12px; opacity: 0.6;">Lokasi Absen:</label>
+            <select id="selLoc"><option value="FIVE STAR 1">FIVE STAR 1</option><option value="FIVE STAR 2">FIVE STAR 2</option></select>
+            <label style="font-size: 12px; opacity: 0.6;">Opsi Absen:</label>
+            <select id="selStatus">
+                <option value="Masuk">Masuk</option><option value="Off">Off</option><option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option><option value="Alpha">Alpha</option><option value="Cuti">Cuti</option>
+            </select>
+            <button class="save" id="btnSave">Simpan Absensi</button>
+            <button class="save" style="background:none; color:var(--text); opacity:0.5;" onclick="closeModal()">Batal</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
         <a href="absensi.html" class="nav-item active"><i data-lucide="calendar"></i><span>Absensi</span></a>
         <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
+
     <script type="module">
-
-// Tambahkan ini di absensi.html, gaji.html, catatan.html, dan profile.html
-localStorage.setItem('lastVisitedPage', window.location.pathname.split('/').pop());
-
+        localStorage.setItem('lastVisitedPage', 'absensi.html');
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fb); const auth = getAuth(app);
-        onAuthStateChanged(auth, (u) => { if(!u) window.location.href="login.html"; });
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
+
+        let isEditMode = false;
+        let selectedDateID = null;
+        let attendanceData = {};
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const now = new Date();
+        const curMonth = now.getMonth();
+        const curYear = now.getFullYear();
+
+        onAuthStateChanged(auth, (u) => { 
+            if(!u) window.location.href="login.html"; 
+            else loadAttendance();
+        });
+
+        // TEMA LOGIC
         const tBtn = document.getElementById('tBtn');
         const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
         tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
-        lucide.createIcons();
 
-// Import fungsi yang dibutuhkan
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-const db = getFirestore(app); // 'app' sudah didefinisikan di config Firebase kamu
-
-// Fungsi untuk Absen Masuk
-async function simpanAbsen() {
-    const user = auth.currentUser; // Ambil data user yang sedang login
-
-    if (user) {
-        try {
-            // 1. Ambil Waktu Lokal
-            const sekarang = new Date();
-            const tanggal = sekarang.toLocaleDateString('id-ID'); // Contoh: 12/04/2026
-            const jam = sekarang.toLocaleTimeString('id-ID'); // Contoh: 08:00:15
-
-            // 2. Simpan ke Firestore (Koleksi: absensi)
-            await addDoc(collection(db, "absensi"), {
-                uid: user.uid,
-                email: user.email,
-                nama: user.displayName || "Karyawan", // Pastikan nama terisi
-                tanggal: tanggal,
-                jam: jam,
-                status: "Masuk",
-                timestamp: serverTimestamp() // Waktu server agar akurat & tidak bisa dimanipulasi HP
-            });
-
-            alert("Berhasil! Absen Masuk kamu sudah tercatat.");
-            
-        } catch (error) {
-            console.error("Gagal simpan absen: ", error);
-            alert("Terjadi kesalahan, coba lagi.");
+        // LOAD DATA DARI FIREBASE
+        async function loadAttendance() {
+            attendanceData = {};
+            const q = query(collection(db, "absensi"), where("uid", "==", auth.currentUser.uid));
+            const snap = await getDocs(q);
+            snap.forEach(d => { attendanceData[d.id.split('_')[1]] = d.data(); });
+            renderCalendar();
         }
-    } else {
-        alert("Kamu belum login!");
-    }
-}
 
-// Pasang fungsi ke tombol "Absen Masuk"
-document.querySelector('button').onclick = simpanAbsen;
+        // GENERATE KALENDER
+        function renderCalendar() {
+            const grid = document.getElementById('calGrid');
+            const monthTitle = document.getElementById('monthName');
+            monthTitle.innerText = `${monthNames[curMonth]} ${curYear}`;
 
+            // Reset Grid (Keep headers)
+            const headers = grid.querySelectorAll('.day-name');
+            grid.innerHTML = '';
+            headers.forEach(h => grid.appendChild(h));
+
+            const firstDay = new Date(curYear, curMonth, 1).getDay(); // 0 = Sun
+            const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+            
+            // Offset hari (agar Senin di awal)
+            let offset = firstDay === 0 ? 6 : firstDay - 1;
+
+            for(let i=0; i < offset; i++) grid.innerHTML += '<div></div>';
+
+            for(let d=1; d <= daysInMonth; d++) {
+                const dateStr = `${d < 10 ? '0'+d : d}-${(curMonth+1) < 10 ? '0'+(curMonth+1) : (curMonth+1)}-${curYear}`;
+                const isSun = new Date(curYear, curMonth, d).getDay() === 0;
+                const data = attendanceData[dateStr] || null;
+
+                const box = document.createElement('div');
+                box.className = `date-box ${isSun ? 'sunday' : ''} ${isEditMode ? 'editing' : ''}`;
+                box.innerHTML = `<span>${d}</span>`;
+                
+                if(data) {
+                    box.innerHTML += `<div class="status-tag st-${data.status.toLowerCase()}">${data.status}</div>`;
+                    box.innerHTML += `<div class="loc-tag">${data.lokasi || ''}</div>`;
+                }
+
+                box.onclick = () => { if(isEditMode) openEdit(dateStr); };
+                grid.appendChild(box);
+            }
+            lucide.createIcons();
+        }
+
+        // EDIT LOGIC
+        document.getElementById('editToggle').onclick = function() {
+            isEditMode = !isEditMode;
+            this.style.background = isEditMode ? 'var(--sunday)' : 'var(--accent)';
+            this.querySelector('span').innerText = isEditMode ? 'Selesai Edit' : 'Edit Absen';
+            document.getElementById('eBanner').style.display = isEditMode ? 'block' : 'none';
+            renderCalendar();
+        };
+
+        function openEdit(dateID) {
+            selectedDateID = dateID;
+            document.getElementById('modalDateLabel').innerText = `Absen: ${dateID}`;
+            const data = attendanceData[dateID];
+            if(data) {
+                document.getElementById('selLoc').value = data.lokasi || "FIVE STAR 1";
+                document.getElementById('selStatus').value = data.status || "Masuk";
+            }
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        window.closeModal = () => document.getElementById('editModal').style.display = 'none';
+
+        document.getElementById('btnSave').onclick = async () => {
+            const user = auth.currentUser;
+            const status = document.getElementById('selStatus').value;
+            const lokasi = document.getElementById('selLoc').value;
+            const idCustom = `${user.uid}_${selectedDateID}`;
+
+            try {
+                await setDoc(doc(db, "absensi", idCustom), {
+                    uid: user.uid,
+                    tanggal: selectedDateID,
+                    status: status,
+                    lokasi: lokasi,
+                    updatedAt: new Date()
+                }, { merge: true });
+
+                attendanceData[selectedDateID] = { status, lokasi };
+                closeModal();
+                renderCalendar();
+            } catch (err) { alert("Gagal Simpan!"); }
+        };
+
+        lucide.createIcons();
     </script>
 </body>
 </html>
