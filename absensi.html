@@ -21,20 +21,16 @@
 
         .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
         
-        .edit-banner { background: var(--accent); color: #000; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; display: none; border-radius: 12px; margin-bottom: 15px; }
-
         /* Navigasi Bulan */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
         .nav-btn { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px; cursor: pointer; display: flex; align-items: center; color: var(--text); }
         .month-title { font-size: 18px; font-weight: 800; }
 
-        /* Kalender Grid (Dimulai Minggu) */
+        /* Kalender Grid */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.5; padding-bottom: 8px; text-transform: uppercase; }
         .day-name.sun { color: var(--sunday); opacity: 1; }
-        .day-name.sat { color: var(--accent); opacity: 0.8; }
         
-        /* BOX TANGGAL - POSISI TANGGAL DI ATAS SEMUA */
         .date-box { 
             background: var(--card); 
             border: 1px solid var(--border); 
@@ -43,30 +39,32 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start; /* Paksa konten mulai dari atas */
+            justify-content: flex-start;
             padding: 8px 2px; 
             position: relative; 
             transition: 0.2s; 
             cursor: pointer; 
             box-sizing: border-box;
+            color: var(--text);
         }
         .date-box span { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
         .date-box.sunday span { color: var(--sunday); }
-        .date-box.editing { border: 2px dashed var(--accent); transform: scale(0.95); }
+        .date-box.editing { border: 2px dashed var(--accent) !important; transform: scale(0.95); }
 
-        /* Tag Status & Lokasi */
-        .status-tag { font-size: 7px; font-weight: 900; padding: 2px 4px; border-radius: 4px; text-transform: uppercase; width: 85%; text-align: center; margin-bottom: 2px; }
-        .loc-tag { font-size: 8px; opacity: 0.6; font-weight: 700; color: var(--text); }
+        /* ATURAN PEWARNAAN KOTAK (FULL COLOR) */
+        .bg-masuk { background-color: #34C759 !important; border: none !important; color: white !important; }
+        .bg-off   { background-color: #8E8E93 !important; border: none !important; color: white !important; }
+        .bg-izin  { background-color: #007AFF !important; border: none !important; color: white !important; }
+        .bg-sakit { background-color: #FF9500 !important; border: none !important; color: white !important; }
+        .bg-alpha { background-color: #FF3B30 !important; border: none !important; color: white !important; }
+        .bg-cuti  { background-color: var(--card); } /* Tanpa pewarnaan khusus */
 
-        /* Warna Status */
-        .st-masuk { background: #E3F2FD; color: #1976D2; }
-        .st-off { background: #F5F5F5; color: #616161; }
-        .st-izin { background: #FFF9C4; color: #FBC02D; }
-        .st-sakit { background: #FFE0B2; color: #F57C00; }
-        .st-alpha { background: #FFEBEE; color: #D32F2F; }
-        .st-cuti { background: #F3E5F5; color: #7B1FA2; }
-        [data-theme="dark"] .st-masuk { background: #1A237E; color: #90CAF9; }
-        [data-theme="dark"] .st-off { background: #333; color: #AAA; }
+        /* Override warna angka di kotak berwarna */
+        .bg-masuk span, .bg-off span, .bg-izin span, .bg-sakit span, .bg-alpha span { color: white !important; }
+
+        /* Tag Status & Lokasi di dalam kotak berwarna */
+        .status-tag { font-size: 7px; font-weight: 900; padding: 2px 4px; border-radius: 4px; text-transform: uppercase; width: 85%; text-align: center; margin-bottom: 2px; background: rgba(255,255,255,0.2); }
+        .loc-tag { font-size: 8px; font-weight: 700; opacity: 0.9; }
 
         /* Modal Popup */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
@@ -75,9 +73,11 @@
         .btn-save { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
         [data-theme="dark"] .btn-save { color: #000; }
 
+        /* Floating Button */
         .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 99; }
         [data-theme="dark"] .btn-edit-toggle { color: #000; }
 
+        /* Nav Bawah */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -85,11 +85,9 @@
     </style>
 </head>
 <body>
-    <header><span>Five Star 2</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    <header><span>KEHADIRAN</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
     
     <div class="container">
-        <div class="edit-banner" id="eBanner">MODE EDIT: KETUK TANGGAL UNTUK ABSEN</div>
-        
         <div class="cal-nav">
             <button class="nav-btn" onclick="changeMonth(-1)"><i data-lucide="chevron-left"></i></button>
             <div class="month-title" id="monthName">...</div>
@@ -97,8 +95,8 @@
         </div>
 
         <div class="cal-grid" id="calGrid">
-            <div class="day-name sun">Min</div><div class="day-name">Sen</div><div class="day-name">Sel</div><div class="day-name">Rab</div><div class="day-name">Kam</div><div class="day-name">Jum</div><div class="day-name sat">Sab</div>
-            </div>
+            <div class="day-name sun">Min</div><div class="day-name">Sen</div><div class="day-name">Sel</div><div class="day-name">Rab</div><div class="day-name">Kam</div><div class="day-name">Jum</div><div class="day-name">Sab</div>
+        </div>
     </div>
 
     <button class="btn-edit-toggle" id="editBtn"><i data-lucide="edit-3"></i><span>Edit Absen</span></button>
@@ -161,18 +159,16 @@
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateKey = `${day < 10 ? '0'+day : day}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
-                const isSunday = new Date(y, m, day).getDay() === 0;
                 const data = localData[dateKey];
-
                 const box = document.createElement('div');
-                box.className = `date-box ${isSunday ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
+                box.className = `date-box ${new Date(y, m, day).getDay() === 0 ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
                 
-                // ORDER: TANGGAL -> STATUS -> LOKASI
-                box.innerHTML = `<span>${day}</span>`;
                 if (data) {
+                    box.classList.add(`bg-${data.status.toLowerCase()}`);
                     const shortLoc = data.lokasi ? data.lokasi.replace('FIVE STAR ', 'FS') : '';
-                    box.innerHTML += `<div class="status-tag st-${data.status.toLowerCase()}">${data.status}</div>`;
-                    box.innerHTML += `<div class="loc-tag">${shortLoc}</div>`;
+                    box.innerHTML = `<span>${day}</span><div class="status-tag">${data.status}</div><div class="loc-tag">${shortLoc}</div>`;
+                } else {
+                    box.innerHTML = `<span>${day}</span>`;
                 }
 
                 box.onclick = () => { if(isEdit) openModal(dateKey); };
@@ -187,7 +183,6 @@
             isEdit = !isEdit;
             this.style.background = isEdit ? 'var(--sunday)' : 'var(--accent)';
             this.querySelector('span').innerText = isEdit ? 'Selesai' : 'Edit Absen';
-            document.getElementById('eBanner').style.display = isEdit ? 'block' : 'none';
             renderCal();
         };
 
