@@ -3,80 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Profil Saya - Five Star 2</title>
+    <title>Profil - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; }
-        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        /* CSS VARIABLE: Light Mode sebagai default (:root) */
+        :root { 
+            --bg: #F5F5F7; 
+            --nav: #FFFFFF; 
+            --text: #1D1D1F; 
+            --accent: #007AFF; 
+            --card: #FFFFFF; 
+            --border: #E5E5E7; 
+            --danger: #FF3B30; 
+            --input-bg: #FFFFFF; 
+        }
+        /* Dark Mode diaktifkan lewat atribut data-theme */
+        [data-theme="dark"] { 
+            --bg: #121212; 
+            --nav: #181818; 
+            --text: #FFFFFF; 
+            --accent: #39FF14; 
+            --card: #1E1E1E; 
+            --border: #333; 
+            --input-bg: #1A1A1A; 
+        }
         
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; transition: 0.3s; }
+        /* Kunci Scroll & Zoom */
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            touch-action: pan-y; /* Masih bisa scroll internal card jika perlu */
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            transition: background 0.3s; 
+        }
         
-        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); position: sticky; top: 0; z-index: 10; }
+        header { 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+            background: var(--nav); 
+        }
         header span { font-size: 18px; font-weight: 700; }
 
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
-        .theme-toggle i { width: 18px; height: 18px; }
 
-        .container { padding: 20px; }
-        .profile-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .container { 
+            padding: 20px; 
+            height: calc(100% - 150px); 
+            overflow-y: auto; /* Card bisa scroll jika isi kepanjangan di layar kecil */
+        }
+        
+        .profile-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
 
+        /* View Mode */
         .info-group { margin-bottom: 18px; }
-        .info-label { font-size: 12px; opacity: 0.6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-label { font-size: 11px; opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .info-value { font-size: 16px; font-weight: 600; margin-top: 4px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 
-        .action-group { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
-        
-        .btn { padding: 16px; border-radius: 30px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; text-decoration: none; transition: 0.2s; }
-        .btn-edit { background: var(--accent); color: white; }
-        [data-theme="dark"] .btn-edit { color: #000; }
-        .btn-logout { background: #8e8e9333; color: var(--text); }
-        .btn-delete { background: transparent; color: var(--danger); border: 1px solid var(--danger); margin-top: 10px; font-size: 13px; }
+        /* Edit Mode */
+        .edit-field { margin-bottom: 18px; }
+        .edit-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        input, select { 
+            width: 100%; background: var(--input-bg); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 14px; color: var(--text); font-size: 15px; box-sizing: border-box; 
+        }
+
+        .btn { padding: 16px; border-radius: 30px; border: none; font-weight: 700; cursor: pointer; text-align: center; width: 100%; transition: 0.2s; font-size: 15px; margin-bottom: 10px; }
+        .btn-primary { background: var(--accent); color: white; }
+        [data-theme="dark"] .btn-primary { color: #000; }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-delete { color: var(--danger); border: 1px solid var(--danger); font-size: 13px; background: transparent; margin-top: 10px; }
 
         /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; text-decoration: none; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <header>
-        <span>Profil Karyawan</span>
+        <span>Profil</span>
         <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
     </header>
 
     <div class="container">
-        <div class="profile-card">
-            <div class="info-group">
-                <div class="info-label">Nama Lengkap</div>
-                <div id="pName" class="info-value">Memuat...</div>
-            </div>
-            <div class="info-group">
-                <div class="info-label">Umur</div>
-                <div id="pAge" class="info-value">-</div>
-            </div>
-            <div class="info-group">
-                <div class="info-label">Jenis Kelamin</div>
-                <div id="pGender" class="info-value">-</div>
-            </div>
-            <div class="info-group">
-                <div class="info-label">Alamat</div>
-                <div id="pAddress" class="info-value">-</div>
-            </div>
+        <div id="viewMode" class="profile-card">
+            <div class="info-group"><div class="info-label">Nama Lengkap</div><div id="pName" class="info-value">...</div></div>
+            <div class="info-group"><div class="info-label">Umur</div><div id="pAge" class="info-value">-</div></div>
+            <div class="info-group"><div class="info-label">Jenis Kelamin</div><div id="pGender" class="info-value">-</div></div>
+            <div class="info-group"><div class="info-label">Alamat</div><div id="pAddress" class="info-value">-</div></div>
+            <button id="editBtn" class="btn btn-primary">Edit Profil</button>
+            <button id="oBtn" class="btn btn-outline">Logout</button>
+            <button id="delBtn" class="btn btn-delete">Hapus Akun Permanen</button>
+        </div>
 
-            <div class="action-group">
-                <button class="btn btn-edit" onclick="alert('Fitur edit segera hadir!')">Edit Profil</button>
-                <button id="oBtn" class="btn btn-logout">Keluar (Logout)</button>
-                <button id="delBtn" class="btn btn-delete">Hapus Akun Permanen</button>
-            </div>
+        <div id="editMode" class="profile-card" style="display: none;">
+            <form id="editForm">
+                <div class="edit-field"><label>Nama Lengkap</label><input type="text" id="fnEdit" required></div>
+                <div class="edit-field"><label>Alamat</label><input type="text" id="almtEdit" required></div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="edit-field" style="flex:1;"><label>Tgl Lahir</label><input type="date" id="bdEdit" required></div>
+                    <div class="edit-field" style="flex:1;"><label>Gender</label>
+                        <select id="gdEdit"><option value="L">Pria</option><option value="P">Wanita</option></select>
+                    </div>
+                </div>
+                <button type="submit" id="saveBtn" class="btn btn-primary">Simpan</button>
+                <button type="button" id="cancelBtn" class="btn btn-outline">Batal</button>
+            </form>
         </div>
     </div>
 
     <nav class="bottom-nav">
         <a href="dashboard.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
-        <a href="dashboard.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="dashboard.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
@@ -84,65 +133,86 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", storageBucket: "five-star-2404.firebasestorage.app", messagingSenderId: "778881784522", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fb);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
 
-        // 1. Ambil Data dari Firestore
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const s = await getDoc(doc(db, "users", user.uid));
-                if (s.exists()) {
-                    const d = s.data();
-                    document.getElementById('pName').innerText = d.nama || "-";
-                    document.getElementById('pGender').innerText = d.gender === 'L' ? 'Laki-laki' : 'Perempuan';
-                    document.getElementById('pAddress').innerText = d.alamat || "Alamat belum diisi";
-                    
-                    // Hitung Umur dari Tgl Lahir
-                    if(d.bd) {
-                        const birth = new Date(d.bd);
-                        const diff = Date.now() - birth.getTime();
-                        const age = new Date(diff).getUTCFullYear() - 1970;
-                        document.getElementById('pAge').innerText = age + " Tahun";
-                    }
-                }
-            } else { window.location.href = "login.html"; }
-        });
+        let userD = null;
 
-        // 2. Fitur Keluar
-        document.getElementById('oBtn').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
-
-        // 3. Fitur Hapus Akun Permanen
-        document.getElementById('delBtn').onclick = async () => {
-            if (confirm("PERINGATAN! Akun Anda akan dihapus secara permanen. Tindakan ini tidak bisa dibatalkan. Lanjutkan?")) {
-                const user = auth.currentUser;
-                try {
-                    await deleteDoc(doc(db, "users", user.uid)); // Hapus data di database
-                    await deleteUser(user); // Hapus akun di Auth
-                    alert("Akun berhasil dihapus.");
-                    window.location.href = "index.html";
-                } catch (e) {
-                    alert("Untuk keamanan, Anda perlu Logout lalu Login kembali sebelum menghapus akun.");
-                }
-            }
-        };
-
-        // 4. Tema & Local Storage
+        // TEMA: DEFAULT LIGHT MODE
         const tBtn = document.getElementById('tBtn');
-        const applyTheme = (t) => {
+        const applyT = (t) => {
             document.body.setAttribute('data-theme', t);
             tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
             lucide.createIcons();
         };
-        applyTheme(localStorage.getItem('theme') || 'light');
+        // Logika: Cek storage, jika kosong pakai 'light'
+        const savedT = localStorage.getItem('theme') || 'light';
+        applyT(savedT);
+
         tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt);
-            applyTheme(nt);
+            const now = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', now);
+            applyT(now);
         };
+
+        // LOAD DATA
+        onAuthStateChanged(auth, async (u) => {
+            if (u) {
+                const s = await getDoc(doc(db, "users", u.uid));
+                if (s.exists()) {
+                    userD = s.data();
+                    renderView();
+                }
+            } else { window.location.href = "login.html"; }
+        });
+
+        function renderView() {
+            document.getElementById('pName').innerText = userD.nama;
+            document.getElementById('pGender').innerText = userD.gender === 'L' ? 'Pria' : 'Wanita';
+            document.getElementById('pAddress').innerText = userD.alamat || "-";
+            if(userD.bd || userD.tgl_lahir) {
+                const b = new Date(userD.bd || userD.tgl_lahir);
+                const age = new Date().getFullYear() - b.getFullYear();
+                document.getElementById('pAge').innerText = age + " Tahun";
+            }
+        }
+
+        // NAVIGASI EDIT
+        document.getElementById('editBtn').onclick = () => {
+            document.getElementById('fnEdit').value = userD.nama;
+            document.getElementById('almtEdit').value = userD.alamat || "";
+            document.getElementById('bdEdit').value = userD.bd || userD.tgl_lahir || "";
+            document.getElementById('gdEdit').value = userD.gender;
+            document.getElementById('viewMode').style.display = 'none';
+            document.getElementById('editMode').style.display = 'block';
+        };
+
+        document.getElementById('cancelBtn').onclick = () => {
+            document.getElementById('editMode').style.display = 'none';
+            document.getElementById('viewMode').style.display = 'block';
+        };
+
+        // SIMPAN
+        document.getElementById('editForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const u = auth.currentUser;
+            const up = {
+                nama: document.getElementById('fnEdit').value,
+                alamat: document.getElementById('almtEdit').value,
+                bd: document.getElementById('bdEdit').value,
+                gender: document.getElementById('gdEdit').value,
+                email: u.email
+            };
+            await setDoc(doc(db, "users", u.uid), up);
+            userD = up;
+            renderView();
+            document.getElementById('cancelBtn').click();
+            alert("Berhasil diperbarui!");
+        };
+
+        document.getElementById('oBtn').onclick = () => signOut(auth).then(() => window.location.href="index.html");
         lucide.createIcons();
     </script>
 </body>
