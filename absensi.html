@@ -36,6 +36,47 @@
 // Tambahkan ini di absensi.html, gaji.html, catatan.html, dan profile.html
 localStorage.setItem('lastVisitedPage', window.location.pathname.split('/').pop());
 
+// Import fungsi yang dibutuhkan
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const db = getFirestore(app); // 'app' sudah didefinisikan di config Firebase kamu
+
+// Fungsi untuk Absen Masuk
+async function simpanAbsen() {
+    const user = auth.currentUser; // Ambil data user yang sedang login
+
+    if (user) {
+        try {
+            // 1. Ambil Waktu Lokal
+            const sekarang = new Date();
+            const tanggal = sekarang.toLocaleDateString('id-ID'); // Contoh: 12/04/2026
+            const jam = sekarang.toLocaleTimeString('id-ID'); // Contoh: 08:00:15
+
+            // 2. Simpan ke Firestore (Koleksi: absensi)
+            await addDoc(collection(db, "absensi"), {
+                uid: user.uid,
+                email: user.email,
+                nama: user.displayName || "Karyawan", // Pastikan nama terisi
+                tanggal: tanggal,
+                jam: jam,
+                status: "Masuk",
+                timestamp: serverTimestamp() // Waktu server agar akurat & tidak bisa dimanipulasi HP
+            });
+
+            alert("Berhasil! Absen Masuk kamu sudah tercatat.");
+            
+        } catch (error) {
+            console.error("Gagal simpan absen: ", error);
+            alert("Terjadi kesalahan, coba lagi.");
+        }
+    } else {
+        alert("Kamu belum login!");
+    }
+}
+
+// Pasang fungsi ke tombol "Absen Masuk"
+document.querySelector('button').onclick = simpanAbsen;
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
