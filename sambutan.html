@@ -9,32 +9,102 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; position: fixed; width: 100%; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        .theme-header { position: absolute; top: 20px; right: 20px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); }
-        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 90%; max-width: 400px; }
-        .logo-img { width: 85%; height: auto; margin-bottom: 30px; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1)); }
-        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.3)); }
-        p { text-align: center; opacity: 0.7; margin-bottom: 40px; font-size: 15px; }
-        .btn { width: 100%; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; display: flex; justify-content: center; background: var(--accent); color: white; font-size: 16px; border: none; }
-        [data-theme="dark"] .btn { color: #000; }
-        footer { position: absolute; bottom: 20px; font-size: 12px; opacity: 0.5; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; transition: 0.3s; }
+        
+        /* SAMAKAN TOGGLE DENGAN LOGIN & ABSENSI */
+        .theme-header { position: absolute; top: 15px; right: 20px; z-index: 10; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
+        .container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 50px 0 80px 0; 
+            box-sizing: border-box;
+        }
+
+        /* LOGO SUPER JUMBO MEPRET KIRI KANAN */
+        .logo-img { 
+            width: 95%; 
+            max-width: 500px; 
+            height: auto; 
+            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.1));
+            margin-top: 10px;
+        }
+        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.4)); }
+
+        .middle-content { text-align: center; width: 90%; }
+        p { opacity: 0.7; font-size: 15px; margin: 0; line-height: 1.5; }
+
+        /* TOMBOL LANJUTKAN KECIL */
+        .btn-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+        .btn { 
+            width: auto; 
+            min-width: 140px; 
+            padding: 12px 30px; 
+            border-radius: 40px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            background: var(--accent); 
+            color: white; 
+            font-size: 15px; 
+            border: none; 
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] .btn { color: #000; box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); }
+
+        footer { 
+            position: absolute; 
+            bottom: 20px; 
+            width: 100%; 
+            text-align: center; 
+            font-size: 12px; 
+            opacity: 0.5; 
+        }
     </style>
 </head>
 <body>
-    <div class="theme-header"><div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div></div>
+    <div class="theme-header">
+        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
+    </div>
+
     <div class="container">
         <img src="logo_fivestar.png" class="logo-img">
-        <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
-        <a href="login.html" class="btn">Lanjutkan</a>
+
+        <div class="middle-content">
+            <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
+        </div>
+
+        <div class="btn-wrapper">
+            <a href="login.html" class="btn">Lanjutkan</a>
+        </div>
     </div>
+
     <footer>Project by RONNY</footer>
+
     <script>
-        const btn = document.getElementById('themeBtn');
-        const applyTheme = (t) => { document.body.setAttribute('data-theme', t); btn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
-        applyTheme(localStorage.getItem('theme') || 'light');
-        btn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyTheme(nt); };
+        // Logika Script disamakan dengan login.html
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
+        };
+        
+        applyT(localStorage.getItem('theme') || 'light');
+        
+        tBtn.onclick = () => { 
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', nt); 
+            applyT(nt); 
+        };
+        
         lucide.createIcons();
     </script>
 </body>
