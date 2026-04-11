@@ -10,55 +10,80 @@
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
         
+        /* Kunci Layar (Apple Style) */
         html, body { height: 100%; margin: 0; overflow: hidden; position: fixed; width: 100%; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; transition: 0.3s; }
         
-        /* SAMAKAN TOGGLE DENGAN LOGIN & ABSENSI */
-        .theme-header { position: absolute; top: 15px; right: 20px; z-index: 10; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
+        /* SAMAKAN TOGGLE DENGAN LOGIN & ABSENSI (Fix Posisi) */
+        .theme-header { position: absolute; top: 15px; right: 20px; z-index: 100; /* Paling atas */ }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); transition: 0.2s; }
+        .theme-toggle:active { transform: scale(0.9); }
         .theme-toggle i { width: 18px; height: 18px; }
 
         .container { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between; 
+            justify-content: space-between; /* Atas, Tengah, Bawah terpisah jauh */
             align-items: center; 
-            padding: 50px 0 80px 0; 
+            padding: 0; /* Remove default padding for max logo */
             box-sizing: border-box;
+            width: 100%;
         }
 
-        /* LOGO SUPER JUMBO MEPRET KIRI KANAN */
+        /* --- LOGO DIPERBESAR MAKSIMAL (MEPET PINGGIR) --- */
+        .logo-wrapper {
+            width: 100vw; /* Lebar penuh layar HP */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden; /* Mencegah scroll horizontal */
+            margin-top: -10px; /* Sedikit naik ke area status bar */
+        }
         .logo-img { 
-            width: 95%; 
-            max-width: 500px; 
+            width: 100%; /* Mengisi wrapper penuh */
             height: auto; 
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.1));
-            margin-top: 10px;
+            display: block;
+            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.08));
+            transition: 0.5s;
         }
-        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.4)); }
+        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.35)); }
 
-        .middle-content { text-align: center; width: 90%; }
-        p { opacity: 0.7; font-size: 15px; margin: 0; line-height: 1.5; }
+        /* Area Tengah (Teks) */
+        .middle-content { 
+            text-align: center; 
+            width: 85%; 
+            max-width: 350px; 
+            margin-top: 20px; /* Jarak dari logo jumbo */
+        }
+        p { opacity: 0.7; font-size: 15px; margin: 0; line-height: 1.5; font-weight: 400; }
 
-        /* TOMBOL LANJUTKAN KECIL */
-        .btn-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+        /* Area Bawah (Tombol Kecil) */
+        .btn-wrapper { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 70px; /* Jarak dari footer */
+        }
         .btn { 
-            width: auto; 
-            min-width: 140px; 
-            padding: 12px 30px; 
+            width: auto; /* Kecil, tidak lebar */
+            min-width: 150px; 
+            padding: 14px 30px; 
             border-radius: 40px; 
             font-weight: 700; 
             text-decoration: none; 
             background: var(--accent); 
             color: white; 
-            font-size: 15px; 
+            font-size: 16px; 
             border: none; 
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: 0.2s;
         }
         [data-theme="dark"] .btn { color: #000; box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); }
+        .btn:active { transform: scale(0.97); }
 
+        /* Footer */
         footer { 
             position: absolute; 
             bottom: 20px; 
@@ -66,6 +91,7 @@
             text-align: center; 
             font-size: 12px; 
             opacity: 0.5; 
+            font-weight: 400;
         }
     </style>
 </head>
@@ -75,7 +101,9 @@
     </div>
 
     <div class="container">
-        <img src="logo_fivestar.png" class="logo-img">
+        <div class="logo-wrapper">
+            <img src="logo_fivestar.png" class="logo-img" alt="Logo Jumbo">
+        </div>
 
         <div class="middle-content">
             <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
@@ -89,7 +117,7 @@
     <footer>Project by RONNY</footer>
 
     <script>
-        // Logika Script disamakan dengan login.html
+        // Logika Script (Sinkron dengan Halaman Lain)
         const tBtn = document.getElementById('tBtn');
         const applyT = (t) => { 
             document.body.setAttribute('data-theme', t); 
