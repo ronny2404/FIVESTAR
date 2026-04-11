@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Profil</title>
+    <title>Profil - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: pan-y; width: 100%; position: fixed; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); }
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .info-label { font-size: 11px; opacity: 0.5; font-weight: 700; text-transform: uppercase; margin-top: 10px; }
         .info-value { font-size: 16px; font-weight: 600; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
         .btn { padding: 15px; border-radius: 30px; border: none; font-weight: 700; cursor: pointer; width: 100%; font-size: 15px; margin-bottom: 10px; }
         .btn-primary { background: var(--accent); color: white; }
         .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
         .btn-danger { color: var(--danger); border: 1px solid var(--danger); background: transparent; }
+        .edit-field { margin-bottom: 15px; }
+        .edit-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text); font-size: 15px; box-sizing: border-box; }
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -34,7 +38,7 @@
             <div class="info-label">Jenis Kelamin</div><div id="pG" class="info-value">...</div>
             <div class="info-label">Alamat</div><div id="pA" class="info-value">...</div>
             <div class="info-label">Umur</div><div id="pU" class="info-value">-</div>
-            <button class="btn btn-primary" id="goEdit">Edit Profil</button>
+            <button class="btn btn-primary" id="goEdit">Edit Profil & Alamat</button>
             <button class="btn btn-outline" id="goPass">Ganti Password</button>
             <button class="btn btn-outline" id="oB">Logout</button>
             <button class="btn btn-danger" id="delB">Hapus Akun Permanen</button>
@@ -42,10 +46,10 @@
         <div id="eMode" class="card" style="display:none;">
             <h3>Edit Profil</h3>
             <form id="eF">
-                <input type="text" id="efN" placeholder="Nama" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <input type="text" id="efA" placeholder="Alamat" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <input type="date" id="efB" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <select id="efG" style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);"><option value="L">Pria</option><option value="P">Wanita</option></select>
+                <div class="edit-field"><label>Nama Lengkap</label><input type="text" id="efN" required></div>
+                <div class="edit-field"><label>Alamat</label><input type="text" id="efA" required></div>
+                <div class="edit-field"><label>Tgl Lahir</label><input type="date" id="efB" required></div>
+                <div class="edit-field"><label>Gender</label><select id="efG"><option value="L">Pria</option><option value="P">Wanita</option></select></div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
             </form>
@@ -53,14 +57,20 @@
         <div id="pMode" class="card" style="display:none;">
             <h3>Ganti Password</h3>
             <form id="pF">
-                <input type="password" id="pOld" placeholder="Password Lama" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
-                <input type="password" id="pNew" placeholder="Password Baru" required style="margin-bottom:10px; width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--input); color:var(--text);">
+                <input type="password" id="pOld" placeholder="Password Lama" required style="margin-bottom:10px;">
+                <input type="password" id="pNew" placeholder="Password Baru" required style="margin-bottom:10px;">
+                <input type="password" id="pConf" placeholder="Konfirmasi Password Baru" required style="margin-bottom:10px;">
                 <button type="submit" class="btn btn-primary">Update</button>
                 <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
             </form>
         </div>
     </div>
-    <nav class="bottom-nav"><a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a><a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a><a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a><a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a></nav>
+    <nav class="bottom-nav">
+        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
+        <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
+        <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
+        <a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a>
+    </nav>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -80,14 +90,35 @@
             document.getElementById('pA').innerText = uD.alamat || "-";
             if(uD.bd) { const b = new Date(uD.bd); document.getElementById('pU').innerText = (new Date().getFullYear() - b.getFullYear()) + " Tahun"; }
         }
-        document.getElementById('goEdit').onclick = () => { document.getElementById('vMode').style.display = 'none'; document.getElementById('eMode').style.display = 'block'; document.getElementById('efN').value = uD.nama; document.getElementById('efA').value = uD.alamat || ""; document.getElementById('efB').value = uD.bd || ""; document.getElementById('efG').value = uD.gender || "L"; };
-        document.getElementById('eF').onsubmit = async (e) => { e.preventDefault(); const up = { ...uD, nama: document.getElementById('efN').value, alamat: document.getElementById('efA').value, bd: document.getElementById('efB').value, gender: document.getElementById('efG').value }; await setDoc(doc(db, "users", auth.currentUser.uid), up); location.reload(); };
+        document.getElementById('goEdit').onclick = () => {
+            document.getElementById('vMode').style.display = 'none'; document.getElementById('eMode').style.display = 'block';
+            document.getElementById('efN').value = uD.nama; document.getElementById('efA').value = uD.alamat || "";
+            document.getElementById('efB').value = uD.bd || ""; document.getElementById('efG').value = uD.gender || "L";
+        };
+        document.getElementById('eF').onsubmit = async (e) => {
+            e.preventDefault();
+            const up = { ...uD, nama: document.getElementById('efN').value, alamat: document.getElementById('efA').value, bd: document.getElementById('efB').value, gender: document.getElementById('efG').value };
+            await setDoc(doc(db, "users", auth.currentUser.uid), up); alert("Berhasil diperbarui!"); location.reload();
+        };
         document.getElementById('goPass').onclick = () => { document.getElementById('vMode').style.display = 'none'; document.getElementById('pMode').style.display = 'block'; };
-        document.getElementById('pF').onsubmit = async (e) => { e.preventDefault(); const oldP = document.getElementById('pOld').value; const newP = document.getElementById('pNew').value; const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP); try { await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); alert("Sip!"); location.reload(); } catch { alert("Gagal!"); } };
-        document.getElementById('delB').onclick = async () => { if(confirm("Hapus Permanen?")) { await deleteDoc(doc(db, "users", auth.currentUser.uid)); await deleteUser(auth.currentUser); window.location.href="index.html"; } };
+        document.getElementById('pF').onsubmit = async (e) => {
+            e.preventDefault(); const oldP = document.getElementById('pOld').value; const newP = document.getElementById('pNew').value;
+            if (newP !== document.getElementById('pConf').value) return alert("Konfirmasi password baru tidak cocok!");
+            const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP);
+            try { await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); alert("Password berhasil diubah!"); location.reload(); } catch { alert("Gagal: Password lama salah."); }
+        };
+        document.getElementById('delB').onclick = async () => {
+            if(confirm("Hapus Akun Permanen?")) {
+                try { await deleteDoc(doc(db, "users", auth.currentUser.uid)); await deleteUser(auth.currentUser); window.location.href="index.html"; }
+                catch { alert("Silakan logout lalu login kembali sebelum menghapus akun."); }
+            }
+        };
         document.getElementById('oB').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
-        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-        const tBtn = document.getElementById('tBtn'); tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); document.body.setAttribute('data-theme', nt); lucide.createIcons(); }; lucide.createIcons();
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
+        lucide.createIcons();
     </script>
 </body>
 </html>
