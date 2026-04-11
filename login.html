@@ -11,25 +11,29 @@
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
         html, body { height: 100%; margin: 0; overflow: hidden; width: 100%; position: fixed; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; }
+        
         input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; transition: background-color 5000s ease-in-out 0s; }
-        .theme-header { position: absolute; top: 15px; right: 15px; }
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--input); color: var(--text); }
-        .form-card { width: 85%; max-width: 350px; margin-top: -30px; } 
-        h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; }
-        .field { margin-bottom: 15px; position: relative; }
+
+        .form-card { width: 85%; max-width: 350px; margin-top: -30px; text-align: center; } 
+        h2 { font-size: 32px; margin-bottom: 30px; font-weight: 700; text-align: left; }
+        .field { margin-bottom: 15px; position: relative; text-align: left; }
         label { display: block; opacity: 0.6; font-size: 13px; margin-bottom: 6px; }
         input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; padding-right: 45px; color: var(--text); font-size: 16px; box-sizing: border-box; }
         .eye-icon { position: absolute; right: 12px; top: 34px; cursor: pointer; color: #888; width: 22px; height: 22px; z-index: 10; }
+        
         button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; }
         [data-theme="dark"] button { color: #000; }
+        
         .btn-google { background: var(--card); color: var(--text); border: 1px solid var(--border); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn-google img { width: 18px; }
+
+        #loadingState { display: none; margin-top: 20px; font-weight: 600; color: var(--accent); }
+
         p { text-align: center; margin-top: 25px; opacity: 0.7; font-size: 14px; }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
-    <div class="theme-header"><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></div>
     <div class="form-card">
         <h2>Masuk</h2>
         <form id="lForm">
@@ -37,7 +41,15 @@
             <div class="field"><label>Password</label><input type="password" id="pass" required><i data-lucide="eye" class="eye-icon" id="eBtn" onclick="togglePass()"></i></div>
             <button type="submit">Masuk</button>
         </form>
-        <button class="btn-google" id="gBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"> Masuk dengan Google</button>
+
+        <button class="btn-google" id="gBtn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+            Masuk dengan Google
+        </button>
+
+        <div id="loadingState">Sedang memproses...</div>
+        <button id="manualJump" style="display:none; background:#28a745; margin-top:20px;">Klik untuk Masuk ke Dashboard</button>
+
         <p>Belum punya akun? <a href="register.html">Daftar</a></p>
     </div>
 
@@ -50,12 +62,17 @@
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // LOGIKA PINDAH HALAMAN
-        const goDashboard = () => { window.location.replace("absensi.html"); };
+        const loader = document.getElementById('loadingState');
+        const jumpBtn = document.getElementById('manualJump');
 
-        // 1. TANGKAP HASIL LOGIN GOOGLE (REDIRECT)
+        // Fungsi Pindah Halaman
+        const go = () => { window.location.href = "absensi.html"; };
+        jumpBtn.onclick = go;
+
+        // 1. TANGKAP HASIL REDIRECT GOOGLE
         getRedirectResult(auth).then(async (res) => {
             if (res?.user) {
+                loader.style.display = 'block';
                 const u = res.user;
                 const s = await getDoc(doc(db, "users", u.uid));
                 if (!s.exists()) {
@@ -63,21 +80,25 @@
                         nama: u.displayName, email: u.email, alamat: "-", gender: "-", bd: "", createdAt: new Date()
                     });
                 }
-                setTimeout(goDashboard, 500); // Jeda 0.5 detik biar data aman
+                go(); 
             }
-        }).catch(err => alert("Google Error: " + err.message));
+        }).catch(err => {
+            console.error(err);
+            alert("Gagal sinkron Google: " + err.message);
+        });
 
-        // 2. CEK STATUS LOGIN AKTIF
+        // 2. DETEKSI STATUS LOGIN (BACKUP)
         onAuthStateChanged(auth, (u) => { 
             if (u) {
-                // Jika user sudah login tapi masih di halaman login, lempar ke dashboard
-                goDashboard();
+                loader.innerText = "Akun terdeteksi! Mengalihkan...";
+                loader.style.display = 'block';
+                jumpBtn.style.display = 'block'; // Munculkan tombol manual jika auto-redirect lambat
+                setTimeout(go, 1500); 
             } 
         });
 
         // 3. TOMBOL GOOGLE
         document.getElementById('gBtn').onclick = () => {
-            provider.setCustomParameters({ prompt: 'select_account' });
             signInWithRedirect(auth, provider);
         };
 
@@ -85,28 +106,16 @@
         document.getElementById('lForm').onsubmit = (e) => {
             e.preventDefault();
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
-                .then(goDashboard)
-                .catch(() => alert("Email atau Password salah!"));
+                .then(go).catch(() => alert("Email/Password Salah"));
         };
 
-        // UI
         window.togglePass = () => {
             const p = document.getElementById('pass'); const e = document.getElementById('eBtn');
             const isP = p.type === 'password'; p.type = isP ? 'text' : 'password';
             e.setAttribute('data-lucide', isP ? 'eye-off' : 'eye'); lucide.createIcons();
         };
 
-        const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => {
-            document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
-            lucide.createIcons();
-        };
-        applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt); applyT(nt);
-        };
+        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
         lucide.createIcons();
     </script>
 </body>
