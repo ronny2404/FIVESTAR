@@ -9,11 +9,22 @@
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
-        header { padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--nav); }
+        
+        header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
+        header span { font-size: 18px; font-weight: 700; }
+
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; }
+        
+        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+        .salary-label { font-size: 12px; opacity: 0.6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .salary-amount { font-size: 32px; font-weight: 700; color: var(--accent); margin: 10px 0; }
+        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -21,21 +32,48 @@
     </style>
 </head>
 <body>
-    <header><span>Laporan Gaji</span></header>
+    <header><span>Laporan Gaji</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    
     <div class="container">
         <div class="card">
-            <span style="font-size:12px; opacity:0.6;">Total Gaji Bulan Ini</span>
-            <h1 style="color:var(--accent); margin:10px 0;">Rp 0</h1>
+            <div class="salary-label">Total Gaji Bulan Ini</div>
+            <div class="salary-amount">Rp 0</div>
+            <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
+            <p style="font-size:13px; opacity:0.7;">Rincian komisi massage dan reflexology akan muncul di sini.</p>
         </div>
     </div>
+
     <nav class="bottom-nav">
         <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
         <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="gaji.html" class="nav-item active"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
-    <script>
-        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app);
+        
+        // Proteksi Halaman
+        onAuthStateChanged(auth, (u) => { 
+            if(!u) { window.location.href="login.html"; }
+        });
+
+        // Tema Logic
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
+        };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { 
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', nt); applyT(nt); 
+        };
         lucide.createIcons();
     </script>
 </body>
