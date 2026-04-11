@@ -31,30 +31,33 @@
             width: 100%;
         }
 
-        /* --- LOGO DIPERBESAR MAKSIMAL (MEPET PINGGIR) --- */
+        /* --- GANTI BAGIAN CSS LOGO INI UNTUK MAKSIMAL JUMBO DAN DIPINDAH KE BAWAH --- */
         .logo-wrapper {
-            width: 100vw; /* Lebar penuh layar HP */
+            width: 120vw; /* Meluber keluar layar untuk Super Jumbo */
+            margin-left: -10vw; /* Memusatkan kembali */
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center; /* Pusat vertikal */
             overflow: hidden; /* Mencegah scroll horizontal */
-            margin-top: -10px; /* Sedikit naik ke area status bar */
+            
+            /* GESER KE BAWAH: Jarak dari tepi atas (Safe Area) */
+            margin-top: 50px; 
         }
         .logo-img { 
             width: 100%; /* Mengisi wrapper penuh */
             height: auto; 
             display: block;
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.08));
+            filter: drop-shadow(0 6px 25px rgba(0,0,0,0.12)); /* Bayangan lebih dramatis */
             transition: 0.5s;
         }
-        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 30px rgba(57, 255, 20, 0.35)); }
+        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 40px rgba(57, 255, 20, 0.4)); } /* Bayangan neon mode gelap */
 
-        /* Area Tengah (Teks) */
+        /* Area Tengah (Teks) - Sedikit jarak dari logo super jumbo */
         .middle-content { 
             text-align: center; 
             width: 85%; 
             max-width: 350px; 
-            margin-top: 20px; /* Jarak dari logo jumbo */
+            margin-top: 10px; /* Jarak kecil dari logo super jumbo */
         }
         p { opacity: 0.7; font-size: 15px; margin: 0; line-height: 1.5; font-weight: 400; }
 
@@ -102,7 +105,7 @@
 
     <div class="container">
         <div class="logo-wrapper">
-            <img src="logo_fivestar.png" class="logo-img" alt="Logo Jumbo">
+            <img src="logo_fivestar.png" class="logo-img" alt="Logo Super Jumbo">
         </div>
 
         <div class="middle-content">
