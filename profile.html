@@ -113,6 +113,10 @@
     </nav>
 
     <script type="module">
+
+// Tambahkan ini di absensi.html, gaji.html, catatan.html, dan profile.html
+localStorage.setItem('lastVisitedPage', window.location.pathname.split('/').pop());
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
