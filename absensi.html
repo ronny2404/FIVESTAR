@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --sunday: #FF3B30; }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
         
         html, body { height: 100%; margin: 0; overflow: hidden; }
@@ -16,83 +16,100 @@
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
         
+        /* Toggle Tema Bulat Sesuai Login */
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
-        
+        .theme-toggle i { width: 18px; height: 18px; }
+
         .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
         
-        /* KALENDER STYLE */
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px; }
+        /* Banner Mode Edit */
+        .edit-banner { background: var(--accent); color: #000; text-align: center; padding: 10px; font-size: 12px; font-weight: 700; display: none; border-radius: 12px; margin-bottom: 15px; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Kalender Grid */
+        .cal-header { margin-bottom: 15px; text-align: center; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        .day-name { text-align: center; font-size: 11px; font-weight: 700; opacity: 0.5; padding-bottom: 5px; }
+        .day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.5; padding-bottom: 5px; text-transform: uppercase; }
         .day-name.sun { color: var(--sunday); opacity: 1; }
         
-        .date-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; aspect-ratio: 1/1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; transition: 0.2s; cursor: pointer; }
-        .date-box span { font-size: 14px; font-weight: 600; }
+        .date-box { background: var(--card); border: 1px solid var(--border); border-radius: 15px; aspect-ratio: 1/1.3; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; transition: 0.2s; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .date-box span { font-size: 15px; font-weight: 700; }
         .date-box.sunday span { color: var(--sunday); }
-        
-        /* Status Absen di Kotak */
-        .status-tag { font-size: 8px; font-weight: 700; padding: 2px 4px; border-radius: 4px; margin-top: 4px; text-transform: uppercase; text-align: center; max-width: 90%; overflow: hidden; }
-        .loc-tag { font-size: 7px; opacity: 0.6; margin-top: 2px; }
+        .date-box.editing { border: 2px dashed var(--accent); transform: scale(0.95); }
 
-        /* Warna Status */
-        .st-masuk { background: #E1F5FE; color: #0288D1; }
-        .st-off { background: #F5F5F5; color: #757575; }
+        /* Tag Status Dalam Kalender */
+        .status-tag { font-size: 8px; font-weight: 800; padding: 2px 5px; border-radius: 5px; margin-top: 5px; text-transform: uppercase; }
+        .loc-tag { font-size: 7px; opacity: 0.5; margin-top: 2px; font-weight: 600; text-align: center; width: 90%; overflow: hidden; white-space: nowrap; }
+
+        /* Warna-warna Status */
+        .st-masuk { background: #E3F2FD; color: #1976D2; }
+        .st-off { background: #F5F5F5; color: #616161; }
         .st-izin { background: #FFF9C4; color: #FBC02D; }
         .st-sakit { background: #FFE0B2; color: #F57C00; }
         .st-alpha { background: #FFEBEE; color: #D32F2F; }
         .st-cuti { background: #F3E5F5; color: #7B1FA2; }
-        [data-theme="dark"] .st-masuk { background: #01579B; color: #81D4FA; }
-        [data-theme="dark"] .st-off { background: #424242; color: #BDBDBD; }
+        [data-theme="dark"] .st-masuk { background: #1A237E; color: #90CAF9; }
+        [data-theme="dark"] .st-off { background: #333; color: #AAA; }
 
-        /* MODE EDIT */
-        .edit-banner { background: var(--accent); color: white; text-align: center; padding: 8px; font-size: 12px; font-weight: 700; display: none; border-radius: 10px; margin-bottom: 15px; }
-        .date-box.editing { border: 2px dashed var(--accent); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        /* Modal Popup Edit */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 28px; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-content h3 { margin: 0 0 15px 0; text-align: center; font-size: 18px; }
+        label { display: block; font-size: 12px; font-weight: 700; opacity: 0.6; margin-bottom: 5px; margin-top: 15px; }
+        select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 15px; }
+        .btn-save { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: 700; margin-top: 25px; cursor: pointer; }
+        [data-theme="dark"] .btn-save { color: #000; }
 
-        /* MODAL EDIT */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 24px; padding: 25px; }
-        .modal-content h3 { margin: 0 0 20px 0; text-align: center; }
-        select, button.save { width: 100%; padding: 12px; border-radius: 12px; margin-bottom: 10px; font-family: inherit; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; }
-        button.save { background: var(--accent); color: white; border: none; font-weight: 700; margin-top: 10px; }
+        /* Tombol Floating Edit */
+        .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 99; transition: 0.3s; }
+        [data-theme="dark"] .btn-edit-toggle { color: #000; }
 
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
         .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
-        
-        .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 90; }
     </style>
 </head>
 <body>
-    <header><span>Five Star 2</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    <header>
+        <span>Five Star 2</span>
+        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
+    </header>
     
     <div class="container">
-        <div class="edit-banner" id="eBanner">MODE EDIT AKTIF: KETUK TANGGAL UNTUK UBAH</div>
+        <div class="edit-banner" id="eBanner">MODE EDIT AKTIF: KETUK TANGGAL UNTUK ABSEN</div>
         
         <div class="cal-header">
-            <h2 id="monthName" style="margin:0; font-size: 18px;">April 2026</h2>
+            <h2 id="monthName" style="margin:0; font-size: 20px; font-weight: 800;">...</h2>
         </div>
 
         <div class="cal-grid" id="calGrid">
-            <div class="day-name">SEN</div><div class="day-name">SEL</div><div class="day-name">RAB</div><div class="day-name">KAM</div><div class="day-name">JUM</div><div class="day-name">SAB</div><div class="day-name sun">MING</div>
+            <div class="day-name">Sen</div><div class="day-name">Sel</div><div class="day-name">Rab</div><div class="day-name">Kam</div><div class="day-name">Jum</div><div class="day-name">Sab</div><div class="day-name sun">Min</div>
             </div>
     </div>
 
-    <button class="btn-edit-toggle" id="editToggle"><i data-lucide="edit-3"></i><span>Edit Absen</span></button>
+    <button class="btn-edit-toggle" id="editBtn"><i data-lucide="edit-3"></i><span>Edit Absen</span></button>
 
     <div class="modal" id="editModal">
         <div class="modal-content">
-            <h3 id="modalDateLabel">Edit Tanggal</h3>
-            <label style="font-size: 12px; opacity: 0.6;">Lokasi Absen:</label>
-            <select id="selLoc"><option value="FIVE STAR 1">FIVE STAR 1</option><option value="FIVE STAR 2">FIVE STAR 2</option></select>
-            <label style="font-size: 12px; opacity: 0.6;">Opsi Absen:</label>
-            <select id="selStatus">
-                <option value="Masuk">Masuk</option><option value="Off">Off</option><option value="Izin">Izin</option>
-                <option value="Sakit">Sakit</option><option value="Alpha">Alpha</option><option value="Cuti">Cuti</option>
+            <h3 id="modalTitle">Edit Absen</h3>
+            <label>LOKASI KERJA</label>
+            <select id="selLoc">
+                <option value="FIVE STAR 1">FIVE STAR 1</option>
+                <option value="FIVE STAR 2">FIVE STAR 2</option>
             </select>
-            <button class="save" id="btnSave">Simpan Absensi</button>
-            <button class="save" style="background:none; color:var(--text); opacity:0.5;" onclick="closeModal()">Batal</button>
+            <label>STATUS KEHADIRAN</label>
+            <select id="selStatus">
+                <option value="Masuk">Masuk</option>
+                <option value="Off">Off</option>
+                <option value="Izin">Izin</option>
+                <option value="Sakit">Sakit</option>
+                <option value="Alpha">Alpha</option>
+                <option value="Cuti">Cuti</option>
+            </select>
+            <button class="btn-save" id="btnSave">Simpan Absensi</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text); margin-top:15px; opacity:0.5; font-weight:600; cursor:pointer;">Batal</button>
         </div>
     </div>
 
@@ -104,97 +121,96 @@
     </nav>
 
     <script type="module">
+        // MEMORI HALAMAN TERAKHIR
         localStorage.setItem('lastVisitedPage', 'absensi.html');
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDocs, collection, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
 
-        let isEditMode = false;
-        let selectedDateID = null;
-        let attendanceData = {};
-        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        const now = new Date();
-        const curMonth = now.getMonth();
-        const curYear = now.getFullYear();
+        let isEdit = false;
+        let selectedDate = null;
+        let localData = {};
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const d = new Date();
+        const m = d.getMonth();
+        const y = d.getFullYear();
 
         onAuthStateChanged(auth, (u) => { 
-            if(!u) window.location.href="login.html"; 
-            else loadAttendance();
+            if (!u) window.location.href = "login.html"; 
+            else fetchAbsensi();
         });
 
-        // TEMA LOGIC
-        const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
-        applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
-
-        // LOAD DATA DARI FIREBASE
-        async function loadAttendance() {
-            attendanceData = {};
+        // AMBIL DATA DARI FIREBASE
+        async function fetchAbsensi() {
+            localData = {};
             const q = query(collection(db, "absensi"), where("uid", "==", auth.currentUser.uid));
             const snap = await getDocs(q);
-            snap.forEach(d => { attendanceData[d.id.split('_')[1]] = d.data(); });
-            renderCalendar();
+            snap.forEach(doc => { 
+                const datePart = doc.id.split('_')[1];
+                localData[datePart] = doc.data(); 
+            });
+            renderCal();
         }
 
-        // GENERATE KALENDER
-        function renderCalendar() {
+        // BUAT KALENDER
+        function renderCal() {
             const grid = document.getElementById('calGrid');
-            const monthTitle = document.getElementById('monthName');
-            monthTitle.innerText = `${monthNames[curMonth]} ${curYear}`;
-
-            // Reset Grid (Keep headers)
+            document.getElementById('monthName').innerText = `${months[m]} ${y}`;
+            
+            // Bersihkan isi grid (kecuali header hari)
             const headers = grid.querySelectorAll('.day-name');
             grid.innerHTML = '';
             headers.forEach(h => grid.appendChild(h));
 
-            const firstDay = new Date(curYear, curMonth, 1).getDay(); // 0 = Sun
-            const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
-            
-            // Offset hari (agar Senin di awal)
-            let offset = firstDay === 0 ? 6 : firstDay - 1;
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const offset = firstDay === 0 ? 6 : firstDay - 1;
 
-            for(let i=0; i < offset; i++) grid.innerHTML += '<div></div>';
+            for (let i = 0; i < offset; i++) grid.innerHTML += '<div></div>';
 
-            for(let d=1; d <= daysInMonth; d++) {
-                const dateStr = `${d < 10 ? '0'+d : d}-${(curMonth+1) < 10 ? '0'+(curMonth+1) : (curMonth+1)}-${curYear}`;
-                const isSun = new Date(curYear, curMonth, d).getDay() === 0;
-                const data = attendanceData[dateStr] || null;
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateKey = `${day < 10 ? '0'+day : day}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
+                const isSunday = new Date(y, m, day).getDay() === 0;
+                const data = localData[dateKey];
 
                 const box = document.createElement('div');
-                box.className = `date-box ${isSun ? 'sunday' : ''} ${isEditMode ? 'editing' : ''}`;
-                box.innerHTML = `<span>${d}</span>`;
-                
-                if(data) {
+                box.className = `date-box ${isSunday ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
+                box.innerHTML = `<span>${day}</span>`;
+
+                if (data) {
                     box.innerHTML += `<div class="status-tag st-${data.status.toLowerCase()}">${data.status}</div>`;
                     box.innerHTML += `<div class="loc-tag">${data.lokasi || ''}</div>`;
                 }
 
-                box.onclick = () => { if(isEditMode) openEdit(dateStr); };
+                box.onclick = () => { if(isEdit) openModal(dateKey); };
                 grid.appendChild(box);
             }
             lucide.createIcons();
         }
 
-        // EDIT LOGIC
-        document.getElementById('editToggle').onclick = function() {
-            isEditMode = !isEditMode;
-            this.style.background = isEditMode ? 'var(--sunday)' : 'var(--accent)';
-            this.querySelector('span').innerText = isEditMode ? 'Selesai Edit' : 'Edit Absen';
-            document.getElementById('eBanner').style.display = isEditMode ? 'block' : 'none';
-            renderCalendar();
+        // LOGIKA MODE EDIT
+        const eBtn = document.getElementById('editBtn');
+        const eBanner = document.getElementById('eBanner');
+        eBtn.onclick = () => {
+            isEdit = !isEdit;
+            eBtn.style.background = isEdit ? 'var(--sunday)' : 'var(--accent)';
+            eBtn.querySelector('span').innerText = isEdit ? 'Selesai Edit' : 'Edit Absen';
+            eBanner.style.display = isEdit ? 'block' : 'none';
+            renderCal();
         };
 
-        function openEdit(dateID) {
-            selectedDateID = dateID;
-            document.getElementById('modalDateLabel').innerText = `Absen: ${dateID}`;
-            const data = attendanceData[dateID];
-            if(data) {
-                document.getElementById('selLoc').value = data.lokasi || "FIVE STAR 1";
-                document.getElementById('selStatus').value = data.status || "Masuk";
+        // MODAL LOGIC
+        function openModal(date) {
+            selectedDate = date;
+            document.getElementById('modalTitle').innerText = `Absen: ${date}`;
+            const existing = localData[date];
+            if (existing) {
+                document.getElementById('selLoc').value = existing.lokasi || "FIVE STAR 1";
+                document.getElementById('selStatus').value = existing.status || "Masuk";
             }
             document.getElementById('editModal').style.display = 'flex';
         }
@@ -202,24 +218,37 @@
         window.closeModal = () => document.getElementById('editModal').style.display = 'none';
 
         document.getElementById('btnSave').onclick = async () => {
-            const user = auth.currentUser;
-            const status = document.getElementById('selStatus').value;
-            const lokasi = document.getElementById('selLoc').value;
-            const idCustom = `${user.uid}_${selectedDateID}`;
+            const loc = document.getElementById('selLoc').value;
+            const sts = document.getElementById('selStatus').value;
+            const docId = `${auth.currentUser.uid}_${selectedDate}`;
 
             try {
-                await setDoc(doc(db, "absensi", idCustom), {
-                    uid: user.uid,
-                    tanggal: selectedDateID,
-                    status: status,
-                    lokasi: lokasi,
+                await setDoc(doc(db, "absensi", docId), {
+                    uid: auth.currentUser.uid,
+                    tanggal: selectedDate,
+                    lokasi: loc,
+                    status: sts,
                     updatedAt: new Date()
                 }, { merge: true });
 
-                attendanceData[selectedDateID] = { status, lokasi };
+                localData[selectedDate] = { lokasi: loc, status: sts };
                 closeModal();
-                renderCalendar();
-            } catch (err) { alert("Gagal Simpan!"); }
+                renderCal();
+            } catch (err) { alert("Gagal Simpan Data!"); }
+        };
+
+        // TEMA LOGIC
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
+        };
+        applyT(localStorage.getItem('theme') || 'light');
+        tBtn.onclick = () => { 
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', nt); 
+            applyT(nt); 
         };
 
         lucide.createIcons();
