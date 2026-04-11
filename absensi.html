@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Absensi - Five Star 2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
@@ -22,15 +22,16 @@
         .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
         
         /* Navigasi Bulan */
-        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
-        .nav-btn { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px; cursor: pointer; display: flex; align-items: center; color: var(--text); }
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px; }
+        .nav-btn { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; cursor: pointer; display: flex; align-items: center; color: var(--text); }
         .month-title { font-size: 18px; font-weight: 800; }
 
-        /* Kalender Grid */
+        /* Kalender Grid (Dimulai Hari Minggu) */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.5; padding-bottom: 8px; text-transform: uppercase; }
         .day-name.sun { color: var(--sunday); opacity: 1; }
         
+        /* KOTAK TANGGAL - TANGGAL DI ATAS */
         .date-box { 
             background: var(--card); 
             border: 1px solid var(--border); 
@@ -39,45 +40,48 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start;
+            justify-content: flex-start; /* Angka tetap di atas */
             padding: 8px 2px; 
             position: relative; 
             transition: 0.2s; 
             cursor: pointer; 
             box-sizing: border-box;
-            color: var(--text);
         }
-        .date-box span { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+        .date-box span { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
         .date-box.sunday span { color: var(--sunday); }
         .date-box.editing { border: 2px dashed var(--accent) !important; transform: scale(0.95); }
 
-        /* ATURAN PEWARNAAN KOTAK (FULL COLOR) */
-        .bg-masuk { background-color: #34C759 !important; border: none !important; color: white !important; }
-        .bg-off   { background-color: #8E8E93 !important; border: none !important; color: white !important; }
-        .bg-izin  { background-color: #007AFF !important; border: none !important; color: white !important; }
-        .bg-sakit { background-color: #FF9500 !important; border: none !important; color: white !important; }
-        .bg-alpha { background-color: #FF3B30 !important; border: none !important; color: white !important; }
-        .bg-cuti  { background-color: var(--card); } /* Tanpa pewarnaan khusus */
+        /* WARNA KOTAK PENUH (Apple UI Colors) */
+        .bg-masuk { background-color: #34C759 !important; border: none !important; }
+        .bg-off   { background-color: #8E8E93 !important; border: none !important; }
+        .bg-izin  { background-color: #007AFF !important; border: none !important; }
+        .bg-sakit { background-color: #FF9500 !important; border: none !important; }
+        .bg-alpha { background-color: #FF3B30 !important; border: none !important; }
+        .bg-cuti  { background-color: var(--card); }
 
-        /* Override warna angka di kotak berwarna */
-        .bg-masuk span, .bg-off span, .bg-izin span, .bg-sakit span, .bg-alpha span { color: white !important; }
+        /* Tulisan Putih jika kotak berwarna */
+        .bg-masuk *, .bg-off *, .bg-izin *, .bg-sakit *, .bg-alpha * { color: #FFFFFF !important; }
 
-        /* Tag Status & Lokasi di dalam kotak berwarna */
-        .status-tag { font-size: 7px; font-weight: 900; padding: 2px 4px; border-radius: 4px; text-transform: uppercase; width: 85%; text-align: center; margin-bottom: 2px; background: rgba(255,255,255,0.2); }
-        .loc-tag { font-size: 8px; font-weight: 700; opacity: 0.9; }
+        /* Tulisan Status (TANPA WARNA LAGI) */
+        .status-tag { 
+            font-size: 7px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+        .loc-tag { font-size: 8px; font-weight: 700; opacity: 0.7; margin-top: 2px; }
 
-        /* Modal Popup */
+        /* Modal & UI lainnya */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 28px; padding: 25px; }
         select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; margin-top: 5px; margin-bottom: 15px; }
         .btn-save { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
         [data-theme="dark"] .btn-save { color: #000; }
 
-        /* Floating Button */
         .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 99; }
         [data-theme="dark"] .btn-edit-toggle { color: #000; }
 
-        /* Nav Bawah */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -85,7 +89,7 @@
     </style>
 </head>
 <body>
-    <header><span>KEHADIRAN</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    <header><span>Five Star 2</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
     
     <div class="container">
         <div class="cal-nav">
@@ -103,10 +107,10 @@
 
     <div class="modal" id="editModal">
         <div class="modal-content">
-            <h3 id="modalTitle" style="text-align:center; margin-top:0;">Edit Absen</h3>
+            <h3 style="text-align:center; margin-top:0;">Update Absensi</h3>
             <label style="font-size:11px; font-weight:700; opacity:0.6;">LOKASI</label>
             <select id="selLoc"><option value="FIVE STAR 1">FIVE STAR 1</option><option value="FIVE STAR 2">FIVE STAR 2</option></select>
-            <label style="font-size:11px; font-weight:700; opacity:0.6;">STATUS</label>
+            <label style="font-size:11px; font-weight:700; opacity:0.6;">STATUS KEHADIRAN</label>
             <select id="selStatus">
                 <option value="Masuk">Masuk</option><option value="Off">Off</option><option value="Izin">Izin</option>
                 <option value="Sakit">Sakit</option><option value="Alpha">Alpha</option><option value="Cuti">Cuti</option>
@@ -163,12 +167,11 @@
                 const box = document.createElement('div');
                 box.className = `date-box ${new Date(y, m, day).getDay() === 0 ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
                 
+                box.innerHTML = `<span>${day}</span>`;
                 if (data) {
                     box.classList.add(`bg-${data.status.toLowerCase()}`);
                     const shortLoc = data.lokasi ? data.lokasi.replace('FIVE STAR ', 'FS') : '';
-                    box.innerHTML = `<span>${day}</span><div class="status-tag">${data.status}</div><div class="loc-tag">${shortLoc}</div>`;
-                } else {
-                    box.innerHTML = `<span>${day}</span>`;
+                    box.innerHTML += `<div class="status-tag">${data.status}</div><div class="loc-tag">${shortLoc}</div>`;
                 }
 
                 box.onclick = () => { if(isEdit) openModal(dateKey); };
@@ -187,7 +190,7 @@
         };
 
         function openModal(date) {
-            selectedDate = date; document.getElementById('modalTitle').innerText = `Absen: ${date}`;
+            selectedDate = date;
             const existing = localData[date];
             if (existing) {
                 document.getElementById('selLoc').value = existing.lokasi || "FIVE STAR 1";
