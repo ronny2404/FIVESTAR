@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Catatan - Five Star 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        header { padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--nav); }
+        .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
+        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
+        .nav-item.active { color: var(--accent); font-weight: 700; }
+        .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <header><span>Catatan Kerja</span></header>
+    <div class="container"><div class="card"><p>Belum ada catatan tugas.</p></div></div>
+    <nav class="bottom-nav">
+        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
+        <a href="catatan.html" class="nav-item active"><i data-lucide="edit-3"></i><span>Catatan</span></a>
+        <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
+        <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
+    </nav>
+    <script>
+        document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        lucide.createIcons();
+    </script>
+</body>
+</html>
