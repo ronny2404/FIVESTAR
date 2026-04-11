@@ -17,9 +17,10 @@
         .theme-toggle i { width: 18px; height: 18px; }
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
         .card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid var(--border); text-align: center; }
+        /* CSS Navigasi - 4 Items */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
-        .nav-item.active { color: var(--accent); font-weight: 700; }
+        .nav-item.active { color: var(--accent); font-weight: 700; } /* Ikon Menjadi Biru/Hijau */
         .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
     </style>
 </head>
@@ -27,7 +28,7 @@
     <header><span id="hn">Absensi</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
     <div class="container">
         <div class="card">
-            <h2 id="welcome">Halo!</h2>
+            <h2>Halo!</h2>
             <p style="opacity:0.7; font-size:14px;">Silakan lakukan absensi kerja hari ini.</p>
             <button style="background:var(--accent); color:white; border:none; padding:15px; border-radius:30px; font-weight:700; width:100%; margin-top:10px;">Absen Masuk</button>
         </div>
@@ -42,8 +43,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
+        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fbConfig); const auth = getAuth(app); const db = getFirestore(app);
         onAuthStateChanged(auth, async (u) => { 
             if(u) { 
                 const s = await getDoc(doc(db, "users", u.uid)); 
