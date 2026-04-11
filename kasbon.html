@@ -7,63 +7,113 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #FF9500; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
-        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #FF9F0A; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
+        :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
+        [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #007AFF; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
-        header span { font-size: 18px; font-weight: 700; flex: 1; text-align: center; margin-left: 35px; }
+        header span { font-size: 20px; font-weight: 700; flex: 1; text-align: center; margin-left: 35px; }
+        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
+
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 11px; font-weight: 800; opacity: 0.6; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
-        input, textarea { width: 100%; padding: 14px; border-radius: 16px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-family: inherit; font-size: 16px; box-sizing: border-box; outline: none; }
-        .btn-simpan { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 40px; font-weight: 800; font-size: 16px; margin-top: 10px; cursor: pointer; }
-        [data-theme="dark"] .btn-simpan { color: #000; }
-        .btn-batal { width: 100%; padding: 15px; background: none; color: var(--text); border: none; font-weight: 700; font-size: 15px; margin-top: 10px; cursor: pointer; opacity: 0.5; }
-        /* MODAL CALENDAR (Sama dengan kerja.html) */
+        
+        input, select, textarea { 
+            width: 100%; padding: 14px; border-radius: 16px; border: 1px solid var(--border); 
+            background: var(--card); color: var(--text); font-family: inherit; font-size: 16px; 
+            box-sizing: border-box; outline: none; cursor: pointer;
+        }
+
+        /* MODAL KALENDER */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-content { background: var(--card); width: 82%; max-width: 330px; border-radius: 30px; padding: 25px; box-sizing: border-box; animation: popUp 0.3s ease; }
+        .modal-content { 
+            background: var(--card); width: 82%; max-width: 330px; border-radius: 30px; 
+            padding: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); box-sizing: border-box;
+            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
         @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; }
-        .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .cal-day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.4; padding-bottom: 10px; }
+        .cal-day-name.sun { color: var(--sunday); opacity: 1; }
+        .cal-date { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border-radius: 50%; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .cal-date.sunday { color: var(--sunday) !important; }
         .today-border { border-color: var(--text) !important; }
-        .sunday { color: var(--sunday); }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); }
-        .nav-item { text-align: center; color: #888; font-size: 10px; text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .locked { opacity: 0.2; pointer-events: none; }
+
+        /* BUTTONS */
+        .btn-simpan { 
+            width: 100%; padding: 18px; background: var(--accent); color: white; 
+            border: none; border-radius: 40px; font-weight: 800; font-size: 16px; 
+            margin-top: 10px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] .btn-simpan { color: #000; }
+        
+        .btn-batal {
+            width: 100%; padding: 15px; background: none; color: var(--text);
+            border: none; font-weight: 700; font-size: 15px; margin-top: 10px;
+            cursor: pointer; opacity: 0.5;
+            text-align: center; display: block; width: 100%; text-decoration: none;
+        }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
+        .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: #007AFF; font-weight: 700; }
+        .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
-    <header><span>Input Kasbon</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
+    <header>
+        <span>Input Kasbon</span>
+        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
+    </header>
+    
     <div class="container">
         <div class="form-group">
-            <label>Tanggal</label>
+            <label>Tanggal Pinjaman</label>
             <input type="text" id="displayTgl" readonly placeholder="Pilih tanggal...">
             <input type="hidden" id="inTgl">
         </div>
+
         <div class="form-group">
             <label>Jumlah Kasbon (Rp)</label>
             <input type="number" id="inAmount" placeholder="Contoh: 50000">
         </div>
+
         <div class="form-group">
-            <label>Keperluan / Keterangan</label>
-            <textarea id="inKet" placeholder="Alasan kasbon..."></textarea>
+            <label>Jenis Kasbon</label>
+            <select id="inType">
+                <option value="Kantor">Kasbon Kantor</option>
+                <option value="Paket">Kasbon Paket</option>
+            </select>
         </div>
+
+        <div class="form-group">
+            <label>Keterangan / Keperluan</label>
+            <textarea id="inKet" placeholder="Tulis alasan kasbon..."></textarea>
+        </div>
+
         <button class="btn-simpan" id="btnSimpan">Simpan Kasbon</button>
-        <button class="btn-batal" onclick="window.location.href='catatan.html'">Batal</button>
+        <a href="catatan.html" class="btn-batal">Batal</a>
     </div>
 
     <div class="modal" id="calModal">
         <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button onclick="moveMonth(-1)" style="background:none;border:none;color:var(--text)"><i data-lucide="chevron-left"></i></button>
-                <h3 id="calMonthYear" style="margin:0; font-size:16px;">...</h3>
-                <button onclick="moveMonth(1)" style="background:none;border:none;color:var(--text)"><i data-lucide="chevron-right"></i></button>
+            <div class="cal-header">
+                <button onclick="moveMonth(-1)" style="background:none; border:none; color:var(--text); cursor:pointer;"><i data-lucide="chevron-left"></i></button>
+                <h3 id="calMonthYear" style="margin:0; font-size:16px; font-weight:800;">...</h3>
+                <button onclick="moveMonth(1)" style="background:none; border:none; color:var(--text); cursor:pointer;"><i data-lucide="chevron-right"></i></button>
             </div>
-            <div class="cal-grid" id="calGrid"></div>
-            <button onclick="closeCal()" style="width:100%; margin-top:20px; border:none; background:none; color:var(--accent); font-weight:800;">TUTUP</button>
+            <div class="cal-grid" id="calGrid">
+                <div class="cal-day-name sun">M</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div><div class="cal-day-name">R</div><div class="cal-day-name">K</div><div class="cal-day-name">J</div><div class="cal-day-name">S</div>
+            </div>
+            <button onclick="closeCal()" style="width:100%; margin-top:25px; background:none; border:none; color:var(--accent); font-weight:800; font-size:15px; cursor:pointer;">BATAL</button>
         </div>
     </div>
 
@@ -79,40 +129,92 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
 
-        let vDate = new Date(); const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        function renderCal() {
-            const grid = document.getElementById('calGrid'); const m = vDate.getMonth(); const y = vDate.getFullYear();
-            document.getElementById('calMonthYear').innerText = `${months[m]} ${y}`;
-            grid.innerHTML = '<div class="sunday">M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>';
-            const first = new Date(y, m, 1).getDay(); const days = new Date(y, m+1, 0).getDate();
-            for(let i=0; i<first; i++) grid.innerHTML += '<div></div>';
-            for(let d=1; d<=days; d++) {
-                const isToday = new Date().toDateString() === new Date(y, m, d).toDateString();
-                grid.innerHTML += `<div class="cal-date ${isToday?'today-border':''} ${new Date(y, m, d).getDay()===0?'sunday':''}" onclick="selectDate(${d},${m},${y})">${d}</div>`;
+        // LOGIKA KALENDER
+        let vDate = new Date();
+        const realToday = new Date(); realToday.setHours(0,0,0,0);
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        
+        function renderCalendar() {
+            const grid = document.getElementById('calGrid');
+            const myLabel = document.getElementById('calMonthYear');
+            const m = vDate.getMonth(); const y = vDate.getFullYear();
+            myLabel.innerText = `${months[m]} ${y}`;
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const headers = grid.querySelectorAll('.cal-day-name');
+            grid.innerHTML = ''; headers.forEach(h => grid.appendChild(h));
+            for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+            for (let d = 1; d <= daysInMonth; d++) {
+                const loopDate = new Date(y, m, d); loopDate.setHours(0,0,0,0);
+                const box = document.createElement('div');
+                box.className = `cal-date ${loopDate.getDay() === 0 ? 'sunday' : ''}`;
+                if (loopDate.getTime() === realToday.getTime()) box.classList.add('today-border');
+                if (loopDate.getTime() > realToday.getTime()) box.classList.add('locked');
+                box.innerText = d;
+                box.onclick = () => selectDate(d, m, y);
+                grid.appendChild(box);
             }
         }
-        window.selectDate = (d, m, y) => {
-            document.getElementById('displayTgl').value = `${d}-${m+1}-${y}`;
-            document.getElementById('inTgl').value = `${y}-${m+1}-${d}`;
+
+        function selectDate(d, m, y) {
+            const fullDate = `${d < 10 ? '0'+d : d}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
+            document.getElementById('displayTgl').value = fullDate;
+            document.getElementById('inTgl').value = `${y}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${d < 10 ? '0'+d : d}`;
             closeCal();
         }
-        window.moveMonth = (dir) => { vDate.setMonth(vDate.getMonth()+dir); renderCal(); };
+
+        window.moveMonth = (dir) => { vDate.setMonth(vDate.getMonth() + dir); renderCalendar(); lucide.createIcons(); };
         window.closeCal = () => document.getElementById('calModal').style.display = 'none';
-        document.getElementById('displayTgl').onclick = () => { document.getElementById('calModal').style.display = 'flex'; renderCal(); };
+        document.getElementById('displayTgl').onclick = () => { document.getElementById('calModal').style.display = 'flex'; renderCalendar(); lucide.createIcons(); };
+
         selectDate(new Date().getDate(), new Date().getMonth(), new Date().getFullYear());
 
-        document.getElementById('btnSimpan').onclick = async () => {
-            const amt = document.getElementById('inAmount').value;
-            if(!amt) return alert("Isi jumlah kasbon!");
-            await addDoc(collection(db, "catatan_kasbon"), {
-                uid: auth.currentUser.uid, tanggal: document.getElementById('inTgl').value,
-                jumlah: Number(amt), keterangan: document.getElementById('inKet').value, createdAt: serverTimestamp()
-            });
-            alert("Kasbon disimpan!"); window.location.href="catatan.html";
+        // FIX DARK MODE LOGIC
+        const tBtn = document.getElementById('tBtn');
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
         };
+        
+        // Cek Memori Tema
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        applyT(currentTheme);
+
+        tBtn.onclick = () => { 
+            const newT = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', newT); 
+            applyT(newT); 
+        };
+
+        // SIMPAN DATA
+        document.getElementById('btnSimpan').onclick = async () => {
+            const user = auth.currentUser;
+            const amt = document.getElementById('inAmount').value;
+            const type = document.getElementById('inType').value;
+            const tgl = document.getElementById('inTgl').value;
+            if (!amt || !tgl) return alert("Isi semua data!");
+            
+            try {
+                await addDoc(collection(db, "catatan_kasbon"), {
+                    uid: user.uid,
+                    nama: user.displayName || "Karyawan",
+                    tanggal: tgl,
+                    jumlah: Number(amt),
+                    jenis: type,
+                    keterangan: document.getElementById('inKet').value,
+                    createdAt: serverTimestamp()
+                });
+                alert("Data Kasbon Berhasil Disimpan!");
+                window.location.href = "catatan.html";
+            } catch (err) { alert("Error simpan data!"); }
+        };
+
+        onAuthStateChanged(auth, (u) => { if (!u) window.location.href = "login.html"; });
         lucide.createIcons();
     </script>
 </body>
