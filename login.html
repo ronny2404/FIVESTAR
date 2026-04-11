@@ -9,7 +9,7 @@
     <style>
         :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: none; width: 100%; position: fixed; }
+        html, body { height: 100%; margin: 0; overflow: hidden; width: 100%; position: fixed; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.3s; }
         input:-webkit-autofill { -webkit-text-fill-color: var(--text) !important; -webkit-box-shadow: 0 0 0px 1000px var(--input) inset !important; transition: background-color 5000s ease-in-out 0s; }
         .theme-header { position: absolute; top: 15px; right: 15px; }
@@ -20,7 +20,7 @@
         label { display: block; opacity: 0.6; font-size: 13px; margin-bottom: 6px; }
         input { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; padding-right: 45px; color: var(--text); font-size: 16px; box-sizing: border-box; }
         .eye-icon { position: absolute; right: 12px; top: 34px; cursor: pointer; color: #888; width: 22px; height: 22px; z-index: 10; }
-        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; transition: 0.3s; }
+        button { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 35px; font-weight: 700; margin-top: 10px; cursor: pointer; }
         [data-theme="dark"] button { color: #000; }
         .btn-google { background: var(--card); color: var(--text); border: 1px solid var(--border); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn-google img { width: 18px; }
@@ -50,38 +50,46 @@
         const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // --- PROSES HASIL LOGIN GOOGLE ---
-        getRedirectResult(auth).then(async (result) => {
-            if (result?.user) {
-                const user = result.user;
-                const s = await getDoc(doc(db, "users", user.uid));
+        // LOGIKA PINDAH HALAMAN
+        const goDashboard = () => { window.location.replace("absensi.html"); };
+
+        // 1. TANGKAP HASIL LOGIN GOOGLE (REDIRECT)
+        getRedirectResult(auth).then(async (res) => {
+            if (res?.user) {
+                const u = res.user;
+                const s = await getDoc(doc(db, "users", u.uid));
                 if (!s.exists()) {
-                    await setDoc(doc(db, "users", user.uid), {
-                        nama: user.displayName, email: user.email, alamat: "-", gender: "-", bd: "", createdAt: new Date()
+                    await setDoc(doc(db, "users", u.uid), {
+                        nama: u.displayName, email: u.email, alamat: "-", gender: "-", bd: "", createdAt: new Date()
                     });
                 }
-                window.location.href = "absensi.html";
+                setTimeout(goDashboard, 500); // Jeda 0.5 detik biar data aman
             }
-        }).catch((err) => { alert("Gagal Login Google: " + err.message); });
+        }).catch(err => alert("Google Error: " + err.message));
 
-        // --- CEK STATUS LOGIN ---
-        onAuthStateChanged(auth, (u) => { if (u) window.location.href = "absensi.html"; });
+        // 2. CEK STATUS LOGIN AKTIF
+        onAuthStateChanged(auth, (u) => { 
+            if (u) {
+                // Jika user sudah login tapi masih di halaman login, lempar ke dashboard
+                goDashboard();
+            } 
+        });
 
-        // --- TOMBOL GOOGLE ---
+        // 3. TOMBOL GOOGLE
         document.getElementById('gBtn').onclick = () => {
             provider.setCustomParameters({ prompt: 'select_account' });
             signInWithRedirect(auth, provider);
         };
 
-        // --- TOMBOL EMAIL BIASA ---
+        // 4. TOMBOL EMAIL
         document.getElementById('lForm').onsubmit = (e) => {
             e.preventDefault();
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value)
-                .then(() => window.location.href="absensi.html")
+                .then(goDashboard)
                 .catch(() => alert("Email atau Password salah!"));
         };
 
-        // UI LOGIC
+        // UI
         window.togglePass = () => {
             const p = document.getElementById('pass'); const e = document.getElementById('eBtn');
             const isP = p.type === 'password'; p.type = isP ? 'text' : 'password';
