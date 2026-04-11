@@ -4,18 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Catatan - Five Star 2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
+        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; }
+        
+        h2 { font-size: 24px; font-weight: 800; margin-bottom: 25px; margin-top: 5px; }
+
+        /* MENU GRID STYLE */
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        
+        .menu-card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 24px; 
+            padding: 25px 15px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            color: var(--text); 
+            transition: 0.2s; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .menu-card:active { transform: scale(0.95); background: var(--border); }
+        
+        .icon-box { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 12px; 
+            background: var(--bg);
+            color: var(--accent);
+        }
+        .menu-card span { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* KHUSUS WARNA IKON */
+        .color-kerja { color: #34C759; } /* Hijau */
+        .color-kasbon { color: #FF9500; } /* Orange */
+        .color-rekap { color: #5856D6; } /* Ungu */
+        .color-edit { color: #FF3B30; } /* Merah */
+
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -23,23 +69,70 @@
     </style>
 </head>
 <body>
-    <header><span>Catatan</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
-    <div class="container"><div class="card"><p>Belum ada catatan.</p></div></div>
+    <header>
+        <span>CATATAN</span>
+        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
+    </header>
+    
+    <div class="container">
+        <h2>Menu Catatan</h2>
+        
+        <div class="menu-grid">
+            <a href="catatan_kerja.html" class="menu-card">
+                <div class="icon-box color-kerja"><i data-lucide="briefcase"></i></div>
+                <span>Kerja</span>
+            </a>
+
+            <a href="catatan_kasbon.html" class="menu-card">
+                <div class="icon-box color-kasbon"><i data-lucide="banknote"></i></div>
+                <span>Kasbon</span>
+            </a>
+
+            <a href="catatan_rekap.html" class="menu-card">
+                <div class="icon-box color-rekap"><i data-lucide="timer"></i></div>
+                <span>Rekap Jam</span>
+            </a>
+
+            <a href="catatan_edit.html" class="menu-card">
+                <div class="icon-box color-edit"><i data-lucide="database"></i></div>
+                <span>Edit Data</span>
+            </a>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
-        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Kehadiran</span></a>
+        <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
         <a href="catatan.html" class="nav-item active"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
-    <script>
 
-// Tambahkan ini di absensi.html, gaji.html, catatan.html, dan profile.html
-localStorage.setItem('lastVisitedPage', window.location.pathname.split('/').pop());
+    <script type="module">
+        // INGAT HALAMAN TERAKHIR
+        localStorage.setItem('lastVisitedPage', 'catatan.html');
 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (u) => { if (!u) window.location.href = "login.html"; });
+
+        // TEMA LOGIC
         const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
+        const applyT = (t) => { 
+            document.body.setAttribute('data-theme', t); 
+            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; 
+            lucide.createIcons(); 
+        };
         applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
+        tBtn.onclick = () => { 
+            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('theme', nt); 
+            applyT(nt); 
+        };
+
         lucide.createIcons();
     </script>
 </body>
