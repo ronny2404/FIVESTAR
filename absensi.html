@@ -9,23 +9,72 @@
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
+        
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
+        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
+
         .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
+        
+        /* Navigasi Bulan */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px; }
         .nav-btn { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; cursor: pointer; display: flex; align-items: center; color: var(--text); }
         .month-title { font-size: 18px; font-weight: 800; }
+
+        /* Kalender Grid */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.5; padding-bottom: 8px; text-transform: uppercase; }
         .day-name.sun { color: var(--sunday); opacity: 1; }
-        .date-box { background: var(--card); border: 1px solid var(--border); border-radius: 15px; aspect-ratio: 1/1.4; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 8px 2px; position: relative; transition: 0.2s; cursor: pointer; box-sizing: border-box; }
-        .date-box span { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+        
+        .date-box { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 15px; 
+            aspect-ratio: 1/1.4; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start;
+            padding: 8px 2px; 
+            position: relative; 
+            transition: 0.2s; 
+            cursor: pointer; 
+            box-sizing: border-box;
+        }
+
+        /* --- LINGKARAN TANGGAL SEKARANG --- */
+        .date-box span { 
+            font-size: 14px; 
+            font-weight: 800; 
+            margin-bottom: 2px; 
+            width: 24px; 
+            height: 24px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .today-circle span { 
+            background: var(--text); 
+            color: var(--card) !important; 
+            border-radius: 50%; 
+        }
+
+        /* --- KUNCI TANGGAL MENDATANG (LOCKED) --- */
+        .locked { 
+            opacity: 0.25; 
+            pointer-events: none; /* Tidak bisa diklik */
+            filter: grayscale(1);
+        }
+
         .date-box.sunday span { color: var(--sunday); }
         .date-box.editing { border: 2px dashed var(--accent) !important; transform: scale(0.95); }
+
+        /* Warna Kotak */
         .bg-masuk { background-color: #34C759 !important; border: none !important; }
         .bg-off   { background-color: #8E8E93 !important; border: none !important; }
         .bg-izin  { background-color: #007AFF !important; border: none !important; }
@@ -33,8 +82,11 @@
         .bg-alpha { background-color: #FF3B30 !important; border: none !important; }
         .bg-cuti  { background-color: var(--card); }
         .bg-masuk *, .bg-off *, .bg-izin *, .bg-sakit *, .bg-alpha * { color: #FFFFFF !important; }
+
         .status-tag { font-size: 7px; font-weight: 900; text-transform: uppercase; margin-top: 2px; opacity: 0.9; }
         .loc-tag { font-size: 8px; font-weight: 700; opacity: 0.7; margin-top: 2px; }
+
+        /* UI Elements */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 28px; padding: 25px; }
         select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; margin-top: 5px; margin-bottom: 15px; }
@@ -93,18 +145,17 @@
 
         let isEdit = false; let selectedDate = null; let localData = {};
         const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        
+        const realToday = new Date();
+        realToday.setHours(0,0,0,0); // Reset jam untuk perbandingan tanggal
+
         let viewDate = new Date(); let m = viewDate.getMonth(); let y = viewDate.getFullYear();
 
         onAuthStateChanged(auth, (u) => { 
             if (!u) window.location.href = "login.html"; 
             else {
-                // 1. CEK CACHE DULU (BIAR CEPAT)
                 const cache = localStorage.getItem(`absensi_cache_${u.uid}`);
-                if (cache) {
-                    localData = JSON.parse(cache);
-                    renderCal();
-                }
-                // 2. FETCH DATA TERBARU DARI FIREBASE (Latar Belakang)
+                if (cache) { localData = JSON.parse(cache); renderCal(); }
                 fetchAbsensi(u.uid);
             }
         });
@@ -114,8 +165,6 @@
             const q = query(collection(db, "absensi"), where("uid", "==", uid));
             const snap = await getDocs(q);
             snap.forEach(doc => { freshData[doc.id.split('_')[1]] = doc.data(); });
-            
-            // Simpan ke Cache & Update Tampilan
             localData = freshData;
             localStorage.setItem(`absensi_cache_${uid}`, JSON.stringify(localData));
             renderCal();
@@ -129,11 +178,22 @@
             const firstDay = new Date(y, m, 1).getDay();
             const daysInMonth = new Date(y, m + 1, 0).getDate();
             for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
+
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateKey = `${day < 10 ? '0'+day : day}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
+                const loopDate = new Date(y, m, day);
+                loopDate.setHours(0,0,0,0);
+
                 const data = localData[dateKey];
                 const box = document.createElement('div');
-                box.className = `date-box ${new Date(y, m, day).getDay() === 0 ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
+                box.className = `date-box ${loopDate.getDay() === 0 ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
+                
+                // LINGKARAN HARI INI
+                if (loopDate.getTime() === realToday.getTime()) box.classList.add('today-circle');
+                
+                // KUNCI TANGGAL MENDATANG
+                if (loopDate.getTime() > realToday.getTime()) box.classList.add('locked');
+
                 box.innerHTML = `<span>${day}</span>`;
                 if (data) {
                     box.classList.add(`bg-${data.status.toLowerCase()}`);
