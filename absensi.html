@@ -9,79 +9,39 @@
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --sunday: #FF3B30; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --sunday: #FF453A; }
-        
         html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
-        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
         header span { font-size: 20px; font-weight: 700; }
-        
         .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
         .theme-toggle i { width: 18px; height: 18px; }
-
         .container { padding: 15px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        
-        /* Navigasi Bulan */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px; }
         .nav-btn { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; cursor: pointer; display: flex; align-items: center; color: var(--text); }
         .month-title { font-size: 18px; font-weight: 800; }
-
-        /* Kalender Grid (Dimulai Hari Minggu) */
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .day-name { text-align: center; font-size: 10px; font-weight: 800; opacity: 0.5; padding-bottom: 8px; text-transform: uppercase; }
         .day-name.sun { color: var(--sunday); opacity: 1; }
-        
-        /* KOTAK TANGGAL - TANGGAL DI ATAS */
-        .date-box { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 15px; 
-            aspect-ratio: 1/1.4; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; /* Angka tetap di atas */
-            padding: 8px 2px; 
-            position: relative; 
-            transition: 0.2s; 
-            cursor: pointer; 
-            box-sizing: border-box;
-        }
+        .date-box { background: var(--card); border: 1px solid var(--border); border-radius: 15px; aspect-ratio: 1/1.4; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 8px 2px; position: relative; transition: 0.2s; cursor: pointer; box-sizing: border-box; }
         .date-box span { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
         .date-box.sunday span { color: var(--sunday); }
         .date-box.editing { border: 2px dashed var(--accent) !important; transform: scale(0.95); }
-
-        /* WARNA KOTAK PENUH (Apple UI Colors) */
         .bg-masuk { background-color: #34C759 !important; border: none !important; }
         .bg-off   { background-color: #8E8E93 !important; border: none !important; }
         .bg-izin  { background-color: #007AFF !important; border: none !important; }
         .bg-sakit { background-color: #FF9500 !important; border: none !important; }
         .bg-alpha { background-color: #FF3B30 !important; border: none !important; }
         .bg-cuti  { background-color: var(--card); }
-
-        /* Tulisan Putih jika kotak berwarna */
         .bg-masuk *, .bg-off *, .bg-izin *, .bg-sakit *, .bg-alpha * { color: #FFFFFF !important; }
-
-        /* Tulisan Status (TANPA WARNA LAGI) */
-        .status-tag { 
-            font-size: 7px; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            margin-top: 2px;
-            opacity: 0.9;
-        }
+        .status-tag { font-size: 7px; font-weight: 900; text-transform: uppercase; margin-top: 2px; opacity: 0.9; }
         .loc-tag { font-size: 8px; font-weight: 700; opacity: 0.7; margin-top: 2px; }
-
-        /* Modal & UI lainnya */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-content { background: var(--card); width: 85%; max-width: 320px; border-radius: 28px; padding: 25px; }
         select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; margin-top: 5px; margin-bottom: 15px; }
         .btn-save { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; }
         [data-theme="dark"] .btn-save { color: #000; }
-
         .btn-edit-toggle { position: fixed; bottom: 85px; right: 20px; background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 99; }
         [data-theme="dark"] .btn-edit-toggle { color: #000; }
-
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
@@ -90,21 +50,17 @@
 </head>
 <body>
     <header><span>KEHADIRAN</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
-    
     <div class="container">
         <div class="cal-nav">
             <button class="nav-btn" onclick="changeMonth(-1)"><i data-lucide="chevron-left"></i></button>
             <div class="month-title" id="monthName">...</div>
             <button class="nav-btn" onclick="changeMonth(1)"><i data-lucide="chevron-right"></i></button>
         </div>
-
         <div class="cal-grid" id="calGrid">
             <div class="day-name sun">Min</div><div class="day-name">Sen</div><div class="day-name">Sel</div><div class="day-name">Rab</div><div class="day-name">Kam</div><div class="day-name">Jum</div><div class="day-name">Sab</div>
         </div>
     </div>
-
     <button class="btn-edit-toggle" id="editBtn"><i data-lucide="edit-3"></i><span>Edit Absen</span></button>
-
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h3 style="text-align:center; margin-top:0;">Update Absensi</h3>
@@ -119,7 +75,6 @@
             <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text); margin-top:10px; opacity:0.5; font-weight:600;">Batal</button>
         </div>
     </div>
-
     <nav class="bottom-nav">
         <a href="absensi.html" class="nav-item active"><i data-lucide="calendar"></i><span>Kehadiran</span></a>
         <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
@@ -140,13 +95,29 @@
         const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         let viewDate = new Date(); let m = viewDate.getMonth(); let y = viewDate.getFullYear();
 
-        onAuthStateChanged(auth, (u) => { if (!u) window.location.href = "login.html"; else fetchAbsensi(); });
+        onAuthStateChanged(auth, (u) => { 
+            if (!u) window.location.href = "login.html"; 
+            else {
+                // 1. CEK CACHE DULU (BIAR CEPAT)
+                const cache = localStorage.getItem(`absensi_cache_${u.uid}`);
+                if (cache) {
+                    localData = JSON.parse(cache);
+                    renderCal();
+                }
+                // 2. FETCH DATA TERBARU DARI FIREBASE (Latar Belakang)
+                fetchAbsensi(u.uid);
+            }
+        });
 
-        async function fetchAbsensi() {
-            localData = {};
-            const q = query(collection(db, "absensi"), where("uid", "==", auth.currentUser.uid));
+        async function fetchAbsensi(uid) {
+            const freshData = {};
+            const q = query(collection(db, "absensi"), where("uid", "==", uid));
             const snap = await getDocs(q);
-            snap.forEach(doc => { localData[doc.id.split('_')[1]] = doc.data(); });
+            snap.forEach(doc => { freshData[doc.id.split('_')[1]] = doc.data(); });
+            
+            // Simpan ke Cache & Update Tampilan
+            localData = freshData;
+            localStorage.setItem(`absensi_cache_${uid}`, JSON.stringify(localData));
             renderCal();
         }
 
@@ -155,25 +126,20 @@
             document.getElementById('monthName').innerText = `${months[m]} ${y}`;
             const headers = grid.querySelectorAll('.day-name');
             grid.innerHTML = ''; headers.forEach(h => grid.appendChild(h));
-
             const firstDay = new Date(y, m, 1).getDay();
             const daysInMonth = new Date(y, m + 1, 0).getDate();
-
             for (let i = 0; i < firstDay; i++) grid.innerHTML += '<div></div>';
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateKey = `${day < 10 ? '0'+day : day}-${(m+1) < 10 ? '0'+(m+1) : (m+1)}-${y}`;
                 const data = localData[dateKey];
                 const box = document.createElement('div');
                 box.className = `date-box ${new Date(y, m, day).getDay() === 0 ? 'sunday' : ''} ${isEdit ? 'editing' : ''}`;
-                
                 box.innerHTML = `<span>${day}</span>`;
                 if (data) {
                     box.classList.add(`bg-${data.status.toLowerCase()}`);
                     const shortLoc = data.lokasi ? data.lokasi.replace('FIVE STAR ', 'FS') : '';
                     box.innerHTML += `<div class="status-tag">${data.status}</div><div class="loc-tag">${shortLoc}</div>`;
                 }
-
                 box.onclick = () => { if(isEdit) openModal(dateKey); };
                 grid.appendChild(box);
             }
@@ -181,14 +147,12 @@
         }
 
         window.changeMonth = (dir) => { m += dir; if (m < 0) { m = 11; y--; } else if (m > 11) { m = 0; y++; } renderCal(); };
-        
         document.getElementById('editBtn').onclick = function() {
             isEdit = !isEdit;
             this.style.background = isEdit ? 'var(--sunday)' : 'var(--accent)';
             this.querySelector('span').innerText = isEdit ? 'Selesai' : 'Edit Absen';
             renderCal();
         };
-
         function openModal(date) {
             selectedDate = date;
             const existing = localData[date];
@@ -198,18 +162,17 @@
             }
             document.getElementById('editModal').style.display = 'flex';
         }
-
         window.closeModal = () => document.getElementById('editModal').style.display = 'none';
-
         document.getElementById('btnSave').onclick = async () => {
             const loc = document.getElementById('selLoc').value; const sts = document.getElementById('selStatus').value;
             const docId = `${auth.currentUser.uid}_${selectedDate}`;
             try {
                 await setDoc(doc(db, "absensi", docId), { uid: auth.currentUser.uid, tanggal: selectedDate, lokasi: loc, status: sts, updatedAt: new Date() }, { merge: true });
-                localData[selectedDate] = { lokasi: loc, status: sts }; closeModal(); renderCal();
+                localData[selectedDate] = { lokasi: loc, status: sts };
+                localStorage.setItem(`absensi_cache_${auth.currentUser.uid}`, JSON.stringify(localData));
+                closeModal(); renderCal();
             } catch (err) { alert("Gagal Simpan!"); }
         };
-
         const tBtn = document.getElementById('tBtn');
         const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
