@@ -3,274 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Profil Saya - Five Star 2</title>
+    <title>Profil - Five Star 2</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root { --bg: #F5F5F7; --nav: #FFFFFF; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; --danger: #FF3B30; --input: #FFFFFF; }
         [data-theme="dark"] { --bg: #121212; --nav: #181818; --text: #FFFFFF; --accent: #39FF14; --card: #1E1E1E; --border: #333; --input: #1A1A1A; }
-        
-        html, body { height: 100%; margin: 0; overflow: hidden; touch-action: pan-y; width: 100%; position: fixed; }
+        html, body { height: 100%; margin: 0; overflow: hidden; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
-        
         header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--nav); }
-        
-        /* --- FIX HEADER TEBAL --- */
-        header span { font-size: 20px; font-weight: 700; color: var(--text); }
-
-        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); color: var(--text); }
-        .theme-toggle i { width: 18px; height: 18px; }
-
+        header span { font-size: 20px; font-weight: 700; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--bg); }
         .container { padding: 20px; height: calc(100% - 140px); overflow-y: auto; box-sizing: border-box; }
-        
-        /* Profile Card */
-        .profile-card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-
-        .info-group { margin-bottom: 18px; }
-        .info-label { font-size: 11px; opacity: 0.5; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .info-value { font-size: 16px; font-weight: 600; margin-top: 4px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-
-        /* Edit Form & Password Form */
-        #editMode, #passMode { display: none; } /* Tersembunyi default */
-        .edit-field { margin-bottom: 18px; }
-        .edit-field label { display: block; font-size: 13px; font-weight: 600; opacity: 0.7; margin-bottom: 6px; }
-        
-        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 14px; color: var(--text); box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--accent); outline: none; }
-
-        .row { display: flex; gap: 10px; }
-        .row .edit-field { flex: 1; }
-
-        /* Tombol */
-        .action-group { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; }
-        .btn { padding: 16px; border-radius: 30px; border: none; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; width: 100%; transition: 0.2s; }
-        
+        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .info-label { font-size: 11px; opacity: 0.5; font-weight: 700; text-transform: uppercase; margin-top: 10px; }
+        .info-value { font-size: 16px; font-weight: 600; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .btn { padding: 15px; border-radius: 30px; border: none; font-weight: 700; cursor: pointer; width: 100%; font-size: 15px; margin-bottom: 10px; }
         .btn-primary { background: var(--accent); color: white; }
-        [data-theme="dark"] .btn-primary { color: #000; }
-        
         .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); font-size: 13px; margin-top: 15px; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; box-sizing: border-box; }
+        .btn-danger { color: var(--danger); border: 1px solid var(--danger); background: transparent; }
+        .edit-field { margin-bottom: 15px; }
+        .edit-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        input, select { width: 100%; background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text); font-size: 15px; box-sizing: border-box; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border); z-index: 100; }
         .nav-item { text-align: center; color: #888; font-size: 10px; display: flex; flex-direction: column; align-items: center; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--accent); font-weight: 700; }
-        .nav-item i { width: 22px; height: 22px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
-
-    <header>
-        <span>Profil Saya</span>
-        <div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div>
-    </header>
-
+    <header><span>Profil</span><div class="theme-toggle" id="tBtn"><i data-lucide="moon"></i></div></header>
     <div class="container">
-        
-        <div class="profile-card" id="viewMode">
-            <div class="info-group">
-                <div class="info-label">Nama Lengkap</div>
-                <div id="pName" class="info-value">Memuat...</div>
-            </div>
-            
-            <div class="info-group">
-                <div class="info-label">Jenis Kelamin</div>
-                <div id="pGender" class="info-value">-</div>
-            </div>
-            
-            <div class="info-group">
-                <div class="info-label">Alamat Lengkap</div>
-                <div id="pAddress" class="info-value">-</div>
-            </div>
-
-            <div class="info-group">
-                <div class="info-label">Umur</div>
-                <div id="pAge" class="info-value">-</div>
-            </div>
-
-            <div class="action-group">
-                <button id="editBtn" class="btn btn-primary">Edit Profil & Alamat</button>
-                <button id="passBtn" class="btn btn-outline">Ganti Password</button>
-                <button id="oBtn" class="btn btn-outline">Keluar (Logout)</button>
-                
-                <button id="delBtn" class="btn btn-danger">Hapus Akun Permanen</button>
-            </div>
+        <div id="vMode" class="card">
+            <div class="info-label">Nama Lengkap</div><div id="pN" class="info-value">...</div>
+            <div class="info-label">Jenis Kelamin</div><div id="pG" class="info-value">...</div>
+            <div class="info-label">Alamat</div><div id="pA" class="info-value">...</div>
+            <div class="info-label">Umur</div><div id="pU" class="info-value">-</div>
+            <button class="btn btn-primary" id="goEdit">Edit Profil & Alamat</button>
+            <button class="btn btn-outline" id="goPass">Ganti Password</button>
+            <button class="btn btn-outline" id="oB">Logout</button>
+            <button class="btn btn-danger" id="delB">Hapus Akun Permanen</button>
         </div>
-
-        <div class="profile-card" id="editMode">
-            <h3 style="margin: 0 0 20px 0;">Perbarui Profil</h3>
-            <form id="editForm">
-                <div class="edit-field"><label>Nama Lengkap</label><input type="text" id="fnEdit" required></div>
-                
-                <div class="edit-field"><label>Alamat Lengkap</label><input type="text" id="almtEdit" required></div>
-                
-                <div class="row">
-                    <div class="edit-field"><label>Tgl Lahir</label><input type="date" id="bdEdit" required></div>
-                    <div class="edit-field"><label>Gender</label>
-                        <select id="gdEdit">
-                            <option value="L">Pria</option>
-                            <option value="P">Wanita</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="action-group" style="flex-direction: row; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-outline" id="cancelEdit">Batal</button>
-                </div>
+        <div id="eMode" class="card" style="display:none;">
+            <h3>Edit Profil</h3>
+            <form id="eF">
+                <div class="edit-field"><label>Nama Lengkap</label><input type="text" id="efN" required></div>
+                <div class="edit-field"><label>Alamat</label><input type="text" id="efA" required></div>
+                <div class="edit-field"><label>Tgl Lahir</label><input type="date" id="efB" required></div>
+                <div class="edit-field"><label>Gender</label><select id="efG"><option value="L">Pria</option><option value="P">Wanita</option></select></div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
             </form>
         </div>
-
-        <div class="profile-card" id="passMode">
-            <h3 style="margin: 0 0 20px 0;">Ganti Password</h3>
-            <form id="passForm">
-                <div class="edit-field">
-                    <label>Password Lama</label>
-                    <input type="password" id="pOld" placeholder="Masukkan password saat ini" required>
-                </div>
-                <div class="edit-field">
-                    <label>Password Baru</label>
-                    <input type="password" id="pNew" placeholder="Minimal 6 karakter" required minlength="6">
-                </div>
-                <div class="edit-field">
-                    <label>Konfirmasi Password Baru</label>
-                    <input type="password" id="pConf" placeholder="Ulangi password baru" required>
-                </div>
-                <div class="action-group" style="flex-direction: row; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <button type="button" class="btn btn-outline" id="cancelPass">Batal</button>
-                </div>
+        <div id="pMode" class="card" style="display:none;">
+            <h3>Ganti Password</h3>
+            <form id="pF">
+                <input type="password" id="pOld" placeholder="Password Lama" required style="margin-bottom:10px;">
+                <input type="password" id="pNew" placeholder="Password Baru" required style="margin-bottom:10px;">
+                <input type="password" id="pConf" placeholder="Konfirmasi Password Baru" required style="margin-bottom:10px;">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-outline" onclick="location.reload()">Batal</button>
             </form>
         </div>
-
     </div>
-
     <nav class="bottom-nav">
         <a href="absensi.html" class="nav-item"><i data-lucide="calendar"></i><span>Absensi</span></a>
         <a href="catatan.html" class="nav-item"><i data-lucide="edit-3"></i><span>Catatan</span></a>
         <a href="gaji.html" class="nav-item"><i data-lucide="wallet"></i><span>Gaji</span></a>
         <a href="profile.html" class="nav-item active"><i data-lucide="user"></i><span>Profil</span></a>
     </nav>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, deleteUser, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
-        const app = initializeApp(fbConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const vM = document.getElementById('viewMode'), eM = document.getElementById('editMode'), pM = document.getElementById('passMode');
-        let uD = null; // Simpan data user lokal
-
-        // 1. Ambil Data dari Firestore & Render
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const s = await getDoc(doc(db, "users", user.uid));
-                if (s.exists()) {
-                    uD = s.data();
-                    // Render ke Tampilan
-                    document.getElementById('pName').innerText = uD.nama || "User";
-                    document.getElementById('pGender').innerText = uD.gender === 'L' ? 'Laki-laki' : 'Perempuan';
-                    document.getElementById('pAddress').innerText = uD.alamat || "Alamat belum diisi";
-                    
-                    if(uD.bd) {
-                        const lahir = new Date(uD.bd);
-                        const umur = new Date().getFullYear() - lahir.getFullYear();
-                        document.getElementById('pAge').innerText = umur + " Tahun";
-                    }
-                }
-            } else { window.location.href = "login.html"; }
+        const fb = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const app = initializeApp(fb); const auth = getAuth(app); const db = getFirestore(app);
+        let uD = null;
+        onAuthStateChanged(auth, async (u) => {
+            if (u) {
+                const s = await getDoc(doc(db, "users", u.uid));
+                if (s.exists()) { uD = s.data(); render(); }
+            } else window.location.href = "login.html";
         });
-
-        // 2. Navigasi Tombol Edit Profil
-        document.getElementById('editBtn').onclick = () => {
-            vM.style.display = 'none'; eM.style.display = 'block';
-            // Isi form dengan data lama
-            document.getElementById('fnEdit').value = uD.nama;
-            document.getElementById('almtEdit').value = uD.alamat || ""; // LOAD ALAMAT KE FORM
-            document.getElementById('bdEdit').value = uD.bd || "";
-            document.getElementById('gdEdit').value = uD.gender || "L";
+        function render() {
+            document.getElementById('pN').innerText = uD.nama || "User";
+            document.getElementById('pG').innerText = uD.gender === 'L' ? 'Pria' : 'Wanita';
+            document.getElementById('pA').innerText = uD.alamat || "-";
+            if(uD.bd) { const b = new Date(uD.bd); document.getElementById('pU').innerText = (new Date().getFullYear() - b.getFullYear()) + " Tahun"; }
+        }
+        document.getElementById('goEdit').onclick = () => {
+            document.getElementById('vMode').style.display = 'none'; document.getElementById('eMode').style.display = 'block';
+            document.getElementById('efN').value = uD.nama; document.getElementById('efA').value = uD.alamat || "";
+            document.getElementById('efB').value = uD.bd || ""; document.getElementById('efG').value = uD.gender || "L";
         };
-        document.getElementById('cancelEdit').onclick = () => { eM.style.display = 'none'; vM.style.display = 'block'; };
-
-        // 3. Simpan Perubahan Profil (Termasuk Alamat)
-        document.getElementById('editForm').onsubmit = async (e) => {
+        document.getElementById('eF').onsubmit = async (e) => {
             e.preventDefault();
-            const user = auth.currentUser;
-            const newData = {
-                ...uD,
-                nama: document.getElementById('fnEdit').value,
-                alamat: document.getElementById('almtEdit').value, // SIMPAN ALAMAT BARU
-                bd: document.getElementById('bdEdit').value,
-                gender: document.getElementById('gdEdit').value
-            };
-            try {
-                await setDoc(doc(db, "users", user.uid), newData);
-                alert("Profil diperbarui!"); location.reload();
-            } catch (err) { alert("Gagal: " + err.message); }
+            const up = { ...uD, nama: document.getElementById('efN').value, alamat: document.getElementById('efA').value, bd: document.getElementById('efB').value, gender: document.getElementById('efG').value };
+            await setDoc(doc(db, "users", auth.currentUser.uid), up); alert("Berhasil diperbarui!"); location.reload();
         };
-
-        // 4. Navigasi Tombol Ganti Password
-        document.getElementById('passBtn').onclick = () => { vM.style.display = 'none'; pM.style.display = 'block'; };
-        document.getElementById('cancelPass').onclick = () => { pM.style.display = 'none'; vM.style.display = 'block'; };
-
-        // 5. Logika Ganti Password (Aman: Perlu Pass Lama)
-        document.getElementById('passForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const oldP = document.getElementById('pOld').value;
-            const newP = document.getElementById('pNew').value;
-            const confP = document.getElementById('pConf').value;
-
-            if (newP !== confP) return alert("Konfirmasi password baru tidak cocok!");
-
-            const user = auth.currentUser;
-            // Re-autentikasi (wajib untuk ganti password)
-            const cred = EmailAuthProvider.credential(user.email, oldP);
-            
-            try {
-                await reauthenticateWithCredential(user, cred); // Cek pass lama
-                await updatePassword(user, newP); // Update pass baru
-                alert("Password berhasil diubah!"); location.reload();
-            } catch (err) {
-                alert("Gagal: Password lama salah atau masalah jaringan.");
+        document.getElementById('goPass').onclick = () => { document.getElementById('vMode').style.display = 'none'; document.getElementById('pMode').style.display = 'block'; };
+        document.getElementById('pF').onsubmit = async (e) => {
+            e.preventDefault(); const oldP = document.getElementById('pOld').value; const newP = document.getElementById('pNew').value;
+            if (newP !== document.getElementById('pConf').value) return alert("Konfirmasi password baru tidak cocok!");
+            const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP);
+            try { await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); alert("Password berhasil diubah!"); location.reload(); } catch { alert("Gagal: Password lama salah."); }
+        };
+        document.getElementById('delB').onclick = async () => {
+            if(confirm("Hapus Akun Permanen?")) {
+                try { await deleteDoc(doc(db, "users", auth.currentUser.uid)); await deleteUser(auth.currentUser); window.location.href="index.html"; }
+                catch { alert("Silakan logout lalu login kembali sebelum menghapus akun."); }
             }
         };
-
-        // 6. Fitur Keluar
-        document.getElementById('oBtn').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
-
-        // 7. Fitur Hapus Akun Permanen (Danger Zone)
-        document.getElementById('delBtn').onclick = async () => {
-            if (confirm("PERINGATAN! Akun Anda akan dihapus secara permanen dari sistem Five Star 2. Tindakan ini tidak bisa dibatalkan. Lanjutkan?")) {
-                const user = auth.currentUser;
-                try {
-                    // Hapus data Firestore dulu
-                    await deleteDoc(doc(db, "users", user.uid));
-                    // Hapus data Auth
-                    await deleteUser(user);
-                    alert("Akun Anda telah dihapus.");
-                    window.location.href = "index.html";
-                } catch (err) {
-                    alert("Gagal menghapus akun. Untuk keamanan, Anda perlu Logout lalu Login kembali sebelum melakukan tindakan ini.");
-                }
-            }
-        };
-
-        // Tema Logic
+        document.getElementById('oB').onclick = () => signOut(auth).then(() => window.location.href = "index.html");
         const tBtn = document.getElementById('tBtn');
-        const applyT = (t) => {
-            document.body.setAttribute('data-theme', t);
-            tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`;
-            lucide.createIcons();
-        };
+        const applyT = (t) => { document.body.setAttribute('data-theme', t); tBtn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
         applyT(localStorage.getItem('theme') || 'light');
-        tBtn.onclick = () => {
-            const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', nt); applyT(nt);
-        };
-
+        tBtn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyT(nt); };
         lucide.createIcons();
     </script>
 </body>
