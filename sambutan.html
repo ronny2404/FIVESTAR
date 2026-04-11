@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Five Star 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg: #F5F5F7; --text: #1D1D1F; --accent: #007AFF; --card: #FFFFFF; --border: #E5E5E7; }
+        [data-theme="dark"] { --bg: #121212; --text: #FFFFFF; --accent: #39FF14; --card: #1A1A1A; --border: #333; }
+        
+        /* Kunci Layar: No Scroll */
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; touch-action: none; width: 100%; position: fixed; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; transition: background 0.3s; box-sizing: border-box; }
+        
+        /* Toggle Mode (Samakan dengan App) */
+        .theme-header { position: absolute; top: 20px; right: 20px; z-index: 10; }
+        .theme-toggle { cursor: pointer; padding: 6px; border-radius: 50%; border: 1px solid var(--border); display: flex; background: var(--card); color: var(--text); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .theme-toggle i { width: 18px; height: 18px; }
+
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 90%; max-width: 400px; padding-top: 15vh; box-sizing: border-box; }
+        
+        /* GAMBAR HEADER BESAR DI TENGAH ATAS */
+        .logo-img { width: 80%; max-width: 320px; height: auto; display: block; margin-bottom: 30px; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.08)); transition: 0.5s; }
+        [data-theme="dark"] .logo-img { filter: drop-shadow(0 0 25px rgba(57, 255, 20, 0.4)); }
+        
+        p { text-align: center; opacity: 0.7; margin: 0 0 40px 0; font-size: 15px; line-height: 1.6; max-width: 300px; }
+        
+        /* Tombol Modern */
+        .btn { width: 100%; padding: 18px; border-radius: 40px; font-weight: 700; text-decoration: none; display: flex; justify-content: center; align-items: center; transition: 0.3s; box-sizing: border-box; font-size: 16px; background: var(--accent); color: white; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        [data-theme="dark"] .btn { color: #000; box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); }
+        .btn:active { transform: scale(0.97); }
+
+        /* FOOTER KETERANGAN DI BAWAH */
+        footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 12px; opacity: 0.5; font-weight: 400; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+    <div class="theme-header"><div class="theme-toggle" id="themeBtn"><i data-lucide="moon"></i></div></div>
+    
+    <div class="container">
+        <img src="logo_fivestar.png" alt="Header Logo" class="logo-img">
+        
+        <p>Aplikasi Absensi & Kelola Data Karyawan Professional</p>
+        
+        <a href="login.html" class="btn">Lanjutkan</a>
+    </div>
+
+    <footer>Project by RONNY</footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        const fbConfig = { apiKey: "AIzaSyAsINtnmVQthClAReXRk09k-AsDo9VIqDQ", authDomain: "five-star-2404.firebaseapp.com", projectId: "five-star-2404", appId: "1:778881784522:web:6d6d43d6213fdaf4b43233" };
+        const auth = getAuth(initializeApp(fbConfig));
+        onAuthStateChanged(auth, (u) => { if (u) window.location.href = "absensi.html"; });
+        const btn = document.getElementById('themeBtn');
+        const applyTheme = (t) => { document.body.setAttribute('data-theme', t); btn.innerHTML = `<i data-lucide="${t === 'dark' ? 'sun' : 'moon'}"></i>`; lucide.createIcons(); };
+        applyTheme(localStorage.getItem('theme') || 'light');
+        btn.onclick = () => { const nt = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; localStorage.setItem('theme', nt); applyTheme(nt); };
+        lucide.createIcons();
+    </script>
+</body>
+</html>
